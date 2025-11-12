@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zelda Hylian Translator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+  <header>
+    <h1>Zelda Hylian Translator</h1>
+    <p>Translate English text to various versions of Hylian!</p>
+  </header>
+
+  <main>
+    <div>
+      <label for="hylianVersion">Choose Hylian Version:</label>
+      <select id="hylianVersion">
+        <!-- Hylian Languages -->
+        <optgroup label="Hylian Languages">
+          <option value="ocarinaOfTime">Ocarina of Time</option>
+          <option value="windwaker">Wind Waker</option>
+          <option value="twilightPrincess">Twilight Princess</option>
+          <option value="skywardSword">Skyward Sword</option>
+          <option value="botw">Breath of the Wild</option>
+        </optgroup>
+
+        <!-- Other Languages -->
+        <optgroup label="Other">
+          <option value="gerudo">Gerudo</option>
+          <option value="sheikah">Sheikah</option>
+        </optgroup>
+      </select>
+    </div>
+    
+    <div>
+      <textarea 
+        id="inputText" 
+        rows="5" 
+        aria-label="Enter Text for Translation" 
+        placeholder="Type something to be translated here."></textarea>
+    </div>
+    
+    <button id="translateBtn">Translate</button>
+
+    <div>
+      <label for="fontColor">Font Color: </label>
+      <input type="color" id="fontColor" value="#000000">
+      
+      <label for="fontSizeSlider">Font Size: 
+        <span id="fontSizeValue">2em</span>
+      </label>
+      <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="3">
+    </div>
+
+    <div>
+      <p id="translatedText">Your translated text will appear here.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Note: All languages are being displayed via custom fonts and won't persist with copy&paste</p>
+    <a href="about.html">More info at the About page</a>
+    <br>
+    <div>
+      <button id="exportPNGBtn">Export as PNG ↓</button>
+      <button id="downloadFontBtn">Download Font ↓</button>
+    </div>
+  </footer>
+
+  <script src="WWHylianMap.js"></script> <!-- Load the WW glyph map -->
+  <script src="64HylianMap.js"></script> <!-- Load the N64 glyph map -->
+  <script src="fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script><!-- Required for PNG export -->
+  <script src="script.js"></script> <!-- Then load main script -->
+
+</body>
+</html>
+

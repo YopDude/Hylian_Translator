@@ -1,0 +1,94 @@
+body {
+  background-image: linear-gradient(rgba(2, 38, 32, 0.90), rgba(10, 126, 163, 0.75)), url('images/pattern-triforce.png');
+}
+
+.content {
+    max-width: 75%;  /* Set the content max width to 75% */
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 40px;
+    overflow: hidden;
+    background-color: #f7f1e1; /* Off-white (cream) background */
+    border: 2px solid #c5a200; /* Gold borders around each block */
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.text-block {
+    width: 48%;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #f7f1e1; /* Off-white (cream) background */
+    border: 1px solid #c5a200; /* Gold border */
+    border-radius: 8px;
+}
+
+h2, h3{
+    font-family: 'ReggaeOne', sans-serif;
+    font-size: 1.5rem;
+    color: #004c4c; /* Dark turquoise for header text */
+}
+
+.text-block p {
+    font-family: 'RocknRollOne', sans-serif;
+    font-size: 1.1rem;
+    color: #333333; /* Dark grey for the paragraph text */
+}
+
+/* Links Styling */
+.links a {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Alternating block float layout */
+.odd .text-block {
+    float: left;
+}
+
+.odd .section img {
+    float: right;
+}
+
+.even .text-block {
+    float: right;
+}
+
+.even .section img {
+    float: left;
+}
+
+/* Clearfix for each section to prevent float issues */
+.section::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .text-block {
+        width: 100%;
+        float: none;
+        margin: 0 auto;
+    }
+
+    .section img {
+        float: none;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .content {
+        width: 100%; /* Make content full width on smaller screens */
+    }
+}
+
