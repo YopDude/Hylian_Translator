@@ -1,0 +1,171 @@
+body {
+  font-family: 'RocknRollOne', sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
+
+header {
+  padding: 20px 0; /* Padding on top and bottom */
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black for header */
+  width: 100%; /* Ensure header extends across full width */
+  color: #f7f1e1; /* Off-white (cream) background */
+}
+
+/* Remove link styling for header */
+header a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from header */
+}
+
+header h1 {
+  font-family: 'ReggaeOne', sans-serif;
+  font-size: 2.5rem;
+  margin: 0;
+  color: #f7f1e1; /* Off-white (cream) background */
+}
+
+select, textarea, button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.2em;
+}
+
+button, select {
+  font-family: 'ReggaeOne', sans-serif;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+footer {
+  font-size: 0.8em;
+  color: #777;
+}
+
+textarea {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1em;
+  width: 100%;
+  max-width: 600px;
+}
+
+#translatedText {
+  font-family: 'HylianAlphabet', sans-serif;
+  font-size: 2.5em;
+  color: #333;
+  margin-top: 20px; /* Add some space above the translated text */
+  word-wrap: break-word; /* Make sure long words break properly */
+  line-height: 1.4; /* Optional: Adjust line height for readability */
+}
+
+@font-face {
+  font-family: 'Albw Botw Hylian';
+  src: url('fonts/AlbwBotwHylian-Regular.woff2') format('woff2'),
+       url('fonts/AlbwBotwHylian-Regular.woff') format('woff'),
+       url('fonts/AlbwBotwHylian-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TP Hylian - GCN';
+  src: url('fonts/TPHylian-GCNRegular.woff2') format('woff2'),
+       url('fonts/TPHylian-GCNRegular.woff') format('woff'),
+       url('fonts/TPHylian-GCNRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gerudo Typography';
+  src: url('fonts/GerudoTypography.ttf') format('truetype'),
+       url('fonts/TPHylian-GCNRegular.woff2') format('woff2'),
+       url('fonts/TPHylian-GCNRegular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hylian 64';
+  src: url('fonts/Hylian64Regular.woff2') format('woff2'),
+       url('fonts/Hylian64Regular.woff') format('woff'),
+       url('fonts/Hylian64Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ancient Hylian';
+  src: url('fonts/AncientHylian-English3.woff2') format('woff2'),
+       url('fonts/AncientHylian-English3.woff') format('woff'),
+       url('fonts/AncientHylian-English3.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SS Ancient Hylian';
+  src: url('fonts/SSAncientHylian.woff2') format('woff2'),
+       url('fonts/SSAncientHylian.woff') format('woff'),
+       url('fonts/SSAncientHylian.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BotW Sheikah';
+  src: url('fonts/BotWSheikahRegular.woff2') format('woff2'),
+       url('fonts/BotWSheikahRegular.woff') format('woff'),
+       url('fonts/BotWSheikahRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Site styling fonts */
+@font-face {
+  font-family: 'RocknRollOne';
+  src: url('fonts/RocknRollOne-Regular.woff2') format('woff2'),
+       url('fonts/RocknRollOne-Regular.woff') format('woff'),
+       url('fonts/RocknRollOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ReggaeOne';
+  src: url('fonts/ReggaeOne-Regular.woff2') format('woff2'),
+       url('fonts/ReggaeOne-Regular.woff') format('woff'),
+       url('fonts/ReggaeOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MinishCap';
+  src: url('fonts/MinishCap--v10.woff2') format('woff2'),
+       url('fonts/MinishCap--v10.woff') format('woff'),
+       url('fonts/MinishCap--v10.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
