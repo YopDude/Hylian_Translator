@@ -1,11 +1,11 @@
 # Hylian Translator
 
-The **Hylian Translator** lets you convert English text into various versions of the **Hylian language** from *The Legend of Zelda* series. It supports multiple Hylian fonts from a variety of games and gives you the ability to customize the translated text's font color and size. You can even export the translated text as a PNG image.
+The **Hylian Translator** lets you convert English and Japanese text into various versions of the **Hylian language** from *The Legend of Zelda* series. It supports multiple Hylian fonts from a variety of games and gives you the ability to customize the translated text's font color and size. You can even export the translated text as a PNG image.
 
 The site is live at https://yopdude.github.io/Hylian_Translator/
 
 ### Features
-- **Hylian Translations**: Translate English and Japanese text into different versions of the Hylian language from various *Zelda* games, including:
+- **Hylian Translations**: Translate English and Japanese (Hiragana and Katakana) text into different versions of the Hylian language from various *Zelda* games, including:
   - **Ocarina of Time**, Majora's Mask (N64)
   - **Wind Waker** (GameCube/Wii U),  Four Swords Adventures (GameCube), The Minish Cap (GBA), Phantom Hourglass and Spirit Tracks (DS)
   - **Twilight Princess** (GameCube; note: the Wii version is mirrored for right-handed Link)
