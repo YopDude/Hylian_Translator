@@ -2,6 +2,8 @@
 
 The **Hylian Translator** lets you convert English text into various versions of the **Hylian language** from *The Legend of Zelda* series. It supports multiple Hylian fonts from a variety of games and gives you the ability to customize the translated text's font color and size. You can even export the translated text as a PNG image.
 
+The site is live at https://yopdude.github.io/Hylian_Translator/
+
 ### Features
 - **Hylian Translations**: Translate English and Japanese text into different versions of the Hylian language from various *Zelda* games, including:
   - **Ocarina of Time**, Majora's Mask (N64)
