@@ -148,6 +148,8 @@ h2, h3 {
 @media (max-width: 768px) {
   /* Make .content take up the full width with no padding or margin */
   .content {
+    padding: 12px 10px;   /* Small padding left/right to avoid touching edges */
+    margin: 0;    /* Remove margin */
     max-width: 100%;  /* Full width */
     box-sizing: border-box; /* Prevent horizontal scrolling */
   }
