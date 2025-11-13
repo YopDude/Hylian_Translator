@@ -76,8 +76,7 @@ textarea {
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 1em;
-  width: 100%;
-  max-width: 600px;
+  width: 90%;
 }
 
 #translatedText {
@@ -149,23 +148,21 @@ h2, h3 {
 @media (max-width: 768px) {
   /* Make .content take up the full width with no padding or margin */
   .content {
-    width: 100%;  /* Full width */
-    padding: 0 10px;   /* Small padding left/right to avoid touching edges */
-    margin: 0;    /* Remove margin */
+    max-width: 100%;  /* Full width */
     box-sizing: border-box; /* Prevent horizontal scrolling */
   }
 
   /* Ensure .section takes up full width and stacks elements vertically */
   .section {
     flex-direction: column;  /* Stack text and images vertically */
-    width: 100%;             /* Full width for sections */
+    max-width: 100%;             /* Full width for sections */
     padding: 10px;           /* Small padding inside sections */
     margin: 10px 0;          /* Add margin for vertical space */
   }
 
   /* .text-block should take 100% of the width, no padding or margin */
   .text-block {
-    width: 100%;    /* Full width for text-block */
+    max-width: 100%;    /* Full width for text-block */
     padding: 10px;  /* Optional: Small padding for content spacing */
     margin: 10px 0; /* Vertical margin between blocks */
     box-sizing: border-box; /* Ensure padding is included in the width calculation */
