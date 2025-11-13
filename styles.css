@@ -1,30 +1,56 @@
+/* Global Styles */
 body {
   font-family: 'RocknRollOne', sans-serif;
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Default background */
   color: #333;
   margin: 0;
   text-align: center;
+  background-image: linear-gradient(rgba(2, 38, 32, 0.90), rgba(10, 126, 163, 0.75)), url('images/pattern-triforce.png');
 }
 
+/* Ensure header is relatively positioned */
 header {
-  padding: 20px 0; /* Padding on top and bottom */
+  position: relative;  /* Needed for absolute positioning of child elements */
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black */
+  color: #f7f1e1; /* Off-white (cream) text color */
+}
+
+/* Add Zelda insignia (the repeating ribbon) */
+header::after {
+  content: "";
+  position: absolute;
+  bottom: -31px;  /* Align it to the very bottom of the header */
+  left: 0;
+  width: 100%;  /* Make it span the entire width of the header */
+  height: 60px;  /* Adjust the height to match the logo's size */
+  background-image: url('images/hyrule_rule.png');  /* Zelda insignia (ribbon) image */
+  background-repeat: repeat-x;  /* Repeat horizontally across the width */
+  background-position: bottom center;  /* Position it at the bottom and center */
+  background-size: auto 60px;  /* Adjust the size if needed, make sure height is 60px */
+  z-index: 1;  /* Ensure it's above any background but below other content */
+}
+
+footer {
+  padding: 20px 0;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black for header */
-  width: 100%; /* Ensure header extends across full width */
-  color: #f7f1e1; /* Off-white (cream) background */
+  width: 100%;
+  color: #f7f1e1; /* Off-white (cream) text color */
 }
 
-/* Remove link styling for header */
-header a {
-  text-decoration: none; /* Remove underline */
-  color: inherit; /* Inherit color from header */
+header a, footer a {
+  text-decoration: none;
+  color: inherit;
 }
 
 header h1 {
-  font-family: 'ReggaeOne', sans-serif;
+  font-family: 'HyliaSerif', sans-serif;
   font-size: 2.5rem;
   margin: 0;
-  color: #f7f1e1; /* Off-white (cream) background */
+  color: #b99f65;
 }
 
 select, textarea, button {
@@ -45,11 +71,6 @@ button:hover {
   background-color: #218838;
 }
 
-footer {
-  font-size: 0.8em;
-  color: #777;
-}
-
 textarea {
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -60,14 +81,125 @@ textarea {
 }
 
 #translatedText {
-  font-family: 'HylianAlphabet', sans-serif;
+  font-family: 'RocknRollOne', sans-serif;
   font-size: 2.5em;
   color: #333;
-  margin-top: 20px; /* Add some space above the translated text */
-  word-wrap: break-word; /* Make sure long words break properly */
-  line-height: 1.4; /* Optional: Adjust line height for readability */
+  word-wrap: break-word;
 }
 
+/* Page Content Styles */
+.content {
+  max-width: 75%;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.section {
+  margin-bottom: 40px;
+  background-color: #f7f1e1; /* Off-white (cream) background */
+  border: 2px solid #c5a200; /* Gold borders around each block */
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to next line */
+  justify-content: space-between; /* Space between content */
+}
+
+.text-block {
+  flex: 1 1 48%;
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: #f7f1e1; /* Off-white (cream) background */
+  border: 1px solid #c5a200; /* Gold border */
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+h2, h3 {
+  font-family: 'ReggaeOne', sans-serif;
+  font-size: 1.5rem;
+  color: #004c4c; /* Dark turquoise for header text */
+}
+
+.text-block p {
+  font-family: 'RocknRollOne', sans-serif;
+  font-size: 1.1rem;
+  color: #333333; /* Dark grey for the paragraph text */
+}
+
+.links a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.section img {
+  width: 45%;
+  margin-left: 2%;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  /* Make .content take up the full width with no padding or margin */
+  .content {
+    width: 100%;  /* Full width */
+    padding: 0 10px;   /* Small padding left/right to avoid touching edges */
+    margin: 0;    /* Remove margin */
+    box-sizing: border-box; /* Prevent horizontal scrolling */
+  }
+
+  /* Ensure .section takes up full width and stacks elements vertically */
+  .section {
+    flex-direction: column;  /* Stack text and images vertically */
+    width: 100%;             /* Full width for sections */
+    padding: 10px;           /* Small padding inside sections */
+    margin: 10px 0;          /* Add margin for vertical space */
+  }
+
+  /* .text-block should take 100% of the width, no padding or margin */
+  .text-block {
+    width: 100%;    /* Full width for text-block */
+    padding: 10px;  /* Optional: Small padding for content spacing */
+    margin: 10px 0; /* Vertical margin between blocks */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+
+  /* Ensure images are full width on mobile */
+  .section img {
+    width: 100%;    /* Images take up full width */
+    margin: 0 0 20px 0;  /* Space below the image */
+    display: block;   /* Ensure images are block-level */
+  }
+}
+
+/* Disclaimer styling */
+.disclaimer {
+  font-family: 'RocknRollOne', sans-serif;  /* Use your site's default font family */
+  font-size: 0.9em;  /* Make the text slightly smaller to keep it subtle */
+  color: #ccc;  /* Light gray color for the disclaimer text */
+  margin-top: 20px;  /* Add some space above the disclaimer */
+  padding: 10px 0;   /* Padding for spacing */
+  text-align: center;  /* Center the text */
+  background-color: rgba(0, 0, 0, 0.75);  /* Semi-transparent background */
+  border-top: 1px solid #f7f1e1;  /* Light border at the top */
+}
+
+.disclaimer p {
+  margin: 0;  /* Remove default margin for better spacing */
+}
+
+.disclaimer strong {
+  font-weight: bold;  /* Bold the Nintendo and "Disclaimer" text for emphasis */
+}
+
+/* Font Faces */
 @font-face {
   font-family: 'Albw Botw Hylian';
   src: url('fonts/AlbwBotwHylian-Regular.woff2') format('woff2'),
@@ -138,7 +270,6 @@ textarea {
   font-display: swap;
 }
 
-/* Site styling fonts */
 @font-face {
   font-family: 'RocknRollOne';
   src: url('fonts/RocknRollOne-Regular.woff2') format('woff2'),
@@ -164,6 +295,26 @@ textarea {
   src: url('fonts/MinishCap--v10.woff2') format('woff2'),
        url('fonts/MinishCap--v10.woff') format('woff'),
        url('fonts/MinishCap--v10.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HyliaSerif';
+  src: url('fonts/HyliaSerifBeta-Regular.woff2') format('woff2'),
+       url('fonts/HyliaSerifBeta-Regular.woff') format('woff'),
+       url('fonts/HyliaSerifBeta-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HylianSymbols';
+  src: url('fonts/HylianSymbols.woff2') format('woff2'),
+       url('fonts/HylianSymbols.woff') format('woff'),
+       url('fonts/HylianSymbols.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
