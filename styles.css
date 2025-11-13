@@ -241,9 +241,9 @@ h2, h3 {
 
 @font-face {
   font-family: 'Ancient Hylian';
-  src: url('fonts/AncientHylian-English3.woff2') format('woff2'),
-       url('fonts/AncientHylian-English3.woff') format('woff'),
-       url('fonts/AncientHylian-English3.ttf') format('truetype');
+  src: url('fonts/AncientHylian-English.woff2') format('woff2'),
+       url('fonts/AncientHylian-English.woff') format('woff'),
+       url('fonts/AncientHylian-English.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -269,6 +269,7 @@ h2, h3 {
   font-display: swap;
 }
 
+/*Styling fonts*/
 @font-face {
   font-family: 'RocknRollOne';
   src: url('fonts/RocknRollOne-Regular.woff2') format('woff2'),
