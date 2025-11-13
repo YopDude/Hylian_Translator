@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zelda Hylian Translator</title>
   <link rel="stylesheet" href="styles.css">
+  <!--Preload all fonts to avoid FOUT (Flash of Unstyled Text)-->
+  <link rel="preload" href="path-to-fonts/Ancient-Hylian.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 </head>
 <body>
   
@@ -64,7 +66,7 @@
 
   <footer>
     <p>Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
-    <p>More info at the: <a href="about.html" style="text-decoration: underline;">About page →</a></p>
+    <p>More info at the <a href="about.html" style="text-decoration: underline;">About page →</a></p>
     <br>
     <div>
       <button id="exportPNGBtn">Export as PNG ↓</button>
@@ -76,10 +78,11 @@
   </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js"></script> <!-- Load the UMD version of Wanakana JPN-->
   <script src="jsMapping/WWHylianMap.js"></script> <!-- Load the WW glyph map -->
   <script src="jsMapping/64HylianMap.js"></script> <!-- Load the N64 glyph map -->
   <script src="jsMapping/fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script><!-- Required for PNG export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- Required for PNG export -->
   <script src="script.js"></script> <!-- Then load main script -->
 
 </body>

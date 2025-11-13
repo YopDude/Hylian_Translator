@@ -1,6 +1,7 @@
 // Function to handle font change and translation logic
 function translateText() {
   const inputText = document.getElementById("inputText").value; // Get the input text
+  const romajiText = convertToRomaji(inputText); // Convert text to English
   const version = document.getElementById("hylianVersion").value; // Get the selected Hylian version
   const translatedTextElement = document.getElementById("translatedText"); // Element where translation appears
 
@@ -10,7 +11,7 @@ function translateText() {
   if (isJapaneseVersion) {
     // Convert Input to Hylian using the appropriate glyph map
     const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
-    const hylianText = convertToHylian(inputText, glyphIndexMap);
+    const hylianText = convertToHylian(romajiText, glyphIndexMap);
 
     // Apply font styles based on version selection
     translatedTextElement.style.fontFamily = version === "windwaker" 
@@ -27,7 +28,7 @@ function translateText() {
 
     // For English-to-Hylian translation, convert each character to the corresponding Hylian font character
     let translatedText = "";
-    for (let char of inputText) {
+    for (let char of romajiText) {
       translatedText += char;  // For simplicity, this can be modified to use a map like above if needed
     }
 
@@ -66,9 +67,9 @@ function getFontFamilyForVersion(version) {
   }
 }
 
-// Function to convert Japanese input text to Romaji (currently a placeholder)
-function convertToRomaji(inputText) {
-  return inputText.toLowerCase();
+function convertToRomaji(input) {
+  // Convert Hiragana or Katakana to Romaji
+  return wanakana.toRomaji(input);
 }
 
 // Define the yoon syllable combinations and their splits
@@ -87,9 +88,9 @@ const yoonMap = {
 };
 
 // Function to convert Romaji to Hylian characters with special handling for yoon combinations
-function convertToHylian(inputText, glyphIndexMap) {
+function convertToHylian(input, glyphIndexMap) {
   let hylianText = "";
-  let modifiedText = inputText.toLowerCase();
+  let modifiedText = input.toLowerCase();
 
   // Step 1: Replace yoon combinations with their corresponding syllable pairs
   for (let yoon in yoonMap) {
@@ -133,7 +134,7 @@ function convertToHylian(inputText, glyphIndexMap) {
     // If no match was found, just skip the character
     i++; // Move to the next character
   }
-
+    //console.log(hylianText)
   return hylianText;
 }
 
@@ -202,4 +203,49 @@ function exportAsPNG() {
     }
   });
 }
+
+// Function to preload font files dynamically
+function preloadFonts() {
+  const fonts = [
+    'fonts/AlbwBotwHylian-Regular.woff2',
+    'fonts/TPHylian-GCNRegular.woff2',
+    'fonts/GerudoTypography.ttf',
+    'fonts/Hylian64Regular.woff2',
+    'fonts/AncientHylian-English3.woff2',
+    'fonts/SSAncientHylian.woff2',
+    'fonts/BotWSheikahRegular.woff2',
+    'fonts/RocknRollOne-Regular.woff2',
+    'fonts/ReggaeOne-Regular.woff2',
+    'fonts/MinishCap--v10.woff2',
+    'fonts/HyliaSerifBeta-Regular.woff2',
+    'fonts/HylianSymbols.woff2',
+
+    // Fallback formats (optional)
+    'fonts/AlbwBotwHylian-Regular.woff',
+    'fonts/TPHylian-GCNRegular.woff',
+    'fonts/GerudoTypography.ttf',
+    'fonts/Hylian64Regular.woff',
+    'fonts/AncientHylian-English3.woff',
+    'fonts/SSAncientHylian.woff',
+    'fonts/BotWSheikahRegular.woff',
+    'fonts/RocknRollOne-Regular.woff',
+    'fonts/ReggaeOne-Regular.woff',
+    'fonts/MinishCap--v10.woff',
+    'fonts/HyliaSerifBeta-Regular.woff',
+    'fonts/HylianSymbols.ttf'
+  ];
+
+  fonts.forEach((font) => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = font;
+    link.as = 'font';
+    link.type = 'font/woff2'; // Assuming woff2 as the default font type
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  });
+}
+
+// Run the font preload function when the page loads
+window.addEventListener('load', preloadFonts);
 
