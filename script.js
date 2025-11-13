@@ -72,39 +72,42 @@ function convertToRomaji(input) {
   return wanakana.toRomaji(input);
 }
 
-// Define the yoon syllable combinations and their splits
-const yoonMap = {
-  "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
-  "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
-  "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
-  "cha": ["chi", "ya"], "chu": ["chi", "yu"], "cho": ["chi", "yo"],
-  "nya": ["ni", "ya"], "nyu": ["ni", "yu"], "nyo": ["ni", "yo"],
-  "hya": ["hi", "ya"], "hyu": ["hi", "yu"], "hyo": ["hi", "yo"],
-  "mya": ["mi", "ya"], "myu": ["mi", "yu"], "myo": ["mi", "yo"],
-  "rya": ["ri", "ya"], "ryu": ["ri", "yu"], "ryo": ["ri", "yo"],
-  "ja": ["ji", "ya"], "ju": ["ji", "yu"], "jo": ["ji", "yo"],
-  "bya": ["bi", "ya"], "byu": ["bi", "yu"], "byo": ["bi", "yo"],
-  "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
-};
-
 // Function to convert Romaji to Hylian characters with special handling for yoon combinations
 function convertToHylian(input, glyphIndexMap) {
   let hylianText = "";
   let modifiedText = input.toLowerCase();
 
-  // Step 1: Replace yoon combinations with their corresponding syllable pairs
+    // Define the yoon syllable combinations and their splits
+    const yoonMap = {
+      "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
+      "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
+      "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
+      "cha": ["chi", "ya"], "chu": ["chi", "yu"], "cho": ["chi", "yo"],
+      "nya": ["ni", "ya"], "nyu": ["ni", "yu"], "nyo": ["ni", "yo"],
+      "hya": ["hi", "ya"], "hyu": ["hi", "yu"], "hyo": ["hi", "yo"],
+      "mya": ["mi", "ya"], "myu": ["mi", "yu"], "myo": ["mi", "yo"],
+      "rya": ["ri", "ya"], "ryu": ["ri", "yu"], "ryo": ["ri", "yo"],
+      "ja": ["ji", "ya"], "ju": ["ji", "yu"], "jo": ["ji", "yo"],
+      "bya": ["bi", "ya"], "byu": ["bi", "yu"], "byo": ["bi", "yo"],
+      "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
+    };
+
+  // Use a regular expression to find lone consonants followed by a consonant + vowel pair
+  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])(?![aeiou])/g, 'tsu');  // Double the consonant when followed by a valid vowel
+
+  //Replace yoon combinations with their corresponding syllable pairs
   for (let yoon in yoonMap) {
     const [firstSyllable, secondSyllable] = yoonMap[yoon];
     // Replace each yoon combination with its split syllables without spaces
     modifiedText = modifiedText.replace(new RegExp(yoon, 'g'), `${firstSyllable}${secondSyllable}`);
   }
 
-  // Step 2: Iterate through the modified text, checking syllables and applying mappings
+  //Iterate through the modified text, checking syllables and applying mappings
   let i = 0;
   while (i < modifiedText.length) {
     const currentChar = modifiedText[i];
 
-    // Step 2.1: Check for valid 3-letter syllables (e.g., "shi", "chi", "tsu", etc.)
+    //Check for valid 3-letter syllables (e.g., "shi", "chi", "tsu", etc.)
     if (i + 2 < modifiedText.length) {
       const threeSyllable = modifiedText.substring(i, i + 3);
       if (glyphIndexMap[threeSyllable]) {
@@ -114,7 +117,7 @@ function convertToHylian(input, glyphIndexMap) {
       }
     }
 
-    // Step 2.2: Check for valid 2-letter syllables (e.g., "ka", "ki", "ku", etc.)
+    //Check for valid 2-letter syllables (e.g., "ka", "ki", "ku", etc.)
     if (i + 1 < modifiedText.length) {
       const twoSyllable = modifiedText.substring(i, i + 2);
       if (glyphIndexMap[twoSyllable]) {
@@ -124,7 +127,7 @@ function convertToHylian(input, glyphIndexMap) {
       }
     }
 
-    // Step 2.3: Check for valid 1-letter syllables (e.g., "a", "i", "u", etc.)
+    //Check for valid 1-letter syllables (e.g., "a", "i", "u", etc.)
     if (glyphIndexMap[currentChar]) {
       hylianText += glyphIndexMap[currentChar];
       i++; // Move to the next character
@@ -203,49 +206,3 @@ function exportAsPNG() {
     }
   });
 }
-
-// Function to preload font files dynamically
-function preloadFonts() {
-  const fonts = [
-    'fonts/AlbwBotwHylian-Regular.woff2',
-    'fonts/TPHylian-GCNRegular.woff2',
-    'fonts/GerudoTypography.ttf',
-    'fonts/Hylian64Regular.woff2',
-    'fonts/AncientHylian-English3.woff2',
-    'fonts/SSAncientHylian.woff2',
-    'fonts/BotWSheikahRegular.woff2',
-    'fonts/RocknRollOne-Regular.woff2',
-    'fonts/ReggaeOne-Regular.woff2',
-    'fonts/MinishCap--v10.woff2',
-    'fonts/HyliaSerifBeta-Regular.woff2',
-    'fonts/HylianSymbols.woff2',
-
-    // Fallback formats (optional)
-    'fonts/AlbwBotwHylian-Regular.woff',
-    'fonts/TPHylian-GCNRegular.woff',
-    'fonts/GerudoTypography.ttf',
-    'fonts/Hylian64Regular.woff',
-    'fonts/AncientHylian-English3.woff',
-    'fonts/SSAncientHylian.woff',
-    'fonts/BotWSheikahRegular.woff',
-    'fonts/RocknRollOne-Regular.woff',
-    'fonts/ReggaeOne-Regular.woff',
-    'fonts/MinishCap--v10.woff',
-    'fonts/HyliaSerifBeta-Regular.woff',
-    'fonts/HylianSymbols.ttf'
-  ];
-
-  fonts.forEach((font) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = font;
-    link.as = 'font';
-    link.type = 'font/woff2'; // Assuming woff2 as the default font type
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
-}
-
-// Run the font preload function when the page loads
-window.addEventListener('load', preloadFonts);
-
