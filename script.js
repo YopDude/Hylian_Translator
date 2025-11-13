@@ -9,17 +9,20 @@ function translateText() {
   const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime";
 
   if (isJapaneseVersion) {
-    // Convert Input to Hylian using the appropriate glyph map
-    const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
-    const hylianText = convertToHylian(romajiText, glyphIndexMap);
-
     // Apply font styles based on version selection
     translatedTextElement.style.fontFamily = version === "windwaker" 
       ? "'Ancient Hylian', sans-serif"  // Windwaker Hylian font
       : "'Hylian 64', sans-serif";       // Ocarina Hylian font
 
-    // Update the translated text
-    translatedTextElement.textContent = hylianText;
+      if (isJapanese(inputText)) { //Fonts updated to accept Japanese. Only convert if English characters used
+        translatedTextElement.textContent = inputText;
+        } else {
+        // Convert Input to Hylian using the appropriate glyph map
+        const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
+        const hylianText = convertToHylian(romajiText, glyphIndexMap);
+        // Update the translated text
+        translatedTextElement.textContent = hylianText;
+        }
 
   } else {
     // Handle English-based (non-Japanese) Hylian translations
@@ -35,6 +38,11 @@ function translateText() {
     // Update the translated text
     translatedTextElement.textContent = translatedText;
   }
+}
+
+function isJapanese(input) {
+  // Check if at least one character in the string is Japanese
+  return /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(input);
 }
 
 // Function to get the glyph map based on version
@@ -92,8 +100,10 @@ function convertToHylian(input, glyphIndexMap) {
       "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
     };
 
+  // Use a regular expression to replace non-japanese letters
+  modifiedText = modifiedText.replace(/[lv]/g, match => match === 'l' ? 'r' : 'b');
   // Use a regular expression to find lone consonants followed by a consonant + vowel pair
-  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])(?![aeiou])/g, 'tsu');  // Double the consonant when followed by a valid vowel
+  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])(?=\1[aiueo])/g, 'tsu');  // Double the consonant when followed by a valid vowel
 
   //Replace yoon combinations with their corresponding syllable pairs
   for (let yoon in yoonMap) {
