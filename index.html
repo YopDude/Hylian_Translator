@@ -12,8 +12,9 @@
     <h1>Zelda Hylian Translator</h1>
     <p>Translate English text to various versions of Hylian!</p>
   </header>
-
-  <main>
+  <div class="content">
+    <section class="section odd">
+      <div class="text-block">
     <div>
       <label for="hylianVersion">Choose Hylian Version:</label>
       <select id="hylianVersion">
@@ -23,7 +24,7 @@
           <option value="windwaker">Wind Waker</option>
           <option value="twilightPrincess">Twilight Princess</option>
           <option value="skywardSword">Skyward Sword</option>
-          <option value="botw">Breath of the Wild</option>
+          <option selected="selected" value="botw">Breath of the Wild</option>
         </optgroup>
 
         <!-- Other Languages -->
@@ -44,7 +45,7 @@
     
     <button id="translateBtn">Translate</button>
 
-    <div>
+    <div><br>
       <label for="fontColor">Font Color: </label>
       <input type="color" id="fontColor" value="#000000">
       
@@ -52,26 +53,32 @@
         <span id="fontSizeValue">2em</span>
       </label>
       <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="3">
-    </div>
+    </div><br>
 
     <div>
       <p id="translatedText">Your translated text will appear here.</p>
     </div>
-  </main>
+</div>
+</section>
+</div>
 
   <footer>
-    <p>Note: All languages are being displayed via custom fonts and won't persist with copy&paste</p>
-    <a href="about.html">More info at the About page</a>
+    <p>Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
+    <p>More info at the: <a href="about.html" style="text-decoration: underline;">About page →</a></p>
     <br>
     <div>
       <button id="exportPNGBtn">Export as PNG ↓</button>
       <button id="downloadFontBtn">Download Font ↓</button>
+    <br>
     </div>
+  <div class="disclaimer">
+    <p><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo. All content on this site is for non-commercial, fan-based purposes only.</p>
+  </div>
   </footer>
 
-  <script src="WWHylianMap.js"></script> <!-- Load the WW glyph map -->
-  <script src="64HylianMap.js"></script> <!-- Load the N64 glyph map -->
-  <script src="fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
+  <script src="jsMapping/WWHylianMap.js"></script> <!-- Load the WW glyph map -->
+  <script src="jsMapping/64HylianMap.js"></script> <!-- Load the N64 glyph map -->
+  <script src="jsMapping/fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script><!-- Required for PNG export -->
   <script src="script.js"></script> <!-- Then load main script -->
 
