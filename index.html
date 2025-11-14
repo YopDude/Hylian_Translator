@@ -3,84 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zelda Hylian Translator</title>
+  <title id="pageTitle">Zelda Hylian Translator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   
   <header>
-    <h1>Zelda Hylian Translator</h1>
-    <p>Translate English text to various versions of Hylian!</p>
+    <h1 id="headerTitle">Zelda Hylian Translator</h1>
+    <p id="headerSubtitle">Translate English text to various versions of Hylian!</p>
+      <!-- Language Selector Icon -->
+      <div class="language-selector">
+        <span id="languageIcon" style="cursor: pointer;">
+          🇬🇧 / 🇯🇵 <!-- English and Japanese Flag Emojis -->
+        </span>
+      </div>
   </header>
   <div class="content">
     <section class="section odd">
       <div class="text-block">
-    <div>
-      <label for="hylianVersion">Choose Hylian Version:</label>
-      <select id="hylianVersion">
-        <!-- Hylian Languages -->
-        <optgroup label="Hylian Languages">
-          <option value="ocarinaOfTime">Ocarina of Time</option>
-          <option value="windwaker">Wind Waker</option>
-          <option value="twilightPrincess">Twilight Princess</option>
-          <option value="skywardSword">Skyward Sword</option>
-          <option selected="selected" value="botw">Breath of the Wild</option>
-        </optgroup>
+        <div>
+            <label for="hylianVersion" id="chooseHylianVersionLabel"></label>
+            <select id="hylianVersion">
+              <optgroup label="Hylian Languages">
+                <option value="ocarinaOfTime" id="chooseHylianVersionOcarina"></option>
+                <option value="windwaker" id="chooseHylianVersionWindwaker"></option>
+                <option value="twilightPrincess" id="chooseHylianVersionTwilightPrincess"></option>
+                <option value="skywardSword" id="chooseHylianVersionSkywardSword"></option>
+                <option selected="selected" value="botw" id="chooseHylianVersionBotw"></option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="gerudo" id="chooseHylianVersionGerudo"></option>
+                <option value="sheikah" id="chooseHylianVersionSheikah"></option>
+              </optgroup>
+            </select>
+        </div>
+        
+        <div>
+          <textarea id="inputText"rows="5" aria-label="Enter Text for Translation" placeholder="Type something to be translated here."></textarea>
+        </div>
+        
+        <button id="translateBtn">Translate</button>
 
-        <!-- Other Languages -->
-        <optgroup label="Other">
-          <option value="gerudo">Gerudo</option>
-          <option value="sheikah">Sheikah</option>
-        </optgroup>
-      </select>
-    </div>
-    
-    <div>
-      <textarea 
-        id="inputText" 
-        rows="5" 
-        aria-label="Enter Text for Translation" 
-        placeholder="Type something to be translated here."></textarea>
-    </div>
-    
-    <button id="translateBtn">Translate</button>
+        <div><br>
+          <label for="fontColor" id="fontColorLabel">Font Color: </label>
+          <input type="color" id="fontColor" value="#000000">
+          
+          <label for="fontSizeSlider" id="fontSizeLabel">Font Size: 
+            <span id="fontSizeValue">3em</span>
+          </label>
+          <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="3">
+        </div><br>
 
-    <div><br>
-      <label for="fontColor">Font Color: </label>
-      <input type="color" id="fontColor" value="#000000">
-      
-      <label for="fontSizeSlider">Font Size: 
-        <span id="fontSizeValue">3em</span>
-      </label>
-      <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="3">
-    </div><br>
-
-    <div>
-      <p id="translatedText">Your translated text will appear here.</p>
-    </div>
-</div>
-</section>
-</div>
+        <div>
+          <p id="translatedText">Your translated text will appear here.</p>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <footer>
-    <p>Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
-    <p>More info at the <a href="about.html" style="text-decoration: underline;">About page →</a></p>
-    <br>
+    <div>
+    <p id="disclaimerNote">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
+    <a id="aboutPageLink"href="about.html" style="text-decoration: underline;">About page →</a><br><br>
+    </div>
     <div>
       <button id="exportPNGBtn">Export as PNG ↓</button>
       <button id="downloadFontBtn">Download Font ↓</button>
-    <br>
     </div>
-  <div class="disclaimer">
-    <p><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
-  </div>
+    <div class="disclaimer">
+      <p><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
+    </div>
   </footer>
-
+    
+  <script src="jsMapping/translations.js"></script> <!-- Load the text content in selected language-->
   <script src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js"></script> <!-- Load the UMD version of Wanakana JPN-->
   <script src="jsMapping/WWHylianMap.js"></script> <!-- Load the WW glyph map -->
   <script src="jsMapping/64HylianMap.js"></script> <!-- Load the N64 glyph map -->
   <script src="jsMapping/fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- Required for PNG export -->
+  <script src="languageSet.js"></script> <!-- Change language -->
   <script src="script.js"></script> <!-- Then load main script -->
 
 </body>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Zelda Hylian Translator</title>
+  <title id="aboutPageTitle">About | Zelda Hylian Translator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -12,68 +12,77 @@
 
   <header>
     <a href="index.html">
-      <h1>Zelda Hylian Translator</h1>
+      <h1 id="aboutPageHeader">Zelda Hylian Translator</h1>
     </a>
+    <!-- Language Selector Icon -->
+    <div class="language-selector" style="text-align: right;">
+      <span id="languageIcon" style="cursor: pointer;">
+        🇬🇧 / 🇯🇵 <!-- English and Japanese Flag Emojis -->
+      </span>
+    </div>
   </header>
 
   <div class="content">
     <section class="section odd">
       <div class="text-block">
-        <p>Welcome to the <strong>Zelda Hylian Translator</strong>, a tool designed to help you convert English text into various versions of Hylian from The Legend of Zelda series.</p>
-        <h3 style="font-size: 1.3em;">Fonts for Japanese and English Input</h3>
-        <p>The <em>Wind Waker</em> and <em>Ocarina of Time</em> fonts are designed specifically to be used with both Japanese and English romaji input.</p>
-        <p>All other fonts in the collection, including those for <em>Twilight Princess</em>, <em>Skyward Sword</em>, and <em>Breath of the Wild</em>, are designed for use with the English alphabet, 1:1.</p>
+        <p id="aboutIntro">Welcome to the <strong>Zelda Hylian Translator</strong>, a tool designed to help you convert English text into various versions of Hylian from The Legend of Zelda series.</p>
+        <h3 id="fontsForJpAndEn">Fonts for Japanese and English Input</h3>
+        <p class="symbol" style="color: #b99f65;">b</p>
+        <p id="wwOoFonts">The <em>Wind Waker</em> and <em>Ocarina of Time</em> fonts are designed specifically to be used with both Japanese and English romaji input.</p>
+        <p id="otherFonts">All other fonts in the collection, including those for <em>Twilight Princess</em>, <em>Skyward Sword</em>, and <em>Breath of the Wild</em>, are designed for use with the English alphabet, 1:1.</p>
       </div>
       <img src="images/hylian-collage.jpg" alt="Hylian Font Example" width="46%">
     </section>
 
     <section class="section odd">
       <div class="text-block">
-        <h2>Downloads & Contributions</h2>
-        <p>All files, fonts, and related assets are available for download. You are welcome to fork the repository, make pull requests, or leave comments to contribute to the project. If you have improvements, suggestions, or new font additions, feel free to message or get involved through the <a href="https://github.com/YopDude/Hylian_Translator">GitHub repository</a></p>
+        <h2 id="downloadsContributionsTitle">Downloads & Contributions</h2>
+        <p class="symbol" style="color: #D84B16;">l</p>
+        <p id="contributionsText">All files, fonts, and related assets are available for download. You are welcome to fork the repository, make pull requests, or leave comments to contribute to the project. If you have improvements, suggestions, or new font additions, feel free to message or get involved through the  <a href="https://github.com/YopDude/Hylian_Translator">GitHub repo</a></p>
       </div>
       <img src="images/github.png" alt="GitHub Repository" width="46%">
     </section>
 
-    <!-- Fonts and Sources Section -->
     <section class="section even">
-      <h3 style="font-size: 1.3em;">Fonts by:</h3>
+      <h3 id="fontsByTitle">Fonts by:</h3>
       <div>
-      <p><strong>Sarinilli</strong> created the fonts for <em>Skyward Sword</em>, <em>Sheikah</em> and <em>Gerudo</em>: <a href="https://www.deviantart.com/sarinilli" target="_blank">DeviantArt</a>.</p>
-      <p><strong>Plaguelily</strong> created the font for <em>Breath of the Wild</em>: <a href="https://www.deviantart.com/plaguelily/art/aLBW-BotW-Hylian-font-848441076" target="_blank">DeviantArt</a>.</p>
-    </div>
+        <p id="sarinilliFontText"><strong>Sarinilli</strong> created the fonts for <em>Skyward Sword</em>, <em>Sheikah</em> and <em>Gerudo</em>: <a href="https://www.deviantart.com/sarinilli" target="_blank" id="sarinilliLink">DeviantArt</a>.</p>
+        <p id="plaguelilyFontText"><strong>Plaguelily</strong> created the font for <em>Breath of the Wild</em>: <a href="https://www.deviantart.com/plaguelily/art/aLBW-BotW-Hylian-font-848441076" target="_blank" id="plaguelilyLink">DeviantArt</a>.</p>
+      </div>
     </section>
 
-
-    <!-- Font Modifications Section -->
     <section class="section odd">
       <div class="text-block">
-        <h2>Font Modifications</h2>
-        <p>Some fonts were modified using <a href="https://www.glyphrstudio.com/" target="_blank">Glyphr Studio</a>, a free and open-source font editor, to fix missing glyphs or improve the assignment of Unicode values. These modifications were necessary to make sure all characters are properly rendered and accessible in the translator.</p>
+        <h2 id="fontModificationsTitle">Font Modifications</h2>
+        <p class="symbol" style="color: #1E3A5F;">n</p>
+        <p id="fontModificationsText">Some fonts were modified using <a href="https://www.glyphrstudio.com/" target="_blank" id="glyphrStudioLink">Glyphr Studio</a>, a free and open-source font editor, to fix missing glyphs or improve the assignment of Unicode values. These modifications were necessary to make sure all characters are properly rendered and accessible in the translator.</p>
       </div>
       <img src="images/glyphr.png" alt="Glyphr Studio Interface" width="47%">
     </section>
 
-    <!-- Additional Resources Section -->
     <section class="section even">
       <div class="text-block">
-        <h2>Additional Resources</h2>
-        <p>For those who are interested in learning more about Hylian, here are a few useful resources:</p>
-        <p><a href="https://zelda.fandom.com/wiki/Hylian_(Language)">Hylian Language Overview (Zelda Wiki)</a></p>
-        <p><a href="https://zeldauniverse.net/media/fonts/">Zelda Universe - Fonts</a></p>
-        <p><a href="https://www.omniglot.com/conscripts/hylian2.htm">Omniglot - Hylian Scripts</a></p>
+        <h2 id="additionalResourcesTitle">Additional Resources</h2>
+        <p class="symbol" style="color: #4B8B3B;">m</p>
+        <p id="hylianResourcesIntro">For those who are interested in learning more about Hylian, here are a few useful resources:</p>
+        <p><a href="https://zelda.fandom.com/wiki/Hylian_(Language)" id="zeldaWikiLink">Hylian Language Overview (Zelda Wiki)</a></p>
+        <p><a href="https://zeldauniverse.net/media/fonts/" id="zeldaUniverseLink">Zelda Universe - Fonts</a></p>
+        <p><a href="https://www.omniglot.com/conscripts/hylian2.htm" id="omniglotLink">Omniglot - Hylian Scripts</a></p>
       </div>
       <img src="images/intro.png" alt="Hylian Language Overview" width="47%">
     </section>
   </div>
 
-    <footer><a href="index.html">Back to Home ↩</a><br>
-  <div class="disclaimer">
-    <p><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
-  </div>
-</footer>
+  <footer>
+    <a href="index.html" id="backToHomeLink">Back to Home ↩</a><br>
+    <div class="disclaimer">
+      <p id="disclaimerText"><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
+    </div>
+  </footer>
+
+  <script src="jsMapping/translations.js"></script> <!-- Load the text content in selected language-->
+  <script src="languageSet.js"></script> <!-- Change language -->
 
 </body>
-
 </html>
 

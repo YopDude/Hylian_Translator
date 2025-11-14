@@ -2,6 +2,7 @@
 function translateText() {
   const inputText = document.getElementById("inputText").value; // Get the input text
   const romajiText = convertToRomaji(inputText); // Convert text to English
+  const normalizedText = normalizeString(romajiText); //Replace any accented letters, etc
   const version = document.getElementById("hylianVersion").value; // Get the selected Hylian version
   const translatedTextElement = document.getElementById("translatedText"); // Element where translation appears
 
@@ -31,7 +32,7 @@ function translateText() {
 
     // For English-to-Hylian translation, convert each character to the corresponding Hylian font character
     let translatedText = "";
-    for (let char of romajiText) {
+    for (let char of normalizedText) {
       translatedText += char;  // For simplicity, this can be modified to use a map like above if needed
     }
 
@@ -43,6 +44,11 @@ function translateText() {
 function isJapanese(input) {
   // Check if at least one character in the string is Japanese
   return /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(input);
+}
+
+function normalizeString(input) {
+  // Normalize to the decomposed form (NFD) and remove diacritical marks (accents)
+  return input.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 // Function to get the glyph map based on version
@@ -100,10 +106,12 @@ function convertToHylian(input, glyphIndexMap) {
       "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
     };
 
-  // Use a regular expression to replace non-japanese letters
+  // Replace non-japanese letters
   modifiedText = modifiedText.replace(/[lv]/g, match => match === 'l' ? 'r' : 'b');
-  // Use a regular expression to find lone consonants followed by a consonant + vowel pair
-  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])(?=\1[aiueo])/g, 'tsu');  // Double the consonant when followed by a valid vowel
+  // Find lone consonants followed by a consonant + vowel pair to substitute for double consonant char 'tsu'
+modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => {
+    return 'tsu' + consonant;  // Replace only the first consonant with 'tsu' and keep the second consonant
+});
 
   //Replace yoon combinations with their corresponding syllable pairs
   for (let yoon in yoonMap) {
@@ -147,7 +155,6 @@ function convertToHylian(input, glyphIndexMap) {
     // If no match was found, just skip the character
     i++; // Move to the next character
   }
-    //console.log(hylianText)
   return hylianText;
 }
 
@@ -216,3 +223,4 @@ function exportAsPNG() {
     }
   });
 }
+
