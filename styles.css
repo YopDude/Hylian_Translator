@@ -95,7 +95,11 @@ textarea {
   font-family: 'RocknRollOne', sans-serif;
   font-size: 2.5em;
   color: #333;
-  word-wrap: break-word;
+  word-wrap: break-word;  /* Allow breaking words with no space */
+  word-break: break-word; /* Force word break */
+  overflow-wrap: break-word; /* More reliable word breaking */
+  white-space: normal; /* Allow line breaks */
+  max-width: 100%; /* Prevent overflow */
 }
 
 /* Page Content Styles */
@@ -227,6 +231,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 90%; 
 }
 
 @font-face {
@@ -237,6 +242,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 130%; 
 }
 
 @font-face {
@@ -257,6 +263,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 105%; 
 }
 
 @font-face {
@@ -267,6 +274,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 120%; 
 }
 
 @font-face {
@@ -275,7 +283,7 @@ p.symbol{
        url('fonts/SSAncientHylian.woff') format('woff'),
        url('fonts/SSAncientHylian.ttf') format('truetype');
   font-weight: normal;
-  font-style: italic;
+  font-style: normal;
   font-display: swap;
 }
 
