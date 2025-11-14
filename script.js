@@ -161,16 +161,20 @@ modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[
 // Attach event listener to the translate button
 document.getElementById("translateBtn").addEventListener("click", translateText);
 
-// Function to update the font size
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const translatedTextContainer = document.getElementById("translatedText");
 
+// Function to update the font size and display it as a multiplier (x)
 fontSizeSlider.addEventListener("input", function() {
-  let fontSize = parseFloat(fontSizeSlider.value).toFixed(1); // Round to 1 decimal place
-  fontSize += "em"; // Add 'em' unit
-  translatedTextContainer.style.fontSize = fontSize; // Apply it to translatedText
-  document.getElementById("fontSizeValue").textContent = fontSize; // Update the displayed value
+  let fontSizeValue = parseFloat(fontSizeSlider.value).toFixed(1);  // Slider value, e.g., 3, 4, etc.
+
+  // Apply the font size in rem to the translatedText
+  translatedTextContainer.style.fontSize = fontSizeValue + "rem";  // Apply font size in rem
+
+  document.getElementById("fontSizeValue").textContent = fontSizeValue + "x"; // Display it as x
 });
+
+
 
 // Function to change the font color
 document.getElementById('fontColor').addEventListener('input', function (event) {

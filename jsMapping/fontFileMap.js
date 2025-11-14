@@ -1,6 +1,6 @@
 const fontFileMap = {
 "ocarinaOfTime":"Hylian64Regular",
-"windwaker":"AncientHylian-English2",
+"windwaker":"AncientHylian-English",
 "twilightPrincess":"TPHylian-GCNRegular",
 "skywardSword":"SSAncientHylian",
 "botw":"AlbwBotwHylian-Regular",
