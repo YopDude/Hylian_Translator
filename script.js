@@ -165,11 +165,19 @@ function convertToHylian(input, glyphIndexMap) {
   return hylianText;
 }
 
+//Don't translate if inputText area is still blank
+function inputTextReady() {
+  const inputTextElement = document.getElementById("inputText");
+  if (inputTextElement.value.length !== 0){
+    translateText();
+  }
+}
+
 // Attach event listener to the translate button
-document.getElementById("translateBtn").addEventListener("click", translateText);
+document.getElementById("translateBtn").addEventListener("click", inputTextReady);
 
 // Add an event listener for the <select> element 'change' event
-document.getElementById('hylianVersion').addEventListener('change', translateText);
+document.getElementById('hylianVersion').addEventListener('change', inputTextReady);
 
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const translatedTextContainer = document.getElementById("translatedText");
@@ -219,16 +227,31 @@ function downloadFont(fontUrl, fontName) {
   link.click();  // Programmatically click the link to trigger the download
 }
 
+// Function to get translated text for the 'translatedText' key
+function getTranslatedText(languageCode) {
+  // Check if the language code exists in the translations object
+  if (translations[languageCode] && translations[languageCode].translatedText) {
+    return translations[languageCode].translatedText;
+  } else {
+    console.error(`Translation not found for language code: ${languageCode}`);
+    return null; // or some default value if needed
+  }
+}
+
 // Attach event listeners to export buttons (add buttons to your HTML)
 document.getElementById('exportPNGBtn').addEventListener('click', exportAsPNG);
 
 function exportAsPNG() {
   const translatedTextElement = document.getElementById("translatedText");
   const computedStyle = window.getComputedStyle(translatedTextElement);
+  const englishText = getTranslatedText("en");
+  const japaneseText = getTranslatedText("jp");
 
-  // Check if translatedTextElement is not empty, or the font hasn't been translated
+  // Check if translatedTextElement is not empty, or still hasn't been translated
 if (translatedTextElement.textContent.length !== 0 &&
-    !computedStyle.fontFamily.includes("RocknRollOne")) {
+    !computedStyle.fontFamily.includes("RocknRollOne") &&
+    translatedTextElement.textContent !== englishText &&
+    translatedTextElement.textContent !== japaneseText) {
     // Use html2canvas to take a snapshot of the translated text
     html2canvas(translatedTextElement, {
       onrendered: function(canvas) {
