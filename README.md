@@ -8,7 +8,7 @@ The site is live at https://yopdude.github.io/Hylian_Translator/
 - **Hylian Translations**: Translate English and Japanese (Hiragana and Katakana) text into different versions of the Hylian language from various *Zelda* games, including:
   - **Ocarina of Time**, Majora's Mask (N64)
   - **Wind Waker** (GameCube/Wii U),  Four Swords Adventures (GameCube), The Minish Cap (GBA), Phantom Hourglass and Spirit Tracks (DS)
-  - **Twilight Princess** (GameCube; note: the Wii version is mirrored for right-handed Link)
+  - **Twilight Princess** (GameCube/Wii) (includes wii version, which is mirrored for right-handed Link)
   - **Skyward Sword** (Wii)
   - **Breath of the Wild** (Switch/Wii U), Tears of the Kingdom (Switch),  A Link Between Worlds, Tri Force Heroes (3DS)
   - **Gerudo** (used in *Ocarina of Time*, *Breath of the Wild*)
