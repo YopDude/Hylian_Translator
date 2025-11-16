@@ -31,6 +31,7 @@ document.getElementById('languageIcon').addEventListener('click', function() {
   
   // Update placeholder text for the textarea based on the new language
   updatePlaceholder(newLanguage);
+  resetTranslatedText(newLanguage);
 });
 
 // Function to update the text content of the page based on the selected language
@@ -57,3 +58,8 @@ function updatePlaceholder(language) {
   }
 }
 
+function resetTranslatedText(language) {
+  const translatedTextElement = document.getElementById("translatedText");
+  translatedTextElement.innerHTML = getTranslatedText(language);
+  translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
+}
