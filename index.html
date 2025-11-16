@@ -5,6 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">Zelda Hylian Translator</title>
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Meta Tags for SEO -->
+  <meta name="description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!">
+  <meta name="keywords" content="Zelda, Hylian Translator, Zelda translator, Hylian language, Zelda fonts, Ocarina of Time, Wind Waker, Twilight Princess, Sheikah, Gerudo, Hylian alphabet">
+  <meta name="author" content="Hylian Translator">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Zelda Hylian Translator">
+  <meta property="og:description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!">
+  <meta property="og:image" content="images/Hylian_Translator_Home.png">
+  <meta property="og:url" content="https://yopdude.github.io/Hylian_Translator/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zelda Hylian Translator">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter Card Tags (for Twitter Preview) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zelda Hylian Translator">
+  <meta name="twitter:description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!">
+  <meta name="twitter:image" content="https://example.com/images/zelda-hylian-translator.jpg">
   <!-- Preload the fonts (using .woff2 format) -->
   <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/TPHylian-GCNRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -60,26 +81,25 @@
             <span id="fontSizeValue">2.5x</span>
           </label>
           <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="2.5">
-        </div><br>
-
+        </div>
         <div>
           <p id="translatedText">Your translated text will appear here.</p>
         </div>
+    <div>
+      <button id="exportPNGBtn">Export as PNG ↓</button>
+    </div>
       </div>
     </section>
   </div>
 
   <footer>
     <div>
-    <p id="disclaimerNote">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
+    <p id="noteText">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
     <a id="aboutPageLink"href="about.html" style="text-decoration: underline;">About page →</a><br><br>
-    </div>
-    <div>
-      <button id="exportPNGBtn">Export as PNG ↓</button>
       <button id="downloadFontBtn">Download Font ↓</button>
     </div>
     <div class="disclaimer">
-      <p><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
+      <p id="disclaimerText"><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
     </div>
   </footer>
     
