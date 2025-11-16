@@ -303,6 +303,17 @@ p.symbol{
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Mudoran';
+  src: url('fonts/MudoranRegular.woff2') format('woff2'),
+       url('fonts/MudoranRegular.woff') format('woff'),
+       url('fonts/MudoranRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 140%;
+}
+
 /*Styling fonts*/
 @font-face {
   font-family: 'RocknRollOne';
