@@ -8,6 +8,7 @@ function translateText() {
 
   // Check for versions that require Romaji translation (Japanese-based)
   const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime";
+  const inputTextWithBreaks = inputText.split('\n').join('<br>');
 
   if (isJapaneseVersion) {
     // Apply font styles based on version selection
@@ -16,13 +17,14 @@ function translateText() {
       : "'Hylian 64', sans-serif";       // Ocarina Hylian font
 
       if (isJapanese(inputText)) { //Fonts updated to accept Japanese. Only convert if English characters used
-        translatedTextElement.textContent = inputText;
+      translatedTextElement.innerHTML = inputTextWithBreaks; // Use innerHTML to preserve line breaks
         } else {
         // Convert Input to Hylian using the appropriate glyph map
         const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
         const hylianText = convertToHylian(romajiText, glyphIndexMap);
+console.log(hylianText);
         // Update the translated text
-        translatedTextElement.textContent = hylianText;
+        translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
         }
 
   } else {
@@ -36,8 +38,8 @@ function translateText() {
       translatedText += char;  // For simplicity, this can be modified to use a map like above if needed
     }
 
-    // Update the translated text
-    translatedTextElement.textContent = translatedText;
+    // Update the translated text and preserve line breaks
+    translatedTextElement.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
   }
 }
 
@@ -109,8 +111,8 @@ function convertToHylian(input, glyphIndexMap) {
   // Replace non-japanese letters
   modifiedText = modifiedText.replace(/[lv]/g, match => match === 'l' ? 'r' : 'b');
   // Find lone consonants followed by a consonant + vowel pair to substitute for double consonant char 'tsu'
-modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => {
-    return 'tsu' + consonant;  // Replace only the first consonant with 'tsu' and keep the second consonant
+  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => {
+  return 'tsu' + consonant;  // Replace only the first consonant with 'tsu' and keep the second consonant
 });
 
   //Replace yoon combinations with their corresponding syllable pairs
@@ -152,7 +154,12 @@ modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[
       continue;
     }
 
-    // If no match was found, just skip the character
+    // If no match was found, just skip the character unless newLine
+    if (currentChar === "\n") {
+      hylianText += "\n";
+      i++; // Move to the next character
+      continue;
+    }
     i++; // Move to the next character
   }
   return hylianText;
@@ -160,6 +167,9 @@ modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[
 
 // Attach event listener to the translate button
 document.getElementById("translateBtn").addEventListener("click", translateText);
+
+// Add an event listener for the <select> element 'change' event
+document.getElementById('hylianVersion').addEventListener('change', translateText);
 
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const translatedTextContainer = document.getElementById("translatedText");
@@ -212,19 +222,24 @@ function downloadFont(fontUrl, fontName) {
 // Attach event listeners to export buttons (add buttons to your HTML)
 document.getElementById('exportPNGBtn').addEventListener('click', exportAsPNG);
 
-// Function to export the translation as PNG (for older html2canvas versions)
 function exportAsPNG() {
   const translatedTextElement = document.getElementById("translatedText");
-  
-  // Use html2canvas to take a snapshot of the translated text
-  html2canvas(translatedTextElement, {
-    onrendered: function(canvas) {
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement('a');
-      link.href = imgData;
-      link.download = 'translatedText.png';
-      link.click();
-    }
-  });
-}
+  const computedStyle = window.getComputedStyle(translatedTextElement);
 
+  // Check if translatedTextElement is not empty, or the font hasn't been translated
+if (translatedTextElement.textContent.length !== 0 &&
+    !computedStyle.fontFamily.includes("RocknRollOne")) {
+    // Use html2canvas to take a snapshot of the translated text
+    html2canvas(translatedTextElement, {
+      onrendered: function(canvas) {
+        const imgData = canvas.toDataURL("image/png");
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'translatedText.png';
+        link.click();
+      }
+    });
+  } else {
+    console.log("No translated text to export.");
+  }
+}

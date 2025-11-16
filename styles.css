@@ -1,4 +1,8 @@
 /* Global Styles */
+html {
+  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: auto; /* Allow vertical scroll */
+}
 body {
   font-family: 'RocknRollOne', sans-serif;
   background-color: #f0f0f0; /* Default background */
@@ -6,13 +10,15 @@ body {
   margin: 0;
   text-align: center;
   background-image: linear-gradient(rgba(2, 38, 32, 0.90), rgba(10, 126, 163, 0.75)), url('images/pattern-triforce.png');
+  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: auto; /* Allow vertical scroll */
 }
 
 /* Ensure header is relatively positioned */
 header {
   position: relative;  /* Needed for absolute positioning of child elements */
   width: 100%;
-  padding: 20px 0;
+  padding: 0px 0;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black */
   color: #f7f1e1; /* Off-white (cream) text color */
@@ -35,7 +41,7 @@ header::after {
 
 /* Position the language selector to the right */
 .language-selector {
-  padding: 0 30px;
+  padding: 10px 30px;
   text-align: right;  /* Vertically center the flags */
 }
 
@@ -46,7 +52,7 @@ header::after {
 }
 
 footer {
-  padding: 20px 0;
+  padding: 15px 0;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black for header */
   width: 100%;
@@ -106,11 +112,11 @@ textarea {
 .content {
   max-width: 75%;
   margin: 30px auto;
-  padding: 20px;
+  padding: 0px;
 }
 
 .section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   background-color: #f7f1e1; /* Off-white (cream) background */
   border: 2px solid #c5a200; /* Gold borders around each block */
   border-radius: 8px;

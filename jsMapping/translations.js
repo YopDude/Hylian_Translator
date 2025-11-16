@@ -15,7 +15,7 @@ const translations = {
     "translateBtn": "Translate",
     "fontColorLabel": "Font Color: ",
     "translatedText": "Your translated text will appear here.",
-    "disclaimerNote": "Note: All languages are being displayed via custom fonts and won't persist with copy&paste.",
+    "noteText": "Note: All languages are being displayed via custom fonts and won't persist with copy&paste.",
     "aboutPageLink": "About page →",
     "exportPNGBtn": "Export as PNG ↓",
     "downloadFontBtn": "Download Font ↓",
@@ -39,7 +39,7 @@ const translations = {
     "zeldaUniverseLink": "Zelda Universe - Fonts",
     "omniglotLink": "Omniglot - Hylian Scripts",
     "backToHomeLink": "Back to Home ↩",
-    "disclaimerText": "The Legend of Zelda and all associated characters, trademarks, and logos are the property of Nintendo. This fan site is not affiliated with, endorsed, or sponsored by Nintendo."
+    "disclaimerText": "*The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo."
   },
   "jp": {
     "pageTitle": "ゼルダ ハイリアン 翻訳者",
@@ -57,7 +57,7 @@ const translations = {
     "translateBtn": "翻訳",
     "fontColorLabel": "フォントの色: ",
     "translatedText": "翻訳されたテキストがここに表示されます。",
-    "disclaimerNote": "注: すべての言語はカスタムフォントで表示され、コピー＆ペーストには持続しません。",
+    "noteText": "注: すべての言語はカスタムフォントで表示され、コピー＆ペーストには持続しません。",
     "aboutPageLink": "詳細はAboutページへ →",
     "exportPNGBtn": "PNGとしてエクスポート ↓",
     "downloadFontBtn": "フォントをダウンロード ↓",
