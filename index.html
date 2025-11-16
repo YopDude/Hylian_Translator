@@ -29,6 +29,7 @@
   <!-- Preload the fonts (using .woff2 format) -->
   <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/TPHylian-GCNRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/TPHylian-WiiRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/GerudoTypography.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/Hylian64Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/AncientHylian-English.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -43,9 +44,7 @@
     <p id="headerSubtitle">Translate English text to various versions of Hylian!</p>
       <!-- Language Selector Icon -->
       <div class="language-selector">
-        <span id="languageIcon" style="cursor: pointer;">
-          🇬🇧 / 🇯🇵 <!-- English and Japanese Flag Emojis -->
-        </span>
+        <img id="languageIcon" src="images/en-jp.jpg" alt="Change Language" style="cursor: pointer;">
       </div>
   </header>
   <div class="content">
@@ -68,12 +67,21 @@
               </optgroup>
             </select>
         </div>
-        
+        <!-- Radio Buttons for Twilight Princess -->
+        <div id="twilightPrincessOptions" style="display: none;">
+          <label>
+            <input type="radio" name="tpVersion" value="gamecube" id="gamecubeOption" checked>
+            GameCube (original)
+          </label>
+          <br>
+          <label>
+            <input type="radio" name="tpVersion" value="wii" id="wiiOption">
+            Wii (mirrored)
+          </label>
+        </div>
         <div>
           <textarea id="inputText"rows="5" aria-label="Enter Text for Translation" placeholder="Type something to be translated here."></textarea>
         </div>
-        
-        <button id="translateBtn">Translate</button>
 
         <div><br>
           <label for="fontColor" id="fontColorLabel">Font Color: </label>

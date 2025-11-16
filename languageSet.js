@@ -32,6 +32,8 @@ document.getElementById('languageIcon').addEventListener('click', function() {
   // Update placeholder text for the textarea based on the new language
   updatePlaceholder(newLanguage);
   resetTranslatedText(newLanguage);
+  // Update radio button labels for Twilight Princess
+  updateRadioLabels(newLanguage);
 });
 
 // Function to update the text content of the page based on the selected language
@@ -62,4 +64,18 @@ function resetTranslatedText(language) {
   const translatedTextElement = document.getElementById("translatedText");
   translatedTextElement.innerHTML = getTranslatedText(language);
   translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
+}
+
+// Function to update the radio button labels
+function updateRadioLabels(language) {
+  const gameCubeRadio = document.getElementById("gamecubeOption");
+  const wiiRadio = document.getElementById("wiiOption");
+
+  if (gameCubeRadio) {
+    gameCubeRadio.innerHTML = translations[language]["gamecubeOption"];
+  }
+
+  if (wiiRadio) {
+    wiiRadio.innerHTML = translations[language]["wiiOption"];
+  }
 }
