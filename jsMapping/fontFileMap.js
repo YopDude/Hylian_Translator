@@ -5,5 +5,6 @@ const fontFileMap = {
 "skywardSword":"SSAncientHylian",
 "botw":"AlbwBotwHylian-Regular",
 "gerudo":"GerudoTypography",
-"sheikah":"BotWSheikahRegular"
+"sheikah":"BotWSheikahRegular",
+"mudoran":"MudoranRegular"
 }

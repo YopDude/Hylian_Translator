@@ -11,6 +11,7 @@ const translations = {
     "chooseHylianVersionBotw": "Breath of the Wild",
     "chooseHylianVersionGerudo": "Gerudo",
     "chooseHylianVersionSheikah": "Sheikah",
+    "chooseHylianVersionMudoran": "Mudoran",
     "inputTextPlaceholder": "Type something to be translated here.",
     "translateBtn": "Translate",
     "fontColorLabel": "Font Color: ",
@@ -38,6 +39,7 @@ const translations = {
     "zeldaWikiLink": "Hylian Language Overview (Zelda Wiki)",
     "zeldaUniverseLink": "Zelda Universe - Fonts",
     "omniglotLink": "Omniglot - Hylian Scripts",
+    "mudoranLink": "Mudoran - The mysterious ancient Hylian script",
     "backToHomeLink": "Back to Home ↩",
     "disclaimerText": "*The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo."
   },
@@ -53,6 +55,7 @@ const translations = {
     "chooseHylianVersionBotw": "ブレスオブザワイルド",
     "chooseHylianVersionGerudo": "ゲルド",
     "chooseHylianVersionSheikah": "シーカー",
+    "chooseHylianVersionMudoran": "ムドラン",
     "inputTextPlaceholder": "ここに翻訳するテキストを入力してください。",
     "translateBtn": "翻訳",
     "fontColorLabel": "フォントの色: ",
@@ -80,6 +83,7 @@ const translations = {
     "zeldaWikiLink": "ハイリアン語概要 (ゼルダウィキ)",
     "zeldaUniverseLink": "ゼルダユニバース - フォント",
     "omniglotLink": "Omniglot - ハイリアン文字",
+    "mudoranLink": "ムドラン - 謎に包まれた古代ハイリア文字",
     "backToHomeLink": "ホームへ戻る ↩",
     "disclaimerText": "ゼルダの伝説および関連するキャラクター、商標、ロゴはすべて任天堂の所有です。このファンサイトは、任天堂とは提携していません。"
   }

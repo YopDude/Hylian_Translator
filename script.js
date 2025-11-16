@@ -1,14 +1,13 @@
 // Function to handle font change and translation logic
 function translateText() {
   const inputText = document.getElementById("inputText").value; // Get the input text
-  const romajiText = convertToRomaji(inputText); // Convert text to English
-  const normalizedText = normalizeString(romajiText); //Replace any accented letters, etc
+  const romajiText = convertToRomaji(inputText); // Convert Japanese to English for English-based fonts
+  const normalizedText = normalizeString(romajiText); // Replace any accented letters, etc
   const version = document.getElementById("hylianVersion").value; // Get the selected Hylian version
   const translatedTextElement = document.getElementById("translatedText"); // Element where translation appears
 
   // Check for versions that require Romaji translation (Japanese-based)
   const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime";
-  const inputTextWithBreaks = inputText.split('\n').join('<br>');
 
   if (isJapaneseVersion) {
     // Apply font styles based on version selection
@@ -16,18 +15,22 @@ function translateText() {
       ? "'Ancient Hylian', sans-serif"  // Windwaker Hylian font
       : "'Hylian 64', sans-serif";       // Ocarina Hylian font
 
-      if (isJapanese(inputText)) { //Fonts updated to accept Japanese. Only convert if English characters used
-      translatedTextElement.innerHTML = inputTextWithBreaks; // Use innerHTML to preserve line breaks
-        } else {
-        // Convert Input to Hylian using the appropriate glyph map
-        const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
-        const hylianText = convertToHylian(romajiText, glyphIndexMap);
-console.log(hylianText);
-        // Update the translated text
-        translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
-        }
-
-  } else {
+    if (isJapanese(inputText)) { // Fonts updated to accept Japanese. Only convert if English characters used
+      translatedTextElement.innerHTML = inputText.split('\n').join('<br>'); // Use innerHTML to preserve line breaks
+    } else {
+      // Convert Input to Hylian using the appropriate glyph map
+      const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
+      const hylianText = convertToHylian(romajiText, glyphIndexMap);
+      //console.log(hylianText);
+      // Update the translated text
+      translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
+    }
+  }
+  else if (version === "mudoran") { // Use 'joke' translation
+    translatedTextElement.style.fontFamily = getFontFamilyForVersion(version);
+    mudoranify(inputText, translatedTextElement);
+  }
+  else {
     // Handle English-based (non-Japanese) Hylian translations
     // Dynamically change the font based on selected version (non-Japanese options)
     translatedTextElement.style.fontFamily = getFontFamilyForVersion(version);
@@ -78,6 +81,8 @@ function getFontFamilyForVersion(version) {
       return "'Gerudo Typography', sans-serif";
     case "sheikah":
       return "'BotW Sheikah', sans-serif";
+    case "mudoran":
+      return "'Mudoran', sans-serif";
     default:
       return "sans-serif"; // Default font for fallback
   }
@@ -165,6 +170,26 @@ function convertToHylian(input, glyphIndexMap) {
   return hylianText;
 }
 
+function mudoranify(input, element) {
+  // Choose the correct set of choices based on the language
+  const choices = isJapanese(input) ? ["D", "E", "F"] : ["A", "B", "C"];
+  // Translate the text
+  let translatedText = "";
+  for (let char of input) {
+    if (/[a-zA-Z]/.test(char)) {  
+      // If the character is an English letter, replace it with a random choice
+      translatedText += choices[Math.floor(Math.random() * choices.length)];
+    } else if (/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(char)) {
+      // If the character is a Japanese letter (Hiragana, Katakana), replace it with a random choice
+      translatedText += choices[Math.floor(Math.random() * choices.length)];
+    } else {
+      // For any other character (punctuation, numbers, spaces), leave it unchanged
+      translatedText += char;
+    }
+  }
+    element.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
+}
+
 //Don't translate if inputText area is still blank
 function inputTextReady() {
   const inputTextElement = document.getElementById("inputText");
@@ -191,8 +216,6 @@ fontSizeSlider.addEventListener("input", function() {
 
   document.getElementById("fontSizeValue").textContent = fontSizeValue + "x"; // Display it as x
 });
-
-
 
 // Function to change the font color
 document.getElementById('fontColor').addEventListener('input', function (event) {
@@ -266,3 +289,4 @@ if (translatedTextElement.textContent.length !== 0 &&
     console.log("No translated text to export.");
   }
 }
+
