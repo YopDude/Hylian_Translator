@@ -1,17 +1,84 @@
+// Declare DOM elements and other frequently accessed variables at the top
+const inputTextElement = document.getElementById("inputText");
+const translatedTextElement = document.getElementById("translatedText");
+const hylianVersionElement = document.getElementById("hylianVersion");
+const gamecubeOption = document.getElementById('gamecubeOption');
+const wiiOption = document.getElementById('wiiOption');
+const twilightPrincessOptions = document.getElementById('twilightPrincessOptions');
+const fontSizeSlider = document.getElementById("fontSizeSlider");
+const fontColorInput = document.getElementById('fontColor');
+const translatedTextContainer = document.getElementById("translatedText");
+const fontSizeValueElement = document.getElementById("fontSizeValue");
+const exportPngElement = document.getElementById('exportPNGBtn');
+const downloadFontElement = document.getElementById('downloadFontBtn');
+
+// Event listeners
+inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
+hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
+
+// Event listener for the dropdown change
+hylianVersionElement.addEventListener('change', function () {
+  const selectedVersion = this.value;
+  showTwilight(selectedVersion);  // Call the function to show or hide Twilight Princess options based on the selection
+});
+
+// Check the selected version when the page loads or refreshes
+window.addEventListener('load', function () {
+  const selectedVersion = hylianVersionElement.value;
+
+  // If "Twilight Princess" is selected, run showTwilight
+  if (selectedVersion === 'twilightPrincess') {
+    showTwilight(selectedVersion);
+  }
+
+  // If the text input is not empty on reload, run translate function
+  inputTextReady();
+});
+
+// Change the font when a radio button is selected
+gamecubeOption.addEventListener('change', function () {
+  if (this.checked) {
+    translateText();
+  }
+});
+
+wiiOption.addEventListener('change', function () {
+  if (this.checked) {
+    translateText();
+  }
+});
+
+// Function to update the font size and display it as a multiplier (x)
+fontSizeSlider.addEventListener("input", function () {
+  let fontSizeValue = parseFloat(fontSizeSlider.value).toFixed(1);  // Slider value, e.g., 3, 4, etc.
+
+  // Apply the font size in rem to the translatedText
+  translatedTextElement.style.fontSize = fontSizeValue + "rem";  // Apply font size in rem
+  fontSizeValueElement.textContent = fontSizeValue + "x"; // Display it as x
+});
+
+// Function to change the font color
+fontColorInput.addEventListener('input', function (event) {
+  const color = event.target.value;
+  translatedTextElement.style.color = color;
+});
+
+// Attach event listeners to export buttons (add buttons to your HTML)
+exportPngElement.addEventListener('click', exportAsPNG);
+
 // Function to handle font change and translation logic
 function translateText() {
-  const inputText = document.getElementById("inputText").value; // Get the input text
+  const inputText = inputTextElement.value; // Get the input text
   const romajiText = convertToRomaji(inputText); // Convert Japanese to English for English-based fonts
   const normalizedText = normalizeString(romajiText); // Replace any accented letters, etc
-  const version = document.getElementById("hylianVersion").value; // Get the selected Hylian version
-  const translatedTextElement = document.getElementById("translatedText"); // Element where translation appears
+  const version = hylianVersionElement.value; // Get the selected Hylian version
 
   // Check for versions that require Romaji translation (Japanese-based)
   const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime";
 
   if (isJapaneseVersion) {
     // Apply font styles based on version selection
-    translatedTextElement.style.fontFamily = version === "windwaker" 
+    translatedTextElement.style.fontFamily = version === "windwaker"
       ? "'Ancient Hylian', sans-serif"  // Windwaker Hylian font
       : "'Hylian 64', sans-serif";       // Ocarina Hylian font
 
@@ -21,6 +88,7 @@ function translateText() {
       // Convert Input to Hylian using the appropriate glyph map
       const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
       const hylianText = convertToHylian(romajiText, glyphIndexMap);
+
       // Update the translated text
       translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
     }
@@ -31,7 +99,6 @@ function translateText() {
   }
   else {
     // Handle English-based (non-Japanese) Hylian translations
-    // Dynamically change the font based on selected version (non-Japanese options)
     translatedTextElement.style.fontFamily = getFontFamilyForVersion(version);
 
     // For English-to-Hylian translation, convert each character to the corresponding Hylian font character
@@ -45,13 +112,13 @@ function translateText() {
   }
 }
 
+// Helper function to check if the input contains Japanese characters
 function isJapanese(input) {
-  // Check if at least one character in the string is Japanese
   return /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(input);
 }
 
+// Function to normalize string (remove accents, etc.)
 function normalizeString(input) {
-  // Normalize to the decomposed form (NFD) and remove diacritical marks (accents)
   return input.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
@@ -66,24 +133,19 @@ function getGlyphIndexMap(version) {
       return {};  // Default empty map if no valid version
   }
 }
+
 // Function to get the font family based on the version
 function getFontFamilyForVersion(version) {
-  const gamecubeOption = document.getElementById('gamecubeOption');
-  const wiiOption = document.getElementById('wiiOption');
-  const textContainer = document.getElementById('translatedText');
-  textContainer.classList.remove('mirror-text'); // Remove mirror effect
+  translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
   
   switch (version) {
     case "twilightPrincess":
       if (gamecubeOption.checked) {
-        // If the GameCube radio button is selected
-        textContainer.classList.remove('mirror-text'); // Remove mirror effect
+        translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
       } else if (wiiOption.checked) {
-        // If the Wii radio button is selected
-        textContainer.classList.add('mirror-text'); // Add mirror effect
+        translatedTextElement.classList.add('mirror-text'); // Add mirror effect
       }
-        return "'TP Hylian - GCN', sans-serif";
-      break;
+      return "'TP Hylian - GCN', sans-serif";
 
     case "skywardSword":
       return "'SS Ancient Hylian', sans-serif";
@@ -100,8 +162,8 @@ function getFontFamilyForVersion(version) {
   }
 }
 
+// Function to convert input to Romaji using wanakana
 function convertToRomaji(input) {
-  // Convert Hiragana or Katakana to Romaji
   return wanakana.toRomaji(input);
 }
 
@@ -110,205 +172,122 @@ function convertToHylian(input, glyphIndexMap) {
   let hylianText = "";
   let modifiedText = input.toLowerCase();
 
-    // Define the yoon syllable combinations and their splits
-    const yoonMap = {
-      "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
-      "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
-      "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
-      "cha": ["chi", "ya"], "chu": ["chi", "yu"], "cho": ["chi", "yo"],
-      "nya": ["ni", "ya"], "nyu": ["ni", "yu"], "nyo": ["ni", "yo"],
-      "hya": ["hi", "ya"], "hyu": ["hi", "yu"], "hyo": ["hi", "yo"],
-      "mya": ["mi", "ya"], "myu": ["mi", "yu"], "myo": ["mi", "yo"],
-      "rya": ["ri", "ya"], "ryu": ["ri", "yu"], "ryo": ["ri", "yo"],
-      "ja": ["ji", "ya"], "ju": ["ji", "yu"], "jo": ["ji", "yo"],
-      "bya": ["bi", "ya"], "byu": ["bi", "yu"], "byo": ["bi", "yo"],
-      "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
-    };
+  // Define the yoon syllable combinations and their splits
+  const yoonMap = {
+    "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
+    "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
+    "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
+    "cha": ["chi", "ya"], "chu": ["chi", "yu"], "cho": ["chi", "yo"],
+    "nya": ["ni", "ya"], "nyu": ["ni", "yu"], "nyo": ["ni", "yo"],
+    "hya": ["hi", "ya"], "hyu": ["hi", "yu"], "hyo": ["hi", "yo"],
+    "mya": ["mi", "ya"], "myu": ["mi", "yu"], "myo": ["mi", "yo"],
+    "rya": ["ri", "ya"], "ryu": ["ri", "yu"], "ryo": ["ri", "yo"],
+    "ja": ["ji", "ya"], "ju": ["ji", "yu"], "jo": ["ji", "yo"],
+    "bya": ["bi", "ya"], "byu": ["bi", "yu"], "byo": ["bi", "yo"],
+    "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
+  };
 
   // Replace non-japanese letters
   modifiedText = modifiedText.replace(/[lv]/g, match => match === 'l' ? 'r' : 'b');
-  // Find lone consonants followed by a consonant + vowel pair to substitute for double consonant char 'tsu'
-  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => {
-  return 'tsu' + consonant;  // Replace only the first consonant with 'tsu' and keep the second consonant
-});
+  modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => 'tsu' + consonant);
 
-  //Replace yoon combinations with their corresponding syllable pairs
+  // Replace yoon combinations with their corresponding syllable pairs
   for (let yoon in yoonMap) {
     const [firstSyllable, secondSyllable] = yoonMap[yoon];
-    // Replace each yoon combination with its split syllables without spaces
     modifiedText = modifiedText.replace(new RegExp(yoon, 'g'), `${firstSyllable}${secondSyllable}`);
   }
 
-  //Iterate through the modified text, checking syllables and applying mappings
+  // Process each character and apply glyph mappings
   let i = 0;
   while (i < modifiedText.length) {
     const currentChar = modifiedText[i];
 
-    //Check for valid 3-letter syllables (e.g., "shi", "chi", "tsu", etc.)
+    // Check for 3-letter syllables (e.g., "shi", "chi", "tsu")
     if (i + 2 < modifiedText.length) {
       const threeSyllable = modifiedText.substring(i, i + 3);
       if (glyphIndexMap[threeSyllable]) {
         hylianText += glyphIndexMap[threeSyllable];
-        i += 3; // Skip the next two characters as we've processed a 3-character syllable
+        i += 3;
         continue;
       }
     }
 
-    //Check for valid 2-letter syllables (e.g., "ka", "ki", "ku", etc.)
+    // Check for 2-letter syllables (e.g., "ka", "ki", "ku")
     if (i + 1 < modifiedText.length) {
       const twoSyllable = modifiedText.substring(i, i + 2);
       if (glyphIndexMap[twoSyllable]) {
         hylianText += glyphIndexMap[twoSyllable];
-        i += 2; // Skip the next character as we've processed a 2-character syllable
+        i += 2;
         continue;
       }
     }
 
-    //Check for valid 1-letter syllables (e.g., "a", "i", "u", etc.)
+    // Check for 1-letter syllables (e.g., "a", "i", "u")
     if (glyphIndexMap[currentChar]) {
       hylianText += glyphIndexMap[currentChar];
-      i++; // Move to the next character
+      i++;
       continue;
     }
 
-    // If no match was found, just skip the character unless newLine
+    // Handle new lines
     if (currentChar === "\n") {
       hylianText += "\n";
-      i++; // Move to the next character
+      i++;
       continue;
     }
-    i++; // Move to the next character
+
+    i++;
   }
+
   return hylianText;
 }
 
+// Mudoranify function for joke translation
 function mudoranify(input, element) {
-  // Choose the correct set of choices based on the language
   const choices = isJapanese(input) ? ["D", "E", "F"] : ["A", "B", "C"];
-  // Translate the text
   let translatedText = "";
+
   for (let char of input) {
-    if (/[a-zA-Z]/.test(char)) {  
-      // If the character is an English letter, replace it with a random choice
+    if (/[a-zA-Z]/.test(char)) {
       translatedText += choices[Math.floor(Math.random() * choices.length)];
     } else if (/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(char)) {
-      // If the character is a Japanese letter (Hiragana, Katakana), replace it with a random choice
       translatedText += choices[Math.floor(Math.random() * choices.length)];
     } else {
-      // For any other character (punctuation, numbers, spaces), leave it unchanged
       translatedText += char;
     }
   }
-    element.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
+
+  element.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
 }
 
-//Don't translate if inputText area is still blank
+// Don't translate if inputText area is still blank
 function inputTextReady() {
-  const inputTextElement = document.getElementById("inputText");
-  if (inputTextElement.value.length !== 0){
+  if (inputTextElement.value.length !== 0) {
     translateText();
   }
 }
-
-// Attach event listener to the inputTextArea
-document.getElementById("inputText").addEventListener("input", translateText);
-
-// Add an event listener for the <select> element 'change' event
-document.getElementById('hylianVersion').addEventListener('change', inputTextReady);
-
-// Event listener for the dropdown change
-document.getElementById('hylianVersion').addEventListener('change', function() {
-  const selectedVersion = this.value;
-
-  // Call the function to show or hide Twilight Princess options based on the selection
-  showTwilight(selectedVersion);
-});
-
-// Check the selected version when the page loads or refreshes
-window.addEventListener('load', function() {
-  const selectedVersion = document.getElementById('hylianVersion').value;
-
-  // If "Twilight Princess" is selected, run showTwilight
-  if (selectedVersion === 'twilightPrincess') {
-    showTwilight(selectedVersion);
-  }
-  // If the text input is not empty on reload, run translate function
-    inputTextReady()
-});
 
 // Function to show or hide the Twilight Princess radio buttons
 function showTwilight(selectedVersion) {
-  const twilightPrincessOptions = document.getElementById('twilightPrincessOptions');
-  const gamecubeOption = document.getElementById('gamecubeOption');
-  const wiiOption = document.getElementById('wiiOption');
-  const translatedText = document.getElementById('translatedText');
-  const inputText = document.getElementById('inputText');
-  
-  // Show or hide the radio buttons based on whether "Twilight Princess" is selected
   if (selectedVersion === 'twilightPrincess') {
-    twilightPrincessOptions.style.display = 'block';  // Show the options
-  // Check if the GameCube or Wii radio button is checked and apply the correct font
-  if ((gamecubeOption.checked || wiiOption.checked)&& inputText.value.length !== 0) {
-    translateText();
-  }
+    twilightPrincessOptions.style.display = 'block'; // Show the options
+
+    if ((gamecubeOption.checked || wiiOption.checked) && inputTextElement.value.length !== 0) {
+      translateText();
+    }
   } else {
-    twilightPrincessOptions.style.display = 'none';   // Hide the options
-    translatedText.classList.remove('mirror-text'); // Remove mirror effect
+    twilightPrincessOptions.style.display = 'none'; // Hide the options
+    translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
   }
-    
 }
 
-// Event listeners for the radio buttons (outside the dropdown change listener)
-const gamecubeOption = document.getElementById('gamecubeOption');
-const wiiOption = document.getElementById('wiiOption');
-const translatedText = document.getElementById('translatedText');
-const inputText = document.getElementById('inputText');
-
-// Change the font when a radio button is selected
-gamecubeOption.addEventListener('change', function() {
-  if (this.checked) {
-    translateText();
-  }
-});
-
-wiiOption.addEventListener('change', function() {
-  if (this.checked) {
-    translateText();
-  }
-});
-
-const fontSizeSlider = document.getElementById("fontSizeSlider");
-const translatedTextContainer = document.getElementById("translatedText");
-
-// Function to update the font size and display it as a multiplier (x)
-fontSizeSlider.addEventListener("input", function() {
-  let fontSizeValue = parseFloat(fontSizeSlider.value).toFixed(1);  // Slider value, e.g., 3, 4, etc.
-
-  // Apply the font size in rem to the translatedText
-  translatedTextContainer.style.fontSize = fontSizeValue + "rem";  // Apply font size in rem
-
-  document.getElementById("fontSizeValue").textContent = fontSizeValue + "x"; // Display it as x
-});
-
-// Function to change the font color
-document.getElementById('fontColor').addEventListener('input', function (event) {
-  const color = event.target.value;
-  document.getElementById('translatedText').style.color = color;
-});
-
 // Event listener for the Download Font button
-document.getElementById('downloadFontBtn').addEventListener('click', function() {
-  // Get the selected font version (e.g., "ocarinaOfTime")
-  const selectedFontVersion = document.getElementById('hylianVersion').value;
-
-  // Look up the font file name based on the selected font version
+downloadFontElement.addEventListener('click', function () {
+  const selectedFontVersion = hylianVersionElement.value;
   const fontFileName = fontFileMap[selectedFontVersion];
 
   if (fontFileName) {
-    // Add the .ttf extension and construct the font URL
     const fontUrl = `fonts/${fontFileName}.ttf`;
-
-    // Trigger the download of the font
     downloadFont(fontUrl, `${fontFileName}.ttf`);
   } else {
     alert('Font file not found for the selected font version.');
@@ -325,7 +304,6 @@ function downloadFont(fontUrl, fontName) {
 
 // Function to get translated text for the 'translatedText' key
 function getTranslatedText(languageCode) {
-  // Check if the language code exists in the translations object
   if (translations[languageCode] && translations[languageCode].translatedText) {
     return translations[languageCode].translatedText;
   } else {
@@ -334,23 +312,19 @@ function getTranslatedText(languageCode) {
   }
 }
 
-// Attach event listeners to export buttons (add buttons to your HTML)
-document.getElementById('exportPNGBtn').addEventListener('click', exportAsPNG);
-
+// Function to export translated text as PNG
 function exportAsPNG() {
-  const translatedTextElement = document.getElementById("translatedText");
   const computedStyle = window.getComputedStyle(translatedTextElement);
   const englishText = getTranslatedText("en");
   const japaneseText = getTranslatedText("jp");
 
-  // Check if translatedTextElement is not empty, or still hasn't been translated
-if (translatedTextElement.textContent.length !== 0 &&
+  if (translatedTextElement.textContent.length !== 0 &&
     !computedStyle.fontFamily.includes("RocknRollOne") &&
     translatedTextElement.textContent !== englishText &&
     translatedTextElement.textContent !== japaneseText) {
-    // Use html2canvas to take a snapshot of the translated text
+
     html2canvas(translatedTextElement, {
-      onrendered: function(canvas) {
+      onrendered: function (canvas) {
         const imgData = canvas.toDataURL("image/png");
         const link = document.createElement('a');
         link.href = imgData;
