@@ -68,7 +68,7 @@ function resetTranslatedText(language) {
         translateText();
     }
     else{
-      translatedText.classList.remove('mirror-text'); // Remove mirror effect
+      translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
       translatedTextElement.innerHTML = getTranslatedText(language);
       translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
     }
