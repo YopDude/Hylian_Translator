@@ -21,7 +21,6 @@ function translateText() {
       // Convert Input to Hylian using the appropriate glyph map
       const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
       const hylianText = convertToHylian(romajiText, glyphIndexMap);
-      //console.log(hylianText);
       // Update the translated text
       translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
     }
@@ -69,9 +68,23 @@ function getGlyphIndexMap(version) {
 }
 // Function to get the font family based on the version
 function getFontFamilyForVersion(version) {
+  const gamecubeOption = document.getElementById('gamecubeOption');
+  const wiiOption = document.getElementById('wiiOption');
+  const textContainer = document.getElementById('translatedText');
+  textContainer.classList.remove('mirror-text'); // Remove mirror effect
+  
   switch (version) {
     case "twilightPrincess":
-      return "'TP Hylian - GCN', sans-serif";
+      if (gamecubeOption.checked) {
+        // If the GameCube radio button is selected
+        textContainer.classList.remove('mirror-text'); // Remove mirror effect
+      } else if (wiiOption.checked) {
+        // If the Wii radio button is selected
+        textContainer.classList.add('mirror-text'); // Add mirror effect
+      }
+        return "'TP Hylian - GCN', sans-serif";
+      break;
+
     case "skywardSword":
       return "'SS Ancient Hylian', sans-serif";
     case "botw":
@@ -219,6 +232,8 @@ window.addEventListener('load', function() {
   if (selectedVersion === 'twilightPrincess') {
     showTwilight(selectedVersion);
   }
+  // If the text input is not empty on reload, run translate function
+    inputTextReady()
 });
 
 // Function to show or hide the Twilight Princess radio buttons
@@ -227,21 +242,18 @@ function showTwilight(selectedVersion) {
   const gamecubeOption = document.getElementById('gamecubeOption');
   const wiiOption = document.getElementById('wiiOption');
   const translatedText = document.getElementById('translatedText');
+  const inputText = document.getElementById('inputText');
   
   // Show or hide the radio buttons based on whether "Twilight Princess" is selected
   if (selectedVersion === 'twilightPrincess') {
     twilightPrincessOptions.style.display = 'block';  // Show the options
   // Check if the GameCube or Wii radio button is checked and apply the correct font
-  if (gamecubeOption.checked) {
-    translatedText.style.fontFamily = "'TP Hylian - GCN', sans-serif";  // Apply GameCube font
-  } else if (wiiOption.checked) {
-    translatedText.style.fontFamily = "'TP Hylian - Wii', sans-serif";  // Apply Wii font
-  } else {
-    // Default font if neither is selected (you can adjust this to your needs)
-    translatedText.style.fontFamily = "sans-serif"; 
+  if ((gamecubeOption.checked || wiiOption.checked)&& inputText.value.length !== 0) {
+    translateText();
   }
   } else {
     twilightPrincessOptions.style.display = 'none';   // Hide the options
+    translatedText.classList.remove('mirror-text'); // Remove mirror effect
   }
     
 }
@@ -250,20 +262,20 @@ function showTwilight(selectedVersion) {
 const gamecubeOption = document.getElementById('gamecubeOption');
 const wiiOption = document.getElementById('wiiOption');
 const translatedText = document.getElementById('translatedText');
+const inputText = document.getElementById('inputText');
 
 // Change the font when a radio button is selected
 gamecubeOption.addEventListener('change', function() {
   if (this.checked) {
-    translatedText.style.fontFamily = "'TP Hylian - GCN', sans-serif";  // GameCube font
+    translateText();
   }
 });
 
 wiiOption.addEventListener('change', function() {
   if (this.checked) {
-    translatedText.style.fontFamily = "'TP Hylian - Wii', sans-serif";  // Wii mirrored font
+    translateText();
   }
 });
-
 
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const translatedTextContainer = document.getElementById("translatedText");
