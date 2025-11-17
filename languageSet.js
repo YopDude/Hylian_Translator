@@ -61,9 +61,17 @@ function updatePlaceholder(language) {
 }
 
 function resetTranslatedText(language) {
-  const translatedTextElement = document.getElementById("translatedText");
-  translatedTextElement.innerHTML = getTranslatedText(language);
-  translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
+    const inputTextElement = document.getElementById("inputText");
+    const translatedTextElement = document.getElementById("translatedText");
+
+    if (inputTextElement.value.length !== 0){
+        translateText();
+    }
+    else{
+      translatedText.classList.remove('mirror-text'); // Remove mirror effect
+      translatedTextElement.innerHTML = getTranslatedText(language);
+      translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
+    }
 }
 
 // Function to update the radio button labels

@@ -236,6 +236,11 @@ p.symbol{
     padding: 0; /* Remove any padding */
 }
 
+.mirror-text {
+  transform: scaleX(-1);
+  direction: rtl; /* Optional: may help with text alignment for some languages */
+}
+
 /* Font Faces */
 @font-face {
   font-family: 'Albw Botw Hylian';
@@ -257,17 +262,6 @@ p.symbol{
   font-style: normal;
   font-display: swap;
   size-adjust: 130%; 
-}
-
-@font-face {
-  font-family: 'TP Hylian - Wii';
-  src: url('fonts/TPHylian-WiiRegular.woff2') format('woff2'),
-       url('fonts/TPHylian-WiiRegular.woff') format('woff'),
-       url('fonts/TPHylian-WiiRegular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 130%;
 }
 
 @font-face {
