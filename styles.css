@@ -275,14 +275,14 @@ p.symbol{
 }
 
 @font-face {
-  font-family: 'Hylian 64';
-  src: url('fonts/Hylian64Regular.woff2') format('woff2'),
-       url('fonts/Hylian64Regular.woff') format('woff'),
-       url('fonts/Hylian64Regular.ttf') format('truetype');
+  font-family: 'Hero Hylian';
+  src: url('fonts/HeroHylianRegular.woff2') format('woff2'),
+       url('fonts/HeroHylianRegular.woff') format('woff'),
+       url('fonts/HeroHylianRegular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 105%; 
+  size-adjust: 150%; 
 }
 
 @font-face {

@@ -80,7 +80,7 @@ function translateText() {
     // Apply font styles based on version selection
     translatedTextElement.style.fontFamily = version === "windwaker"
       ? "'Ancient Hylian', sans-serif"  // Windwaker Hylian font
-      : "'Hylian 64', sans-serif";       // Ocarina Hylian font
+      : "'Hero Hylian', sans-serif";       // Ocarina Hylian font
 
     if (isJapanese(inputText)) { // Fonts updated to accept Japanese. Only convert if English characters used
       translatedTextElement.innerHTML = inputText.split('\n').join('<br>'); // Use innerHTML to preserve line breaks
