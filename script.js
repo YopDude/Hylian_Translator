@@ -33,6 +33,15 @@ window.addEventListener('load', function () {
 
   // If the text input is not empty on reload, run translate function
   inputTextReady();
+
+  // Apply the current font size from the slider (if any) on page load
+  const fontSizeValue = fontSizeSlider.value;
+  translatedTextElement.style.fontSize = fontSizeValue + "rem"; // Apply font size in rem
+  fontSizeValueElement.textContent = fontSizeValue + "x"; // Update label to match slider
+
+  // Apply the current font color from the color picker (if any) on page load
+  const fontColorValue = fontColorInput.value;
+  translatedTextElement.style.color = fontColorValue; // Apply the font color
 });
 
 // Change the font when a radio button is selected
@@ -244,20 +253,30 @@ function convertToHylian(input, glyphIndexMap) {
 
 // Mudoranify function for joke translation
 function mudoranify(input, element) {
+  // Determine which set of 3 symbols to use
   const choices = isJapanese(input) ? ["D", "E", "F"] : ["A", "B", "C"];
   let translatedText = "";
 
-  for (let char of input) {
-    if (/[a-zA-Z]/.test(char)) {
-      translatedText += choices[Math.floor(Math.random() * choices.length)];
-    } else if (/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(char)) {
-      translatedText += choices[Math.floor(Math.random() * choices.length)];
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    // Detect if this character should be transformed
+    const isLatin = /[a-zA-Z]/.test(char);
+    const isJap = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(char);
+
+    if (isLatin || isJap) {
+      const code = char.charCodeAt(0);
+
+      // Deterministic modulus function
+      const idx = (code + i) % choices.length;
+      translatedText += choices[idx];
     } else {
+      // Preserve punctuation, numbers, spaces, etc
       translatedText += char;
     }
   }
 
-  element.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
+  element.innerHTML = translatedText.split('\n').join('<br>');
 }
 
 // Don't translate if inputText area is still blank

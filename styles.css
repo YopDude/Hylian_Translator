@@ -266,9 +266,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Gerudo Typography';
-  src: url('fonts/GerudoTypography.woff2') format('woff2'),
-       url('fonts/GerudoTypography.woff') format('woff'),
-       url('fonts/GerudoTypography.ttf') format('truetype');
+  src: url('fonts/GerudosTypographyRegular.woff2') format('woff2'),
+       url('fonts/GerudosTypographyRegular.woff') format('woff'),
+       url('fonts/GerudosTypographyRegular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
