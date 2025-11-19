@@ -1,3 +1,38 @@
+/* Fix text alignment inside the select box */
+#hylianVersion + .select2-container .select2-selection__rendered {
+  padding-left: 10px; /* Space for the icon */
+  padding-right: 10px; /* Optional: Add some padding to the right */
+  align-items: center;
+}
+
+#hylianVersion + .select2-container .select2-selection__rendered img{
+    width:24px;
+    height:24px;
+    margin-right: 15px;
+    vertical-align: left;
+}
+
+#hylianVersion + .select2-selection__rendered,.img-flag{
+    width:32px;
+    height:32px;
+    margin-right: 5px;
+    vertical-align: left;
+}
+
+#hylianVersion + .select2-container .select2-dropdown {
+    display: none;
+}
+
+.select2-container--default .select2-selection--single {
+    background-color: #ECF2FF;
+    border: 1px solid #aaa;
+}
+
+select{
+  font-size: 1.2em;
+    width:30%;
+}
+
 /* Global Styles */
 html {
   overflow-x: hidden; /* Disable horizontal scroll */
@@ -79,13 +114,13 @@ header h1 {
   color: #b99f65; /*Gold*/
 }
 
-select, textarea, button {
+textarea, button {
   padding: 10px;
   margin: 10px;
   font-size: 1.2em;
 }
 
-button, select {
+button{
   font-family: 'ReggaeOne', sans-serif;
   background-color: #28a745;
   color: white;
@@ -164,14 +199,6 @@ h2, h3 {
 
 .links a:hover {
   text-decoration: underline;
-}
-
-.section img {
-  width: 45%;
-  margin-left: 2%;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  display: block;
 }
 
 /* Mobile Styles */
@@ -378,5 +405,4 @@ p.symbol{
     font-display: swap;
 }
 }
-
 
