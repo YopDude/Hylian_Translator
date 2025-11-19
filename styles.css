@@ -1,3 +1,29 @@
+#hylianVersion{
+    height:300px;
+}
+
+#hylianVersion + .select2-container .select2-selection__rendered img,.img-flag{
+    width:32px;
+    height:32px;
+    margin-right: 5px;
+    vertical-align: left;
+}
+
+#hylianVersion + .select2-container .select2-dropdown {
+    display: none;
+}
+
+.select2-container--default .select2-selection--single {
+    background-color: #ECF2FF;
+    border: 1px solid #aaa;
+}
+
+select{
+  padding: 30px;
+  margin: 120px;
+  font-size: 1.2em;
+}
+
 /* Global Styles */
 html {
   overflow-x: hidden; /* Disable horizontal scroll */
@@ -79,7 +105,7 @@ header h1 {
   color: #b99f65; /*Gold*/
 }
 
-select, textarea, button {
+textarea, button {
   padding: 10px;
   margin: 10px;
   font-size: 1.2em;
