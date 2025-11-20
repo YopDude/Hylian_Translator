@@ -1,8 +1,30 @@
+.select2-selection__rendered img.img-flag {
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;  /* Space between image and text */
+  text-align: center;
+}
+
+/* Style the images inside the dropdown options */
+.select2-results__option img.img-flag {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;  /* Space between image and text */
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+select{
+  font-size: 1.2em;
+    width:35%;
+}
+
 /* Global Styles */
 html {
   overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: auto; /* Allow vertical scroll */
 }
+
 body {
   font-family: 'RocknRollOne', sans-serif;
   background-color: #f0f0f0; /* Default background */
@@ -79,13 +101,13 @@ header h1 {
   color: #b99f65; /*Gold*/
 }
 
-select, textarea, button {
+textarea, button {
   padding: 10px;
   margin: 10px;
   font-size: 1.2em;
 }
 
-button, select {
+button{
   font-family: 'ReggaeOne', sans-serif;
   background-color: #28a745;
   color: white;
@@ -164,14 +186,6 @@ h2, h3 {
 
 .links a:hover {
   text-decoration: underline;
-}
-
-.section img {
-  width: 45%;
-  margin-left: 2%;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  display: block;
 }
 
 /* Mobile Styles */
@@ -378,4 +392,5 @@ p.symbol{
     font-display: swap;
 }
 }
+
 

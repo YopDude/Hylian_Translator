@@ -34,6 +34,7 @@ document.getElementById('languageIcon').addEventListener('click', function() {
   resetTranslatedText(newLanguage);
   // Update radio button labels for Twilight Princess
   updateRadioLabels(newLanguage);
+  customDropdown();
 });
 
 // Function to update the text content of the page based on the selected language

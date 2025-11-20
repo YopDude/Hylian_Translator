@@ -14,12 +14,12 @@ const downloadFontElement = document.getElementById('downloadFontBtn');
 
 // Event listeners
 inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
-hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
 
-// Event listener for the dropdown change
-hylianVersionElement.addEventListener('change', function () {
-  const selectedVersion = this.value;
+// Select2 jQuery listener on the #hylianVersion select element
+$('#hylianVersion').on('change', function () {
+  const selectedVersion = $(this).val();  // Get the selected value
   showTwilight(selectedVersion);  // Call the function to show or hide Twilight Princess options based on the selection
+  inputTextReady();
 });
 
 // Check the selected version when the page loads or refreshes
@@ -31,6 +31,8 @@ window.addEventListener('load', function () {
     showTwilight(selectedVersion);
   }
 
+  //Call custom dropdown
+  customDropdown();
   // If the text input is not empty on reload, run translate function
   inputTextReady();
 
@@ -47,13 +49,13 @@ window.addEventListener('load', function () {
 // Change the font when a radio button is selected
 gamecubeOption.addEventListener('change', function () {
   if (this.checked) {
-    translateText();
+    inputTextReady();
   }
 });
 
 wiiOption.addEventListener('change', function () {
   if (this.checked) {
-    translateText();
+    inputTextReady();
   }
 });
 
@@ -356,3 +358,23 @@ function exportAsPNG() {
   }
 }
 
+function customDropdown(){
+ $(document).ready(function() {
+   function formatOption(option) {
+        if (!option.id) {
+            return option.text;
+        }
+        var imageUrl = 'images/icons/' + option.id + '.png';
+        var optionWithImage = $(
+            '<span><img src="' + imageUrl + '" class="img-flag" /> ' + option.text + '</span>'
+        );
+        return optionWithImage;
+    }
+
+    $('#hylianVersion').select2({
+        templateResult: formatOption,
+        templateSelection: formatOption,
+        minimumResultsForSearch: Infinity
+    });
+});
+}
