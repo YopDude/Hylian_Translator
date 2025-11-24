@@ -254,17 +254,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 130%; 
-}
-
-@font-face {
-  font-family: 'Gerudo Typography';
-  src: url('fonts/GerudosTypographyRegular.woff2') format('woff2'),
-       url('fonts/GerudosTypographyRegular.woff') format('woff'),
-       url('fonts/GerudosTypographyRegular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  size-adjust: 150%; 
 }
 
 @font-face {
@@ -275,7 +265,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 150%; 
+  size-adjust: 190%; 
 }
 
 @font-face {
@@ -286,7 +276,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 120%; 
+  size-adjust: 140%; 
 }
 
 @font-face {
@@ -297,6 +287,18 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 110%;
+}
+
+@font-face {
+  font-family: 'Gerudo';
+  src: url('fonts/GerudoTypographyRegular.woff2') format('woff2'),
+       url('fonts/GerudoTypographyRegular.woff') format('woff'),
+       url('fonts/GerudoTypographyRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 130%;
 }
 
 @font-face {
@@ -307,6 +309,7 @@ p.symbol{
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  size-adjust: 125%;
 }
 
 @font-face {

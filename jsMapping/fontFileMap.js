@@ -4,7 +4,7 @@ const fontFileMap = {
 "twilightPrincess":"TPHylian-GCNRegular",
 "skywardSword":"SSAncientHylian",
 "botw":"AlbwBotwHylian-Regular",
-"gerudo":"GerudoTypography",
+"gerudo":"GerudoTypographyRegular",
 "sheikah":"BotWSheikahRegular",
 "mudoran":"MudoranRegular"
 }

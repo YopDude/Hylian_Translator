@@ -161,7 +161,7 @@ function getFontFamilyForVersion(version) {
     case "botw":
       return "'Albw Botw Hylian', sans-serif";
     case "gerudo":
-      return "'Gerudo Typography', sans-serif";
+      return "'Gerudo', sans-serif";
     case "sheikah":
       return "'BotW Sheikah', sans-serif";
     case "mudoran":
