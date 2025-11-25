@@ -11,6 +11,8 @@ if (!selectedLanguage) {
 document.documentElement.lang = selectedLanguage;
 setLanguage(selectedLanguage);
 updatePlaceholder(selectedLanguage);
+updateRadioLabels(selectedLanguage);
+updateTooltips(selectedLanguage);
 
 // Function to detect the user's browser language (defaults to English if not Japanese)
 function detectLanguage() {
@@ -34,6 +36,8 @@ document.getElementById('languageIcon').addEventListener('click', function() {
   resetTranslatedText(newLanguage);
   // Update radio button labels for Twilight Princess
   updateRadioLabels(newLanguage);
+  // Update tooltips based on the new language
+  updateTooltips(newLanguage);
 });
 
 // Function to update the text content of the page based on the selected language
@@ -87,3 +91,20 @@ function updateRadioLabels(language) {
     wiiRadio.innerHTML = translations[language]["wiiOption"];
   }
 }
+
+// Function to update the tooltips based on the selected language
+function updateTooltips(language) {
+  // Tooltip translations for each language
+  const tooltipTexts = translations[language].tooltips;
+  
+  // Select all elements with a 'data-tooltip-key' attribute
+  const tooltipElements = document.querySelectorAll('[data-tooltip-key]');
+  
+  tooltipElements.forEach((el) => {
+    const tooltipKey = el.getAttribute('data-tooltip-key');
+    if (tooltipKey && tooltipTexts[tooltipKey]) {
+      el.setAttribute('data-tooltip', tooltipTexts[tooltipKey]); // Update tooltip content
+    }
+  });
+}
+

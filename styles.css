@@ -159,6 +159,10 @@ textarea {
   justify-content: space-between; /* Space between content */
 }
 
+.section img {
+    margin-left: 10px;
+}
+
 .text-block {
   flex: 1 1 48%;
   margin-bottom: 10px;
@@ -196,7 +200,6 @@ a:hover {
   text-decoration-thickness: 3px; /* Thicker underline */
   transform: translateY(-2px); /* Lift effect on hover */
 }
-
 /* Overlay background */
 .overlay {
   display: none; /* Hidden by default */
@@ -215,14 +218,19 @@ a:hover {
 .overlay-content {
   position: relative;
   text-align: center;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 100%;  /* Ensure the content doesn’t exceed screen width */
+  max-height: 100%; /* Ensure the content doesn’t exceed screen height */
+  overflow: hidden; /* Prevent overflow */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Image styling */
 #hylianMapImage {
-  width: 100%;
-  height: auto;
+  max-width: 90%;  /* Limit the width to 90% of the screen width */
+  max-height: 90vh; /* Limit the height to 90% of the viewport height */
+  object-fit: contain; /* Ensures the image maintains its aspect ratio */
   border: 2px solid white;
   border-radius: 10px;
 }
@@ -235,21 +243,94 @@ a:hover {
 /* Close Button Styles */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 2%;
+  right: 5%;
   background: none;
-  border: 2px solid white; /* Add a white border */
+  border: 2px solid white;
   color: white;
-  font-size: 30px;
-  padding: 5px 10px;  /* Space inside the button */
-  border-radius: 5px;  /* Optional: gives a slight rounded corner to the button */
+  font-size: 3vw;  /* Font size in viewport width for responsiveness */
+  width: 2vw;  /* Width as a percentage of the viewport width */
+  height: 4vw; /* Height to maintain square aspect ratio */
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* Center the icon/text inside the button */
+  border-radius: 0;  /* No rounded corners */
   cursor: pointer;
-  transition: color 0.3s, border-color 0.3s;  /* Smooth transition for color and border */
+  transition: color 0.3s, border-color 0.3s;  /* Smooth transition for hover effects */
 }
 
+/* Close Button Hover Styles */
 .close-btn:hover {
-  color: #f1c40f; /* Highlight color when hovered */
+  color: #f1c40f;  /* Highlight color when hovered */
   border-color: #f1c40f;  /* Change border color on hover */
+  background: none;
+}
+
+.overlay-content {
+  position: relative;  /* Keeps content inside the overlay in place */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container for the dropdown and button */
+.dropdown-container {
+  display: flex;
+  align-items: center; /* Vertically center the dropdown and button */
+  gap: 10px; /* Space between the dropdown and the button */
+}
+
+/* Style the button */
+.eye-btn {
+  font-family: 'HylianSymbols', sans-serif;
+  font-size: 24px; /* Adjust size of the emoji */
+  background-color: #403F3F;
+  border: none;
+  cursor: pointer;
+  padding: 10px; /* Add padding to make it circular */
+  width: 30px; /* Set equal width and height for a perfect circle */
+  height: 30px; /* Equal height to make it round */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Makes it a perfect circle */
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the button */
+.eye-btn:hover {
+  background-color: #A69F9F; /* Light background on hover */
+}
+
+/* Tooltip Styles */
+.tooltip-element {
+  position: relative; /* To position the tooltip relative to this element */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Tooltip appearance on hover */
+.tooltip-element:hover::after {
+  font-family: 'RocknRollOne', sans-serif;
+  content: attr(data-tooltip); /* Get tooltip content from data-tooltip attribute */
+  position: absolute;
+  bottom: 100%; /* Position the tooltip above the element */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide the tooltip when not hovered */
+.tooltip-element::after {
+  opacity: 0;
+  visibility: hidden;
 }
 
 

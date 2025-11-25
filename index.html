@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Zelda Hylian Translator</title>
+  <title id="pageTitle">Zelda Hylian Translator – Convert English to Zelda's Hylian Languages (Breath of the Wild, Ocarina, Wind Waker)</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Zelda Hylian Translator"/>
   <meta name="twitter:description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!"/>
-  <meta name="twitter:image" content="https://example.com/images/zelda-hylian-translator.jpg"/>
+  <meta name="twitter:image" content="https://yopdude.github.io/Hylian_Translator/images/Hylian_Translator_Home.png"/>
   <!-- Preload the fonts (using .woff2 format) -->
   <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/TPHylian-GCNRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -67,6 +67,7 @@
                 <option value="mudoran" id="chooseHylianVersionMudoran"></option>
               </optgroup>
             </select>
+            <button id="showHylianMapBtn" class="eye-btn tooltip-element"  data-tooltip-key="showHylianMapBtn">f</button>
         </div>
         <!-- Radio Buttons for Twilight Princess -->
         <div id="twilightPrincessOptions" style="display: none;">
@@ -93,8 +94,7 @@
           <p id="translatedText"></p>
         </div>
     <div>
-      <button id="exportPNGBtn">Export as PNG ↓</button>
-    <button id="showHylianMapBtn">Show Alphabet Map</button>
+      <button id="exportPNGBtn" class="tooltip-element" data-tooltip-key="exportPNGBtn">Export as PNG ↓</button>
     </div>
       </div>
     </section>
@@ -104,7 +104,7 @@
     <div>
     <p id="noteText">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
     <a id="aboutPageLink"href="about.html" style="text-decoration: underline;">About page →</a><br><br>
-      <button id="downloadFontBtn">Download Font ↓</button>
+      <button id="downloadFontBtn" class="tooltip-element" data-tooltip-key="downloadFontBtn">Download Font ↓</button>
     </div>
 
     <div class="disclaimer">

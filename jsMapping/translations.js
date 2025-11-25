@@ -1,6 +1,6 @@
 const translations = {
   "en": {
-    "pageTitle": "Zelda Hylian Translator",
+    "pageTitle": "Zelda Hylian Translator – Convert English to Zelda's Hylian Languages (Breath of the Wild, Ocarina, Wind Waker",
     "headerTitle": "Zelda Hylian Translator",
     "headerSubtitle": "Translate English text to various versions of Hylian!",
     "chooseHylianVersionLabel": "Choose Hylian Version:",
@@ -21,9 +21,8 @@ const translations = {
     "noteText": "Note: All languages are being displayed via custom fonts and won't persist with copy&paste.",
     "aboutPageLink": "About page →",
     "exportPNGBtn": "Export as PNG ↓",
-    "showHylianMapBtn": "Show Alphabet Map",
     "downloadFontBtn": "Download Font ↓",
-    "aboutPageTitle": "About | Zelda Hylian Translator",
+    "aboutPageTitle": "About Zelda Hylian Translator – Learn More About Fonts, Contributions, and Resources",
     "aboutPageHeader": "Zelda Hylian Translator",
     "aboutIntro": "Welcome to the Zelda Hylian Translator, a tool designed to help you convert English text into various versions of Hylian from The Legend of Zelda series.",
     "fontsForJpAndEn": "Fonts for Japanese and English Input",
@@ -44,7 +43,12 @@ const translations = {
     "omniglotLink": "Omniglot - Hylian Scripts",
     "mudoranLink": "Mudoran - The mysterious ancient Hylian script",
     "backToHomeLink": "Back to Home ↩",
-    "disclaimerText": "*The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo."
+    "disclaimerText": "*The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.",
+    "tooltips": {
+      "showHylianMapBtn": "View the Alphabet Chart",
+      "exportPNGBtn": "Download the translation as a PNG image",
+      "downloadFontBtn": "Download the currently selected language font file"
+    }
   },
   "jp": {
     "pageTitle": "ゼルダ ハイリアン 翻訳者",
@@ -68,7 +72,6 @@ const translations = {
     "noteText": "注: すべての言語はカスタムフォントで表示され、コピー＆ペーストには持続しません。",
     "aboutPageLink": "詳細はAboutページへ →",
     "exportPNGBtn": "PNGとしてエクスポート ↓",
-    "showHylianMapBtn": "アルファベットマップを表示",
     "downloadFontBtn": "フォントをダウンロード ↓",
     "aboutPageTitle": "About | ゼルダ ハイリアン 翻訳者",
     "aboutPageHeader": "ゼルダ ハイリアン 翻訳者",
@@ -91,7 +94,12 @@ const translations = {
     "omniglotLink": "Omniglot - ハイリアン文字",
     "mudoranLink": "ムドラン - 謎に包まれた古代ハイリア文字",
     "backToHomeLink": "ホームへ戻る ↩",
-    "disclaimerText": "ゼルダの伝説および関連するキャラクター、商標、ロゴはすべて任天堂の所有です。このファンサイトは、任天堂とは提携していません。"
+    "disclaimerText": "ゼルダの伝説および関連するキャラクター、商標、ロゴはすべて任天堂の所有です。このファンサイトは、任天堂とは提携していません。",
+    "tooltips": {
+      "showHylianMapBtn": "記号チャートを見る",
+      "exportPNGBtn": "翻訳をPNGファイルとしてエクスポートする",
+      "downloadFontBtn": "現在選択されている言語フォントファイルをダウンロードする"
+    }
   }
 };
 

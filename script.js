@@ -11,7 +11,6 @@ const translatedTextContainer = document.getElementById("translatedText");
 const fontSizeValueElement = document.getElementById("fontSizeValue");
 const exportPngElement = document.getElementById('exportPNGBtn');
 const downloadFontElement = document.getElementById('downloadFontBtn');
-// Get references to the elements
 const overlay = document.getElementById('overlay');
 const showHylianMapBtn = document.getElementById('showHylianMapBtn');
 const closeOverlayBtn = document.getElementById('closeOverlayBtn');
@@ -85,13 +84,13 @@ window.addEventListener('load', function () {
 // Change the font when a radio button is selected
 gamecubeOption.addEventListener('change', function () {
   if (this.checked) {
-    translateText();
+    inputTextReady();
   }
 });
 
 wiiOption.addEventListener('change', function () {
   if (this.checked) {
-    translateText();
+    inputTextReady();
   }
 });
 
@@ -329,8 +328,8 @@ function showTwilight(selectedVersion) {
   if (selectedVersion === 'twilightPrincess') {
     twilightPrincessOptions.style.display = 'block'; // Show the options
 
-    if ((gamecubeOption.checked || wiiOption.checked) && inputTextElement.value.length !== 0) {
-      translateText();
+    if (gamecubeOption.checked || wiiOption.checked) {
+      inputTextReady();
     }
   } else {
     twilightPrincessOptions.style.display = 'none'; // Hide the options
