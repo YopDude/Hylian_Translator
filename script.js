@@ -19,14 +19,14 @@ const hylianVersionSelect = document.getElementById('hylianVersion');
 
 // Create a mapping for Hylian versions to their respective image URLs
 const hylianVersionImages = {
-  ocarinaOfTime: 'images/ocarina.webp',
-  windwaker: 'images/windwaker.webp',
-  twilightPrincess: 'images/twilight.webp',
-  skywardSword: 'images/skyward.webp',
-  botw: 'images/botw.webp',
-  gerudo: 'images/gerudo.webp',
-  sheikah: 'images/sheikah.webp',
-  mudoran: 'images/mudoran.webp',
+  ocarinaOfTime: 'images/ocarina.png',
+  windwaker: 'images/windwaker.png',
+  twilightPrincess: 'images/twilight.png',
+  skywardSword: 'images/skyward.png',
+  botw: 'images/botw.png',
+  gerudo: 'images/gerudo.png',
+  sheikah: 'images/sheikah.png',
+  mudoran: 'images/mudoran.png',
 };
 
 // Open the overlay and set the image based on selected version
