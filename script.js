@@ -11,6 +11,44 @@ const translatedTextContainer = document.getElementById("translatedText");
 const fontSizeValueElement = document.getElementById("fontSizeValue");
 const exportPngElement = document.getElementById('exportPNGBtn');
 const downloadFontElement = document.getElementById('downloadFontBtn');
+// Get references to the elements
+const overlay = document.getElementById('overlay');
+const showHylianMapBtn = document.getElementById('showHylianMapBtn');
+const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+const hylianMapImage = document.getElementById('hylianMapImage');
+const hylianVersionSelect = document.getElementById('hylianVersion');
+
+// Create a mapping for Hylian versions to their respective image URLs
+const hylianVersionImages = {
+  ocarinaOfTime: 'images/ocarina.webp',
+  windwaker: 'images/windwaker.webp',
+  twilightPrincess: 'images/twilight.webp',
+  skywardSword: 'images/skyward.webp',
+  botw: 'images/botw.webp',
+  gerudo: 'images/gerudo.webp',
+  sheikah: 'images/sheikah.webp',
+  mudoran: 'images/mudoran.webp',
+};
+
+// Open the overlay and set the image based on selected version
+showHylianMapBtn.addEventListener('click', () => {
+  const selectedVersion = hylianVersionSelect.value;
+  hylianMapImage.src = hylianVersionImages[selectedVersion] || '';  // Set image based on selected version
+  overlay.classList.add('open');
+});
+
+// Close the overlay when the close button is clicked
+closeOverlayBtn.addEventListener('click', () => {
+  overlay.classList.remove('open');
+});
+
+// Close the overlay when clicked outside the image
+overlay.addEventListener('click', (event) => {
+  if (event.target === overlay) {
+    overlay.classList.remove('open');
+  }
+});
+
 
 // Event listeners
 inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
