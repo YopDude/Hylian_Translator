@@ -115,16 +115,21 @@
 
   </footer>
 
-<!-- Image Overlay (Initially Hidden) -->
-<div id="overlay" class="overlay">
-  <div class="overlay-content">
-    <!-- Close Button -->
-    <button id="closeOverlayBtn" class="close-btn">&times;</button>
-    <!-- Dynamic Image -->
-    <img id="hylianMapImage" src="" alt="Hylian Alphabet Mapping">
-  </div>
-</div>
-    
+    <!-- Image Overlay (Initially Hidden) -->
+    <div id="overlay" class="overlay">
+      <div class="overlay-content">
+        <!-- Close Button -->
+        <button id="closeOverlayBtn" class="close-btn">&times;</button>
+        <!-- Dynamic Image -->
+        <img id="hylianMapImage" src="" alt="Hylian Alphabet Mapping">
+      </div>
+    </div>
+        
+    <!-- Loading Spinner (Hidden by default) -->
+    <div id="loadingIndicator" class="loading-indicator">
+      <div class="spinner"></div>
+    </div>
+
   <script src="jsMapping/translations.js"></script> <!-- Load the text content in selected language-->
   <script src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js"></script> <!-- Load the UMD version of Wanakana JPN-->
   <script src="jsMapping/WWHylianMap.js"></script> <!-- Load the WW glyph map -->

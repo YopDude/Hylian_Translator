@@ -16,25 +16,53 @@ const showHylianMapBtn = document.getElementById('showHylianMapBtn');
 const closeOverlayBtn = document.getElementById('closeOverlayBtn');
 const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
+const loadingIndicator = document.getElementById('loadingIndicator');
 
-// Create a mapping for Hylian versions to their respective image URLs
+// Image mapping with mobile versions
 const hylianVersionImages = {
-  ocarinaOfTime: 'images/ocarina.png',
-  windwaker: 'images/windwaker.png',
-  twilightPrincess: 'images/twilight.png',
-  skywardSword: 'images/skyward.png',
-  botw: 'images/botw.png',
-  gerudo: 'images/gerudo.png',
-  sheikah: 'images/sheikah.png',
-  mudoran: 'images/mudoran.png',
+  "ocarinaOfTime": 'images/ocarina.png',
+  "ocarinaOfTime-mobile": 'images/ocarina-mobile.png',
+  "windwaker": 'images/windwaker.png',
+  "windwaker-mobile": 'images/windwaker-mobile.png',
+  "twilightPrincess": 'images/twilight.png',
+  "twilightPrincess-mobile": 'images/twilight-mobile.png',
+  "skywardSword": 'images/skyward.png',
+  "skywardSword-mobile": 'images/skyward-mobile.png',
+  "botw": 'images/botw.png',
+  "botw-mobile": 'images/botw-mobile.png',
+  "gerudo": 'images/gerudo.png',
+  "gerudo-mobile": 'images/gerudo-mobile.png',
+  "sheikah": 'images/sheikah.png',
+  "sheikah-mobile": 'images/sheikah-mobile.png',
+  "mudoran": 'images/mudoran.png',
+  "mudoran-mobile": 'images/mudoran-mobile.png',
 };
 
-// Open the overlay and set the image based on selected version
-showHylianMapBtn.addEventListener('click', () => {
+// Event listeners
+inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
+hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
+
+showHylianMapBtn.addEventListener('click', () => { 
   const selectedVersion = hylianVersionSelect.value;
-  hylianMapImage.src = hylianVersionImages[selectedVersion] || '';  // Set image based on selected version
-  overlay.classList.add('open');
+  const imageToDisplay = preloadImage(selectedVersion);
+
+  // Show loading indicator
+  loadingIndicator.style.display = 'block';
+
+  // Wait for the image to load before showing it
+  imageToDisplay.onload = function() {
+    loadingIndicator.style.display = 'none'; // Hide loading indicator when image is loaded
+    hylianMapImage.src = imageToDisplay.src; // Set the source of the image once it's loaded
+    overlay.classList.add('open');
+  };
+
+  // In case the image fails to load, handle the error
+  imageToDisplay.onerror = function() {
+    loadingIndicator.style.display = 'none'; // Hide loading indicator on error
+    console.error('Failed to load the image.');
+  };
 });
+
 
 // Close the overlay when the close button is clicked
 closeOverlayBtn.addEventListener('click', () => {
@@ -48,15 +76,20 @@ overlay.addEventListener('click', (event) => {
   }
 });
 
-
-// Event listeners
-inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
-hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
+window.addEventListener('resize', updateImageForDevice); //When page resized updated overlay images (for mobile)
 
 // Event listener for the dropdown change
 hylianVersionElement.addEventListener('change', function () {
   const selectedVersion = this.value;
   showTwilight(selectedVersion);  // Call the function to show or hide Twilight Princess options based on the selection
+  updateImageForDevice();  //Update overlay image version (for mobile)
+  // Preload and update the selected overlay image
+  const imageToDisplay = preloadImage(selectedVersion);
+  
+  // Wait for the image to load before updating the overlay
+  imageToDisplay.onload = function() {
+    hylianMapImage.src = imageToDisplay.src; // Update the overlay image
+  };
 });
 
 // Check the selected version when the page loads or refreshes
@@ -67,7 +100,6 @@ window.addEventListener('load', function () {
   if (selectedVersion === 'twilightPrincess') {
     showTwilight(selectedVersion);
   }
-
   // If the text input is not empty on reload, run translate function
   inputTextReady();
 
@@ -79,6 +111,8 @@ window.addEventListener('load', function () {
   // Apply the current font color from the color picker (if any) on page load
   const fontColorValue = fontColorInput.value;
   translatedTextElement.style.color = fontColorValue; // Apply the font color
+  updateImageForDevice();  //Update overlay image version (for mobile)
+  preloadImage(selectedVersion);  // Preload the selected over lay image for the version
 });
 
 // Change the font when a radio button is selected
@@ -391,4 +425,29 @@ function exportAsPNG() {
   } else {
     console.log("No translated text to export.");
   }
+}
+
+// Preload the image based on the selected version
+function preloadImage(version) {
+  const image = new Image();
+  image.src = hylianVersionImages[version];
+  return image;
+}
+
+function updateImageForDevice() {
+  const selectedVersion = hylianVersionSelect.value;
+
+  // Select the appropriate image based on screen size
+  let imageSrc;
+  
+  if (window.innerWidth <= 768) {
+    // Mobile image version (more narrow)
+    imageSrc = hylianVersionImages[selectedVersion + '-mobile'] || hylianVersionImages[selectedVersion];
+  } else {
+    // Desktop image version (standard)
+    imageSrc = hylianVersionImages[selectedVersion];
+  }
+
+  // Update the image source
+  hylianMapImage.src = imageSrc;
 }
