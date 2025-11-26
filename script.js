@@ -42,7 +42,7 @@ const hylianVersionImages = {
 inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
 hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
 
-showHylianMapBtn.addEventListener('click', () => { 
+showHylianMapBtn.addEventListener('click', () => {
   const selectedVersion = hylianVersionSelect.value;
   const imageToDisplay = preloadImage(selectedVersion);
 
@@ -63,7 +63,6 @@ showHylianMapBtn.addEventListener('click', () => {
   };
 });
 
-
 // Close the overlay when the close button is clicked
 closeOverlayBtn.addEventListener('click', () => {
   overlay.classList.remove('open');
@@ -76,19 +75,24 @@ overlay.addEventListener('click', (event) => {
   }
 });
 
-window.addEventListener('resize', updateImageForDevice); //When page resized updated overlay images (for mobile)
+window.addEventListener('resize', () => {
+  const selectedVersion = hylianVersionSelect.value;
+  const imageToDisplay = preloadImage(selectedVersion); // Preload the image again based on the current version
+
+  // Update the image source
+  hylianMapImage.src = imageToDisplay.src;
+});
 
 // Event listener for the dropdown change
 hylianVersionElement.addEventListener('change', function () {
   const selectedVersion = this.value;
   showTwilight(selectedVersion);  // Call the function to show or hide Twilight Princess options based on the selection
-  updateImageForDevice();  //Update overlay image version (for mobile)
   // Preload and update the selected overlay image
   const imageToDisplay = preloadImage(selectedVersion);
   
   // Wait for the image to load before updating the overlay
   imageToDisplay.onload = function() {
-    hylianMapImage.src = imageToDisplay.src; // Update the overlay image
+  hylianMapImage.src = imageToDisplay.src; // Update the overlay image
   };
 });
 
@@ -111,7 +115,6 @@ window.addEventListener('load', function () {
   // Apply the current font color from the color picker (if any) on page load
   const fontColorValue = fontColorInput.value;
   translatedTextElement.style.color = fontColorValue; // Apply the font color
-  updateImageForDevice();  //Update overlay image version (for mobile)
   preloadImage(selectedVersion);  // Preload the selected over lay image for the version
 });
 
@@ -427,27 +430,20 @@ function exportAsPNG() {
   }
 }
 
-// Preload the image based on the selected version
 function preloadImage(version) {
   const image = new Image();
-  image.src = hylianVersionImages[version];
-  return image;
-}
-
-function updateImageForDevice() {
-  const selectedVersion = hylianVersionSelect.value;
-
-  // Select the appropriate image based on screen size
   let imageSrc;
-  
+
+  // Determine if it's mobile or desktop
   if (window.innerWidth <= 768) {
     // Mobile image version (more narrow)
-    imageSrc = hylianVersionImages[selectedVersion + '-mobile'] || hylianVersionImages[selectedVersion];
+    imageSrc = hylianVersionImages[version + '-mobile'];
   } else {
     // Desktop image version (standard)
-    imageSrc = hylianVersionImages[selectedVersion];
+    imageSrc = hylianVersionImages[version];
   }
 
-  // Update the image source
-  hylianMapImage.src = imageSrc;
+  // Set the image source
+  image.src = imageSrc;
+  return image;
 }

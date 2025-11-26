@@ -240,44 +240,36 @@ a:hover {
   display: flex;
 }
 
-/* Close Button Styles */
-.close-btn {
+/* Close Icon Styles */
+.close-icon {
   position: absolute;
-  top: 2%;
-  right: 5%;
-  background: none;
-  border: 2px solid white;
-  color: white;
-  font-size: 3vw;  /* Font size in viewport width for responsiveness */
-  width: 2vw;  /* Width as a percentage of the viewport width */
-  height: 4vw; /* Height to maintain square aspect ratio */
-  display: flex;
-  align-items: center;
-  justify-content: center;  /* Center the icon/text inside the button */
-  border-radius: 0;  /* No rounded corners */
-  cursor: pointer;
-  transition: color 0.3s, border-color 0.3s;  /* Smooth transition for hover effects */
+  opacity: 0.65;
+  top: 1%;    /* 2% from the top of the overlay */
+  right: 5%;  /* 2% from the right of the overlay */
+  width: 4%;  /* Width of the close icon is 8% of the overlay's width */
+  height: auto;  /* Keep the aspect ratio intact */
+  object-fit: contain;  /* Ensures image scales properly */
+  cursor: pointer;  /* Pointer cursor on hover */
+  z-index: 1100;  /* Keep it above other content */
+  transition: opacity 0.3s ease;  /* Smooth transition effect */
 }
 
-/* Close Button Hover Styles */
-.close-btn:hover {
-  color: #f1c40f;  /* Highlight color when hovered */
-  border-color: #f1c40f;  /* Change border color on hover */
-  background: none;
+/* Close Icon Hover Effect */
+.close-icon:hover {
+  opacity: 1;
+  transform: translateY(-4%);  /* Move the icon up*/
 }
 
+/* Overlay Content - Centering and styling */
 .overlay-content {
-  position: relative;  /* Keeps content inside the overlay in place */
+  position: relative;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Container for the dropdown and button */
-.dropdown-container {
-  display: flex;
-  align-items: center; /* Vertically center the dropdown and button */
-  gap: 10px; /* Space between the dropdown and the button */
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 /* Spinner styling */
@@ -389,6 +381,29 @@ a:hover {
     width: 100%;    /* Images take up full width */
     margin: 0 0 20px 0;  /* Space below the image */
     display: block;   /* Ensure images are block-level */
+  }
+
+    .close-icon {
+      position: absolute; /* Ensure it's positioned */
+      z-index: 1100;  /* Make sure it's on top */
+          width: 8%;  /* Width of the close icon is 8% of the overlay's width */
+          height: auto;  /* Keep the aspect ratio intact */
+    }
+
+    .close-icon:hover {
+      opacity: 1;
+      transform: translateY(-4%);
+      z-index: 1200;  /* Ensure hover state is above other content */
+    }
+}
+
+/* Mobile Styles for width < 412px */
+@media (max-width: 412px) {
+  /* Target the select dropdown directly */
+  select {
+    width: 70%;  /* Reduce the width of the dropdown */
+    font-size: 1em; /* Adjust the font size */
+    padding: 8px 12px; /* Adjust padding if needed */
   }
 }
 
@@ -565,5 +580,6 @@ p.symbol{
     font-display: swap;
 }
 }
+
 
 
