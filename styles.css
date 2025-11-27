@@ -350,6 +350,22 @@ a:hover {
   visibility: hidden;
 }
 
+.linebeck {
+    width: 64px;
+    height: auto;
+}
+
+.kofi {
+    width: auto;
+    height: 40px;
+    transition: all 0.3s ease;
+}
+
+.kofi:hover {
+  filter: brightness(80%);  /* Darker green on hover */
+  transform: translateY(-2px);  /* Slight lift effect */
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   /* Make .content take up the full width with no padding or margin */
