@@ -20,8 +20,10 @@ const loadingIndicator = document.getElementById('loadingIndicator');
 
 // Image mapping with mobile versions
 const hylianVersionImages = {
-  "ocarinaOfTime": 'images/ocarina.png',
-  "ocarinaOfTime-mobile": 'images/ocarina-mobile.png',
+  "ocarinaOfTime64": 'images/ocarina.png',
+  "ocarinaOfTime64-mobile": 'images/ocarina-mobile.png',
+  "ocarinaOfTime3d": 'images/ocarina.png',
+  "ocarinaOfTime3d-mobile": 'images/ocarina-mobile.png',
   "windwaker": 'images/windwaker.png',
   "windwaker-mobile": 'images/windwaker-mobile.png',
   "twilightPrincess": 'images/twilight.png',
@@ -157,14 +159,17 @@ function translateText() {
   const version = hylianVersionElement.value; // Get the selected Hylian version
 
   // Check for versions that require Romaji translation (Japanese-based)
-  const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime";
+  const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime64" || version === "ocarinaOfTime3d";
 
-  if (isJapaneseVersion) {
-    // Apply font styles based on version selection
-    translatedTextElement.style.fontFamily = version === "windwaker"
-      ? "'Ancient Hylian', sans-serif"  // Windwaker Hylian font
-      : "'Hero Hylian', sans-serif";       // Ocarina Hylian font
-
+    if (isJapaneseVersion) {
+      translatedTextElement.style.fontFamily =
+        version === "windwaker"
+          ? "'Ancient Hylian', sans-serif"
+          : version === "ocarinaOfTime64"
+            ? "'Hylian64', sans-serif"
+            : version === "ocarinaOfTime3d"
+              ? "'Hero Hylian', sans-serif"
+              : "";
     if (isJapanese(inputText)) { // Fonts updated to accept Japanese. Only convert if English characters used
       translatedTextElement.innerHTML = inputText.split('\n').join('<br>'); // Use innerHTML to preserve line breaks
     } else {
@@ -210,8 +215,10 @@ function getGlyphIndexMap(version) {
   switch (version) {
     case "windwaker":
       return windwakerGlyphMap;
-    case "ocarinaOfTime":
-      return ocarinaGlyphMap;
+    case "ocarinaOfTime64":
+      return ocarina64GlyphMap;
+    case "ocarinaOfTime3d":
+      return ocarina3dGlyphMap;
     default:
       return {};  // Default empty map if no valid version
   }

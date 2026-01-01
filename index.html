@@ -32,6 +32,7 @@
   <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/TPHylian-GCNRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/GerudoTypographyRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/Hylian64Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/HeroHylianRegular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/AncientHylian-English.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="fonts/SSAncientHylian.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -55,7 +56,8 @@
             <label for="hylianVersion" id="chooseHylianVersionLabel"></label>
             <select id="hylianVersion">
               <optgroup label="Hylian Languages">
-                <option value="ocarinaOfTime" id="chooseHylianVersionOcarina"></option>
+                <option value="ocarinaOfTime64" id="chooseHylianVersionOcarina64"></option>
+                <option value="ocarinaOfTime3d" id="chooseHylianVersionOcarina3d"></option>
                 <option value="windwaker" id="chooseHylianVersionWindwaker"></option>
                 <option value="twilightPrincess" id="chooseHylianVersionTwilightPrincess"></option>
                 <option value="skywardSword" id="chooseHylianVersionSkywardSword"></option>
@@ -135,6 +137,7 @@
   <script src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js"></script> <!-- Load the UMD version of Wanakana JPN-->
   <script src="jsMapping/WWHylianMap.js"></script> <!-- Load the WW glyph map -->
   <script src="jsMapping/64HylianMap.js"></script> <!-- Load the N64 glyph map -->
+  <script src="jsMapping/3dHylianMap.js"></script> <!-- Load the 3ds glyph map -->
   <script src="jsMapping/fontFileMap.js"></script> <!-- Load the FontFile map to be able to download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- Required for PNG export -->
   <script src="languageSet.js"></script> <!-- Change language -->
