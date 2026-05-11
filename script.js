@@ -172,7 +172,12 @@ fontColorInput.addEventListener('input', function (event) {
 });
 
 // Attach event listeners to export buttons (add buttons to your HTML)
-exportPngElement.addEventListener('click', exportAsPNG);
+exportPngElement.addEventListener('click', () => {
+  exportAsPNG().catch((err) => {
+    console.error('Export as PNG failed:', err);
+    alert('PNG export failed to load required library. Please check your connection and try again.');
+  });
+});
 
 // Function to handle font change and translation logic
 function translateText() {
@@ -446,16 +451,21 @@ async function exportAsPNG() {
     translatedTextElement.textContent !== englishText &&
     translatedTextElement.textContent !== japaneseText) {
 
-    const html2canvas = await loadHtml2Canvas();
-    html2canvas(translatedTextElement, {
-      onrendered: function (canvas) {
-        const imgData = canvas.toDataURL("image/png");
-        const link = document.createElement('a');
-        link.href = imgData;
-        link.download = 'translatedText.png';
-        link.click();
-      }
-    });
+    try {
+      const html2canvas = await loadHtml2Canvas();
+      html2canvas(translatedTextElement, {
+        onrendered: function (canvas) {
+          const imgData = canvas.toDataURL("image/png");
+          const link = document.createElement('a');
+          link.href = imgData;
+          link.download = 'translatedText.png';
+          link.click();
+        }
+      });
+    } catch (err) {
+      console.error('Failed to load html2canvas:', err);
+      alert('PNG export is temporarily unavailable (failed to load). Please try again.');
+    }
   } else {
     console.log("No translated text to export.");
   }
