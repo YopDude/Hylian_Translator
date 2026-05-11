@@ -18,6 +18,29 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
+function loadHtml2Canvas() {
+  if (window.html2canvas) return Promise.resolve(window.html2canvas);
+
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-html2canvas]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(window.html2canvas));
+      existing.addEventListener('error', reject);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js';
+    script.async = true;
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+    script.dataset.html2canvas = 'true';
+    script.onload = () => resolve(window.html2canvas);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
 // Image mapping with mobile versions
 const hylianVersionImages = {
   "ocarinaOfTime64": 'images/ocarina.png',
@@ -413,7 +436,7 @@ function getTranslatedText(languageCode) {
 }
 
 // Function to export translated text as PNG
-function exportAsPNG() {
+async function exportAsPNG() {
   const computedStyle = window.getComputedStyle(translatedTextElement);
   const englishText = getTranslatedText("en");
   const japaneseText = getTranslatedText("jp");
@@ -423,6 +446,7 @@ function exportAsPNG() {
     translatedTextElement.textContent !== englishText &&
     translatedTextElement.textContent !== japaneseText) {
 
+    const html2canvas = await loadHtml2Canvas();
     html2canvas(translatedTextElement, {
       onrendered: function (canvas) {
         const imgData = canvas.toDataURL("image/png");

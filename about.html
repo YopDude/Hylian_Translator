@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="aboutPageTitle">About Zelda Hylian Translator – Learn More About Fonts, Contributions, and Resources</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2026-05-11">
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
   <!-- Meta Tags for SEO -->
@@ -30,7 +30,7 @@
 
 </head>
 
-<body>
+<body class="about-page">
 
   <header>
     <a href="index.html">
@@ -38,7 +38,7 @@
     </a>
     <!-- Language Selector Icon -->
     <div class="language-selector" style="text-align: right;">
-        <img id="languageIcon" src="images/en-jp.jpg" alt="Change Language" style="cursor: pointer;">
+        <img id="languageIcon" src="images/en-jp.jpg" alt="Change Language" width="317" height="201" decoding="async" style="cursor: pointer;">
     </div>
   </header>
 
@@ -51,7 +51,10 @@
         <p id="wwOoFonts">The <em>Wind Waker</em> and <em>Ocarina of Time</em> fonts are designed specifically to be used with both Japanese and English romaji input.</p>
         <p id="otherFonts">All other fonts in the collection, including those for <em>Twilight Princess</em>, <em>Skyward Sword</em>, and <em>Breath of the Wild</em>, are designed for use with the English alphabet.</p>
       </div>
-      <img src="images/hylian-collage.jpg" alt="A collage showcasing different Hylian fonts from Zelda games like Ocarina of Time and Breath of the Wild" width="46%">
+      <picture class="about-section-media about-section-media-46">
+        <source srcset="images/hylian-collage.webp" type="image/webp">
+        <img src="images/hylian-collage.jpg" alt="A collage showcasing different Hylian fonts from Zelda games like Ocarina of Time and Breath of the Wild" width="3264" height="3264" loading="lazy" decoding="async">
+      </picture>
     </section>
 
     <section class="section odd">
@@ -60,7 +63,10 @@
         <p class="symbol" style="color: #d84a17">l</p>
         <p id="contributionsText">All files, fonts, and related assets are available for download. You are welcome to fork the repository, make pull requests, or leave comments to contribute to the project. If you have improvements, suggestions, or new font additions, feel free to message or get involved through the  <a href="https://github.com/YopDude/Hylian_Translator">GitHub repo</a></p>
       </div>
-      <img src="images/github.png" alt="GitHub Repository" width="46%">
+      <picture class="about-section-media about-section-media-46">
+        <source srcset="images/github.webp" type="image/webp">
+        <img src="images/github.png" alt="GitHub Repository" width="1021" height="813" loading="lazy" decoding="async">
+      </picture>
     </section>
 
     <section class="section even">
@@ -78,7 +84,10 @@
         <p class="symbol" style="color: #2f5d9b">n</p>
         <p id="fontModificationsText">Some fonts were modified using <a href="https://www.glyphrstudio.com/">Glyphr Studio</a> and <a href="https://fontforge.org/">Font Forge</a>; Free and open-source font editors, to fix missing glyphs or improve the assignment of Unicode values (including: adding Japanese).</p>
       </div>
-      <img src="images/glyphr.png" alt="Glyphr Studio Interface" width="47%">
+      <picture class="about-section-media about-section-media-47">
+        <source srcset="images/glyphr.webp" type="image/webp">
+        <img src="images/glyphr.png" alt="Glyphr Studio Interface" width="1545" height="821" loading="lazy" decoding="async">
+      </picture>
     </section>
 
     <section class="section even">
@@ -91,7 +100,10 @@
         <p><a href="https://www.omniglot.com/conscripts/hylian2.htm" id="omniglotLink">Omniglot - Hylian Scripts</a></p>
         <p><a href="https://zeldauniverse.net/2022/09/27/zeldas-study-lost-in-localization/" id="mudoranLink">Mudoran - The mysterious ancient Hylian script</a></p>
       </div>
-      <img src="images/intro.png" alt="Hylian Language Overview" width="47%">
+      <picture class="about-section-media about-section-media-47">
+        <source srcset="images/intro.webp" type="image/webp">
+        <img src="images/intro.png" alt="Hylian Language Overview" width="400" height="240" loading="lazy" decoding="async">
+      </picture>
     </section>
   </div>
 
@@ -101,15 +113,10 @@
     <div class="disclaimer">
       <p id="disclaimerText"><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
     </div>
-    </div>
-    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support me on Ko-fi', '#28a745', 'L3L01P30QJ');kofiwidget2.draw();</script> 
   </footer>
 
-  <script src="jsMapping/translations.js"></script> <!-- Load the text content in selected language-->
-  <script src="languageSet.js"></script> <!-- Change language -->
-
-</script>
+  <script defer src="jsMapping/translations.js?v=2026-05-11"></script> <!-- Load the text content in selected language-->
+  <script defer src="languageSet.js?v=2026-05-11"></script> <!-- Change language -->
 
 </body>
 </html>
-

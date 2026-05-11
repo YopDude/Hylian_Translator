@@ -159,6 +159,33 @@ textarea {
   justify-content: space-between; /* Space between content */
 }
 
+.about-page .section {
+  align-items: stretch;
+}
+
+.about-page .about-section-media {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.about-page .about-section-media-46 {
+  flex: 1 1 46%;
+  max-width: 46%;
+}
+
+.about-page .about-section-media-47 {
+  flex: 1 1 47%;
+  max-width: 47%;
+}
+
+.about-page .about-section-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .section img {
     margin-left: 10px;
 }
@@ -606,7 +633,3 @@ p.symbol{
     font-style: normal;
     font-display: swap;
 }
-}
-
-
-
