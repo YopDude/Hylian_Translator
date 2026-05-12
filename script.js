@@ -18,6 +18,75 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
+/** Bumped on each translate; stale async work must not touch the DOM. */
+let translateGeneration = 0;
+/** Last font-family applied to the output; avoids FOUT to system sans while a new webfont loads. */
+let lastCommittedFontFamily = null;
+
+function primaryFamilyFromCssFontFamily(cssFontFamily) {
+  const trimmed = cssFontFamily.trim();
+  const sq = trimmed.match(/^'([^']*)'/);
+  if (sq) return sq[1];
+  const dq = trimmed.match(/^"([^"]*)"/);
+  if (dq) return dq[1];
+  const first = trimmed.split(',')[0].trim();
+  return first.replace(/^["']|["']$/g, '');
+}
+
+async function ensureFontReady(targetFont, gen) {
+  if (gen !== translateGeneration) return;
+  if (!targetFont || targetFont.trim() === 'sans-serif') return;
+  const primary = primaryFamilyFromCssFontFamily(targetFont);
+  if (!primary || primary === 'sans-serif') return;
+  const fontSizeRem = fontSizeSlider.value;
+  const loadSpec = `${fontSizeRem}rem "${primary}"`;
+  if (document.fonts.check(loadSpec)) return;
+  try {
+    await document.fonts.load(loadSpec);
+  } catch (e) {
+    // Still commit after load failure so text is not stuck forever.
+  }
+}
+
+function syncMirrorClassForVersion(version) {
+  translatedTextElement.classList.remove('mirror-text');
+  if (version === 'twilightPrincess' && wiiOption.checked) {
+    translatedTextElement.classList.add('mirror-text');
+  }
+}
+
+function getFontFamilyString(version) {
+  switch (version) {
+    case 'twilightPrincess':
+      return "'TP Hylian - GCN', sans-serif";
+    case 'skywardSword':
+      return "'SS Ancient Hylian', sans-serif";
+    case 'botw':
+      return "'Albw Botw Hylian', sans-serif";
+    case 'gerudo':
+      return "'Gerudo', sans-serif";
+    case 'sheikah':
+      return "'BotW Sheikah', sans-serif";
+    case 'mudoran':
+      return "'Mudoran', sans-serif";
+    default:
+      return 'sans-serif';
+  }
+}
+
+function getJapaneseFontFamilyString(version) {
+  switch (version) {
+    case 'windwaker':
+      return "'Ancient Hylian', sans-serif";
+    case 'ocarinaOfTime64':
+      return "'Hylian64', sans-serif";
+    case 'ocarinaOfTime3d':
+      return "'Hero Hylian', sans-serif";
+    default:
+      return '';
+  }
+}
+
 function loadHtml2Canvas() {
   if (window.html2canvas) return Promise.resolve(window.html2canvas);
 
@@ -180,52 +249,49 @@ exportPngElement.addEventListener('click', () => {
 });
 
 // Function to handle font change and translation logic
-function translateText() {
-  const inputText = inputTextElement.value; // Get the input text
-  const romajiText = convertToRomaji(inputText); // Convert Japanese to English for English-based fonts
-  const normalizedText = normalizeString(romajiText); // Replace any accented letters, etc
-  const version = hylianVersionElement.value; // Get the selected Hylian version
+async function translateText() {
+  const gen = ++translateGeneration;
+  const inputText = inputTextElement.value;
+  const romajiText = convertToRomaji(inputText);
+  const normalizedText = normalizeString(romajiText);
+  const version = hylianVersionElement.value;
 
-  // Check for versions that require Romaji translation (Japanese-based)
-  const isJapaneseVersion = version === "windwaker" || version === "ocarinaOfTime64" || version === "ocarinaOfTime3d";
+  const isJapaneseVersion =
+    version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
 
-    if (isJapaneseVersion) {
-      translatedTextElement.style.fontFamily =
-        version === "windwaker"
-          ? "'Ancient Hylian', sans-serif"
-          : version === "ocarinaOfTime64"
-            ? "'Hylian64', sans-serif"
-            : version === "ocarinaOfTime3d"
-              ? "'Hero Hylian', sans-serif"
-              : "";
-    if (isJapanese(inputText)) { // Fonts updated to accept Japanese. Only convert if English characters used
-      translatedTextElement.innerHTML = inputText.split('\n').join('<br>'); // Use innerHTML to preserve line breaks
+  let targetFont = 'sans-serif';
+  let innerHTML = '';
+
+  if (isJapaneseVersion) {
+    targetFont = getJapaneseFontFamilyString(version);
+    if (isJapanese(inputText)) {
+      innerHTML = inputText.split('\n').join('<br>');
     } else {
-      // Convert Input to Hylian using the appropriate glyph map
-      const glyphIndexMap = getGlyphIndexMap(version); // Get the correct map based on the selected version
+      const glyphIndexMap = getGlyphIndexMap(version);
       const hylianText = convertToHylian(romajiText, glyphIndexMap);
-
-      // Update the translated text
-      translatedTextElement.innerHTML = hylianText.split('\n').join('<br>'); // Preserve line breaks
+      innerHTML = hylianText.split('\n').join('<br>');
     }
-  }
-  else if (version === "mudoran") { // Use 'joke' translation
-    translatedTextElement.style.fontFamily = getFontFamilyForVersion(version);
-    mudoranify(inputText, translatedTextElement);
-  }
-  else {
-    // Handle English-based (non-Japanese) Hylian translations
-    translatedTextElement.style.fontFamily = getFontFamilyForVersion(version);
-
-    // For English-to-Hylian translation, convert each character to the corresponding Hylian font character
-    let translatedText = "";
-    for (let char of normalizedText) {
-      translatedText += char;  // For simplicity, this can be modified to use a map like above if needed
+  } else if (version === 'mudoran') {
+    targetFont = getFontFamilyString(version);
+    innerHTML = mudoranifyToHtml(inputText);
+  } else {
+    targetFont = getFontFamilyString(version);
+    let translatedText = '';
+    for (const char of normalizedText) {
+      translatedText += char;
     }
-
-    // Update the translated text and preserve line breaks
-    translatedTextElement.innerHTML = translatedText.split('\n').join('<br>'); // Preserve line breaks
+    innerHTML = translatedText.split('\n').join('<br>');
   }
+
+  if (targetFont !== lastCommittedFontFamily) {
+    await ensureFontReady(targetFont, gen);
+  }
+  if (gen !== translateGeneration) return;
+
+  syncMirrorClassForVersion(version);
+  translatedTextElement.style.fontFamily = targetFont;
+  translatedTextElement.innerHTML = innerHTML;
+  lastCommittedFontFamily = targetFont;
 }
 
 // Helper function to check if the input contains Japanese characters
@@ -249,34 +315,6 @@ function getGlyphIndexMap(version) {
       return ocarina3dGlyphMap;
     default:
       return {};  // Default empty map if no valid version
-  }
-}
-
-// Function to get the font family based on the version
-function getFontFamilyForVersion(version) {
-  translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
-  
-  switch (version) {
-    case "twilightPrincess":
-      if (gamecubeOption.checked) {
-        translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
-      } else if (wiiOption.checked) {
-        translatedTextElement.classList.add('mirror-text'); // Add mirror effect
-      }
-      return "'TP Hylian - GCN', sans-serif";
-
-    case "skywardSword":
-      return "'SS Ancient Hylian', sans-serif";
-    case "botw":
-      return "'Albw Botw Hylian', sans-serif";
-    case "gerudo":
-      return "'Gerudo', sans-serif";
-    case "sheikah":
-      return "'BotW Sheikah', sans-serif";
-    case "mudoran":
-      return "'Mudoran', sans-serif";
-    default:
-      return "sans-serif"; // Default font for fallback
   }
 }
 
@@ -360,32 +398,28 @@ function convertToHylian(input, glyphIndexMap) {
   return hylianText;
 }
 
-// Mudoranify function for joke translation
-function mudoranify(input, element) {
-  // Determine which set of 3 symbols to use
-  const choices = isJapanese(input) ? ["D", "E", "F"] : ["A", "B", "C"];
-  let translatedText = "";
+// Mudoranify function for joke translation (returns HTML fragment)
+function mudoranifyToHtml(input) {
+  const choices = isJapanese(input) ? ['D', 'E', 'F'] : ['A', 'B', 'C'];
+  let translatedText = '';
 
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
 
-    // Detect if this character should be transformed
     const isLatin = /[a-zA-Z]/.test(char);
     const isJap = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(char);
 
     if (isLatin || isJap) {
       const code = char.charCodeAt(0);
 
-      // Deterministic modulus function
       const idx = (code + i) % choices.length;
       translatedText += choices[idx];
     } else {
-      // Preserve punctuation, numbers, spaces, etc
       translatedText += char;
     }
   }
 
-  element.innerHTML = translatedText.split('\n').join('<br>');
+  return translatedText.split('\n').join('<br>');
 }
 
 // Don't translate if inputText area is still blank
@@ -488,3 +522,8 @@ function preloadImage(version) {
   image.src = imageSrc;
   return image;
 }
+
+/** Keeps font-load bookkeeping in sync when language toggle resets the output (script loads after languageSet). */
+window.syncTranslatorCommittedFont = function (cssFontFamily) {
+  lastCommittedFontFamily = cssFontFamily;
+};
