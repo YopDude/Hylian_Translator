@@ -333,12 +333,14 @@ function convertToHylian(input, glyphIndexMap) {
     "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
     "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
     "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
+    "shya": ["shi", "ya"], "shyu": ["shi", "yu"], "shyo": ["shi", "yo"],
     "cha": ["chi", "ya"], "chu": ["chi", "yu"], "cho": ["chi", "yo"],
     "nya": ["ni", "ya"], "nyu": ["ni", "yu"], "nyo": ["ni", "yo"],
     "hya": ["hi", "ya"], "hyu": ["hi", "yu"], "hyo": ["hi", "yo"],
     "mya": ["mi", "ya"], "myu": ["mi", "yu"], "myo": ["mi", "yo"],
     "rya": ["ri", "ya"], "ryu": ["ri", "yu"], "ryo": ["ri", "yo"],
     "ja": ["ji", "ya"], "ju": ["ji", "yu"], "jo": ["ji", "yo"],
+    "jya": ["ji", "ya"], "jyu": ["ji", "yu"], "jyo": ["ji", "yo"],
     "bya": ["bi", "ya"], "byu": ["bi", "yu"], "byo": ["bi", "yo"],
     "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
   };
