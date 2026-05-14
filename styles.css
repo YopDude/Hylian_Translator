@@ -159,7 +159,7 @@ textarea {
   justify-content: space-between; /* Space between content */
 }
 
-.about-page .section {
+.aabout-page .section {
   align-items: stretch;
 }
 
@@ -445,6 +445,23 @@ a:hover {
       transform: translateY(-4%);
       z-index: 1200;  /* Ensure hover state is above other content */
     }
+
+    .about-section {
+        flex-direction: column; /* Stack text and image vertically */
+        align-items: center;
+        padding: 10px;
+      }
+
+      .about-section-media {
+        width: 95%; /* Force image to take up most of the screen width */
+        max-width: none; /* Remove any desktop constraints */
+        margin: 15px auto; /* Center the image with some spacing */
+      }
+
+      .about-section-media img {
+        width: 100%; /* Ensure the img tag fills its container */
+        height: auto; /* Maintain aspect ratio */
+      }
 }
 
 /* Mobile Styles for width < 412px */
