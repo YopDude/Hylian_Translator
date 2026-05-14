@@ -18,8 +18,7 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
-// Ensure this is an absolute URL
-const KUROMOJI_DICT_BASE = "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/";
+const KUROMOJI_DICT_BASE = './dict/';
 const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
 const KUROSHIRO_ANALYZER_SCRIPT =
   'https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js';
