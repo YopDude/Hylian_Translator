@@ -19,6 +19,7 @@ const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
 const KUROMOJI_DICT_BASE = './dict/';
+// Add this line below:
 const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
 const KUROSHIRO_ANALYZER_SCRIPT =
   'https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js';
@@ -323,8 +324,8 @@ async function ensureKuroshiroInstance() {
           throw new Error('Kuroshiro or KuromojiAnalyzer not available');
         }
         
+        // Update this section in ensureKuroshiroInstance:
         const kuroshiro = new Kuroshiro();
-        // This triggers the dictionary download
         await kuroshiro.init(new KuromojiAnalyzer({
             dictPath: KUROMOJI_DICT_BASE 
         }));
