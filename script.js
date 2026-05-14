@@ -18,7 +18,8 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
-const KUROMOJI_DICT_BASE = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/';
+// Ensure this is an absolute URL
+const KUROMOJI_DICT_BASE = "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/";
 const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
 const KUROSHIRO_ANALYZER_SCRIPT =
   'https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js';
@@ -325,7 +326,9 @@ async function ensureKuroshiroInstance() {
         
         const kuroshiro = new Kuroshiro();
         // This triggers the dictionary download
-        await kuroshiro.init(new KuromojiAnalyzer({ dictPath: KUROMOJI_DICT_BASE }));
+        await kuroshiro.init(new KuromojiAnalyzer({
+            dictPath: KUROMOJI_DICT_BASE 
+        }));
         
         window.__hylianKuroshiro = kuroshiro;
         return kuroshiro;
