@@ -128,8 +128,11 @@
     </div>
         
     <!-- Loading Spinner (Hidden by default) -->
-    <div id="loadingIndicator" class="loading-indicator">
-      <div class="spinner"></div>
+    <div id="loadingIndicator" class="loadingIndicator">
+      <div id="loadingGifContainer"></div> 
+      <div class="loading-bubble">
+        <div id="loadingMessage"></div>
+      </div>
     </div>
 
   <script defer src="jsMapping/translations.js?v=2026-05-11"></script> <!-- Load the text content in selected language-->
@@ -140,7 +143,7 @@
   <script defer src="jsMapping/fontFileMap.js?v=2026-05-11"></script> <!-- Load the FontFile map to be able to download -->
   <!-- html2canvas is loaded on-demand (only when exporting) -->
   <script defer src="languageSet.js?v=2026-05-12"></script> <!-- Change language -->
-  <script defer src="script.js?v=2026-05-12"></script> <!-- Then load main script -->
+  <script defer src="script.js?v=2026-05-15"></script> <!-- Then load main script -->
 
 </body>
 </html>

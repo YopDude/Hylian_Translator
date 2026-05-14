@@ -18,6 +18,14 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
+const KUROMOJI_DICT_BASE = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/';
+const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
+const KUROSHIRO_ANALYZER_SCRIPT =
+  'https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js';
+
+/** @type {Promise<unknown>|null} */
+let kuroshiroInitPromise = null;
+
 /** Bumped on each translate; stale async work must not touch the DOM. */
 let translateGeneration = 0;
 /** Last font-family applied to the output; avoids FOUT to system sans while a new webfont loads. */
@@ -240,6 +248,109 @@ fontColorInput.addEventListener('input', function (event) {
   translatedTextElement.style.color = color;
 });
 
+function umdDefault(globalName) {
+  const mod = window[globalName];
+  if (mod == null) return null;
+  return mod.default != null ? mod.default : mod;
+}
+
+function loadKanjiScriptOnce(src) {
+  return new Promise(function (resolve, reject) {
+    const marker = encodeURIComponent(src);
+    const sel = 'script[data-hylian-kanji-src="' + marker + '"]';
+    const existing = document.querySelector(sel);
+    if (existing) {
+      if (existing.getAttribute('data-loaded') === '1') {
+        resolve();
+        return;
+      }
+      existing.addEventListener(
+        'load',
+        function () {
+          existing.setAttribute('data-loaded', '1');
+          resolve();
+        },
+        { once: true }
+      );
+      existing.addEventListener(
+        'error',
+        function () {
+          reject(new Error('Failed to load script: ' + src));
+        },
+        { once: true }
+      );
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.setAttribute('data-hylian-kanji-src', marker);
+    s.addEventListener('load', function () {
+      s.setAttribute('data-loaded', '1');
+      resolve();
+    });
+    s.addEventListener('error', function () {
+      reject(new Error('Failed to load script: ' + src));
+    });
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureKuroshiroInstance() {
+  if (window.__hylianKuroshiro) {
+    return window.__hylianKuroshiro;
+  }
+  
+  if (!kuroshiroInitPromise) {
+    kuroshiroInitPromise = (async function () {
+      const spinnerOverlay = document.querySelector('.loadingIndicator');
+
+      // 1. Display the overlay container
+      if (spinnerOverlay) {
+        spinnerOverlay.style.display = 'block';
+      }
+      
+      document.body.style.cursor = 'wait';
+
+      try {
+        await loadKanjiScriptOnce(KUROSHIRO_SCRIPT);
+        await loadKanjiScriptOnce(KUROSHIRO_ANALYZER_SCRIPT);
+        const Kuroshiro = umdDefault('Kuroshiro');
+        const KuromojiAnalyzer = umdDefault('KuromojiAnalyzer');
+        
+        if (!Kuroshiro || !KuromojiAnalyzer) {
+          throw new Error('Kuroshiro or KuromojiAnalyzer not available');
+        }
+        
+        const kuroshiro = new Kuroshiro();
+        // This triggers the dictionary download
+        await kuroshiro.init(new KuromojiAnalyzer({ dictPath: KUROMOJI_DICT_BASE }));
+        
+        window.__hylianKuroshiro = kuroshiro;
+        return kuroshiro;
+      } finally {
+        // 2. Hide the overlay container when completed or failed
+        if (spinnerOverlay) {
+          spinnerOverlay.style.display = 'none';
+        }
+        document.body.style.cursor = 'default';
+      }
+    })();
+  }
+  
+  try {
+    return await kuroshiroInitPromise;
+  } catch (e) {
+    kuroshiroInitPromise = null;
+    throw e;
+  }
+}
+
+function hasKanji(input) {
+  return /[\u4E00-\u9FFF]/.test(input);
+}
+
 // Attach event listeners to export buttons (add buttons to your HTML)
 exportPngElement.addEventListener('click', () => {
   exportAsPNG().catch((err) => {
@@ -251,9 +362,7 @@ exportPngElement.addEventListener('click', () => {
 // Function to handle font change and translation logic
 async function translateText() {
   const gen = ++translateGeneration;
-  const inputText = inputTextElement.value;
-  const romajiText = convertToRomaji(inputText);
-  const normalizedText = normalizeString(romajiText);
+  const originalInput = inputTextElement.value;
   const version = hylianVersionElement.value;
 
   const isJapaneseVersion =
@@ -261,28 +370,49 @@ async function translateText() {
 
   let targetFont = 'sans-serif';
   let innerHTML = '';
+  let workingText = originalInput;
 
-  if (isJapaneseVersion) {
-    targetFont = getJapaneseFontFamilyString(version);
-    if (isJapanese(inputText)) {
-      innerHTML = inputText.split('\n').join('<br>');
-    } else {
-      const glyphIndexMap = getGlyphIndexMap(version);
-      const hylianText = convertToHylian(romajiText, glyphIndexMap);
-      innerHTML = hylianText.split('\n').join('<br>');
+  // 1. GLOBAL KANJI CONVERSION
+  // We check for Kanji regardless of the selected version.
+  if (hasKanji(originalInput)) {
+    try {
+      const kuroshiro = await ensureKuroshiroInstance();
+      if (gen !== translateGeneration) return;
+      // Convert Kanji to Romaji so it can be mapped to Hylian letters (A-Z) or Japanese syllables.
+      workingText = await kuroshiro.convert(originalInput, { to: 'romaji' });
+      if (gen !== translateGeneration) return;
+    } catch (err) {
+      console.error('Kanji reading conversion failed:', err);
+      if (gen !== translateGeneration) return;
+      // Fallback to original text if conversion fails
+      workingText = originalInput;
     }
-  } else if (version === 'mudoran') {
-    targetFont = getFontFamilyString(version);
-    innerHTML = mudoranifyToHtml(inputText);
-  } else {
-    targetFont = getFontFamilyString(version);
-    let translatedText = '';
-    for (const char of normalizedText) {
-      translatedText += char;
-    }
-    innerHTML = translatedText.split('\n').join('<br>');
   }
 
+  // 2. FONT & TRANSLATION LOGIC
+  if (isJapaneseVersion) {
+    targetFont = getJapaneseFontFamilyString(version);
+    const glyphIndexMap = getGlyphIndexMap(version);
+    
+    // For Japanese versions, we need the Romaji format to map to syllables
+    const romajiFromJp = convertToRomaji(workingText);
+    const hylianText = convertToHylian(romajiFromJp, glyphIndexMap);
+    innerHTML = hylianText.split('\n').join('<br>');
+
+  } else if (version === 'mudoran') {
+    targetFont = getFontFamilyString(version);
+    innerHTML = mudoranifyToHtml(workingText);
+
+  } else {
+    // English-based Hylian (BotW, Twilight Princess, Skyward Sword, etc.)
+    targetFont = getFontFamilyString(version);
+    const romajiText = convertToRomaji(workingText);
+    const normalizedText = normalizeString(romajiText);
+    
+    innerHTML = normalizedText.split('\n').join('<br>');
+  }
+
+  // 3. RENDER
   if (targetFont !== lastCommittedFontFamily) {
     await ensureFontReady(targetFont, gen);
   }
