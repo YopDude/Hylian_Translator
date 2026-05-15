@@ -368,12 +368,20 @@ async function translateText() {
   const originalInput = inputTextElement.value;
   const version = hylianVersionElement.value;
 
-  const isJapaneseVersion =
-    version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
+  if (!originalInput) {
+    translatedTextElement.textContent = "";
+    return;
+  }
 
+  const isJapaneseVersion = version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
   let targetFont = 'sans-serif';
   let innerHTML = '';
+  
+  // Clean text: Handle Slavic, Greek, and European accents immediately
   let workingText = originalInput;
+  if (typeof window.normalizeToEnglish === 'function') {
+    workingText = window.normalizeToEnglish(originalInput);
+  }
 
   // 1. GLOBAL KANJI CONVERSION
   // We check for Kanji regardless of the selected version.
@@ -434,6 +442,9 @@ function isJapanese(input) {
 
 // Function to normalize string (remove accents, etc.)
 function normalizeString(input) {
+  // We only want to normalize non-Japanese text. 
+  // If it's Japanese, we skip the NFD normalization which breaks dakuten.
+  if (isJapanese(input)) return input;
   return input.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
