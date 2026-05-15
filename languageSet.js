@@ -64,9 +64,13 @@ function setLanguage(language) {
 
   for (let key in langData) {
     const element = document.getElementById(key);
-    // Only update if it's a string (don't try to inject the tooltips object)
     if (element && typeof langData[key] === 'string') {
-      element.innerHTML = langData[key];
+      // Check if the element is an optgroup
+      if (element.tagName.toLowerCase() === 'optgroup') {
+        element.setAttribute('label', langData[key]);
+      } else {
+        element.innerHTML = langData[key];
+      }
     }
   }
 }

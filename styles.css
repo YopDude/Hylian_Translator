@@ -680,3 +680,13 @@ p.symbol{
     font-style: normal;
     font-display: swap;
 }
+
+/* 1. Global override for the entire site (including About page and Footer) */
+html[lang="ru"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect), 
+html[lang="uk"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect), 
+html[lang="sr"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect) {
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif !important;
+    letter-spacing: normal !important;
+}
+
+
