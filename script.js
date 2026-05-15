@@ -17,7 +17,24 @@ const closeOverlayBtn = document.getElementById('closeOverlayBtn');
 const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
+//Chinese characters
+const PINYIN_SCRIPT = 'https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.3/dist/index.js';
+let pinyinLibPromise = null;
 
+async function ensurePinyinInstance() {
+    if (window.pinyinPro) return window.pinyinPro;
+    if (!pinyinLibPromise) {
+        pinyinLibPromise = loadKanjiScriptOnce(PINYIN_SCRIPT).then(() => window.pinyinPro);
+    }
+    return pinyinLibPromise;
+}
+
+function hasChinese(text) {
+    // Detects Chinese characters but ignores Japanese-specific Kanji ranges if possible
+    return /[\u4e00-\u9fa5]/.test(text);
+}
+
+//Japanese characters
 const KUROMOJI_DICT_BASE = './dict/';
 // Add this line below:
 const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
@@ -350,9 +367,9 @@ async function ensureKuroshiroInstance() {
   }
 }
 
-function hasKanji(input) {
-  return /[\u4E00-\u9FFF]/.test(input);
-}
+function hasKanji(input) { return /[\u4E00-\u9FFF]/.test(input); }
+function hasKana(input) { return /[\u3040-\u309F\u30A0-\u30FF]/.test(input); }
+function hasChinese(input) { return /[\u4e00-\u9fa5]/.test(input); }
 
 // Attach event listeners to export buttons (add buttons to your HTML)
 exportPngElement.addEventListener('click', () => {
@@ -365,7 +382,7 @@ exportPngElement.addEventListener('click', () => {
 // Function to handle font change and translation logic
 async function translateText() {
   const gen = ++translateGeneration;
-  const originalInput = inputTextElement.value;
+  const originalInput = String(inputTextElement.value); // Force String
   const version = hylianVersionElement.value;
 
   if (!originalInput) {
@@ -377,30 +394,17 @@ async function translateText() {
   let targetFont = 'sans-serif';
   let innerHTML = '';
   
-  // Clean text: Handle Slavic, Greek, and European accents immediately
+  // Clean text through your map file
   let workingText = originalInput;
   if (typeof window.normalizeToEnglish === 'function') {
-    workingText = window.normalizeToEnglish(originalInput);
+      // Use await because the map now calls the Pinyin library
+      workingText = await window.normalizeToEnglish(originalInput);
   }
 
-  // 1. GLOBAL KANJI CONVERSION
-  // We check for Kanji regardless of the selected version.
-  if (hasKanji(originalInput)) {
-    try {
-      const kuroshiro = await ensureKuroshiroInstance();
-      if (gen !== translateGeneration) return;
-      // Convert Kanji to Romaji so it can be mapped to Hylian letters (A-Z) or Japanese syllables.
-      workingText = await kuroshiro.convert(originalInput, { to: 'romaji' });
-      if (gen !== translateGeneration) return;
-    } catch (err) {
-      console.error('Kanji reading conversion failed:', err);
-      if (gen !== translateGeneration) return;
-      // Fallback to original text if conversion fails
-      workingText = originalInput;
-    }
-  }
+  // Ensure workingText is a string before passing to Wanakana
+  workingText = String(workingText);
 
-  // 2. FONT & TRANSLATION LOGIC
+  // 1. FONT & TRANSLATION LOGIC
   if (isJapaneseVersion) {
     targetFont = getJapaneseFontFamilyString(version);
     const glyphIndexMap = getGlyphIndexMap(version);

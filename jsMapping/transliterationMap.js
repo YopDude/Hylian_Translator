@@ -29,32 +29,50 @@ function decomposeHangul(char) {
     return KOREAN_INITIALS[initial] + KOREAN_VOWELS[vowel] + KOREAN_FINALS[final];
 }
 
-function normalizeToEnglish(text) {
+async function normalizeToEnglish(text) {
     if (!text) return "";
     let result = "";
 
-    for (let char of text) {
+    // Convert input to string just in case it's being passed an event or object
+    const input = String(text);
+
+    for (let char of input) {
         const charCode = char.charCodeAt(0);
         
-        // 1. Handle Korean (Hangul blocks start at 0xAC00)
+        // 1. Handle Korean (Hangul)
         if (charCode >= 0xAC00 && charCode <= 0xD7AF) {
             result += decomposeHangul(char);
             continue;
         }
 
-        // 2. Skip Japanese (to preserve dots/dakuten)
-        const isCharJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(char);
-        if (isCharJapanese) {
-            result += char;
+        // 2. Handle Chinese (Hanzi)
+        if (/[\u4e00-\u9fa5]/.test(char)) {
+            try {
+                const pinyinPro = await window.ensurePinyinInstance();
+                // Ensure we get a string back, use a space to separate pinyin sounds
+                const pinyinResult = pinyinPro.pinyin(char, { toneType: 'none' });
+                result += String(pinyinResult) + " ";
+            } catch (e) {
+                result += char;
+            }
             continue;
         }
 
-        // 3. Process European/Slavic/Greek
+        // 3. Handle Japanese (Kana/Kanji)
+        // Keep them as-is so Kuroshiro/Wanakana can handle them later in script.js
+        if (/[\u3040-\u309F\u30A0-\u30FF]/.test(char)) {
+            result += char; 
+            continue;
+        }
+
+        // 4. Process European/Slavic/Greek/German
         let processedChar = char.toLowerCase();
         processedChar = processedChar.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
         result += CYRILLIC_GREEK_MAP[processedChar] || processedChar;
     }
-    return result;
+    
+    // Final safety: trim extra spaces and ensure it is a string
+    return result.trim();
 }
 
 window.normalizeToEnglish = normalizeToEnglish;
