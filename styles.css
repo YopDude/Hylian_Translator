@@ -15,14 +15,13 @@ body {
   overflow-y: auto; /* Allow vertical scroll */
 }
 
-/* Ensure header is relatively positioned */
 header {
-  position: relative;  /* Needed for absolute positioning of child elements */
+  position: relative;
   width: 100%;
-  padding: 0px 0;
+  padding: 20px 0 40px 0; /* Adjusted padding for better vertical balance */
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black */
-  color: #f7f1e1; /* Off-white (cream) text color */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #f7f1e1;
 }
 
 /* Add Zelda insignia (the repeating ribbon) */
@@ -40,20 +39,29 @@ header::after {
   z-index: 1;  /* Ensure it's above any background but below other content */
 }
 
-/* Position the language selector to the right */
+/* Position the selector inline with the subtitle area */
 .language-selector {
-  padding: 10px 30px;
-  text-align: right;  /* Vertically center the flags */
-  z-index: 10; /* Above other elements */
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%); /* Centers it vertically within the header height */
+  padding: 0;
+  z-index: 10;
 }
 
-#languageIcon {
-  cursor: pointer;
-  width: 3rem; 
-  height: auto;  /* Maintain aspect ratio */
-  transition: transform 0.2s ease;
+/* Make the dropdown itself less bulky */
+#languageSelect {
+  padding: 5px 10px;
+  margin: 0;
+  font-size: 0.9rem; /* Smaller font for a cleaner look */
+  border-radius: 4px;
 }
 
+/* Adjust subtitle to ensure it doesn't collide with the selector */
+#headerSubtitle {
+  margin: 5px 0 0 0;
+  padding: 0 150px; /* Prevents text from overlapping the selector on medium screens */
+}
 
 #languageIcon:hover {
   transform: scale(1.1);  /* Zoom the image slightly on hover */
@@ -462,6 +470,21 @@ a:hover {
         width: 100%; /* Ensure the img tag fills its container */
         height: auto; /* Maintain aspect ratio */
       }
+  .language-selector {
+    position: static; /* Let it flow naturally on small screens */
+    transform: none;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  #headerSubtitle {
+    padding: 0 20px;
+  }
+
+  #languageSelect {
+    width: auto; /* Allow it to shrink */
+    font-size: 0.85rem;
+  }
 }
 
 /* Mobile Styles for width < 412px */

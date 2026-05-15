@@ -1,66 +1,96 @@
 // Check if a language is already selected in sessionStorage
 let selectedLanguage = sessionStorage.getItem('language');
 
-// If no language is selected, detect the user's preferred language (default to English if not Japanese)
-if (!selectedLanguage) {
-  selectedLanguage = detectLanguage(); // Detect language
-  sessionStorage.setItem('language', selectedLanguage); // Store language in sessionStorage
-}
-
-// Initialize the page with the selected language (either from sessionStorage or detected)
-document.documentElement.lang = selectedLanguage;
-setLanguage(selectedLanguage);
-updatePlaceholder(selectedLanguage);
-updateRadioLabels(selectedLanguage);
-updateTooltips(selectedLanguage);
-
-// Function to detect the user's browser language (defaults to English if not Japanese)
+// Function to detect the user's browser language
 function detectLanguage() {
   const userLanguage = navigator.language || navigator.userLanguage;
-  return userLanguage.startsWith('ja') ? 'jp' : 'en'; // If it's Japanese, return 'jp', else return 'en'
+  return userLanguage.startsWith('ja') ? 'jp' : 'en'; 
 }
 
-// Event listener for the language toggle button/icon
-document.getElementById('languageIcon').addEventListener('click', function() {
-  const currentLanguage = document.documentElement.lang; // Get current language
-  const newLanguage = currentLanguage === 'en' ? 'jp' : 'en'; // Toggle between 'en' and 'jp'
-  
-  setLanguage(newLanguage);  // Update the text content based on the selected language
-  document.documentElement.lang = newLanguage;  // Update lang attribute for accessibility and SEO
-  
-  // Store the new language selection in sessionStorage
-  sessionStorage.setItem('language', newLanguage);
-  
-  // Update placeholder text for the textarea based on the new language
-  updatePlaceholder(newLanguage);
-  resetTranslatedText(newLanguage);
-  // Update radio button labels for Twilight Princess
-  updateRadioLabels(newLanguage);
-  // Update tooltips based on the new language
-  updateTooltips(newLanguage);
-});
+// Initial Setup Function
+function initLanguage() {
+  if (!selectedLanguage) {
+    selectedLanguage = detectLanguage(); 
+    sessionStorage.setItem('language', selectedLanguage);
+  }
 
-// Function to update the text content of the page based on the selected language
+  // Ensure the translations object exists before proceeding
+  if (typeof translations === 'undefined' || !translations[selectedLanguage]) {
+    console.warn("Translations not loaded yet. Retrying in 50ms...");
+    setTimeout(initLanguage, 50);
+    return;
+  }
+
+  document.documentElement.lang = selectedLanguage;
+
+  const languageSelect = document.getElementById('languageSelect');
+  if (languageSelect) {
+    languageSelect.value = selectedLanguage;
+  }
+
+  // Initial UI Update
+  setLanguage(selectedLanguage);
+  updatePlaceholder(selectedLanguage);
+  updateRadioLabels(selectedLanguage);
+  updateTooltips(selectedLanguage);
+}
+
+// Run initialization
+initLanguage();
+
+// Event Listener for the dropdown selection
+const languageSelect = document.getElementById('languageSelect');
+if (languageSelect) {
+  languageSelect.addEventListener('change', function(event) {
+    const newLanguage = event.target.value; 
+    
+    // Safety check: ensure the new language exists in our data
+    if (translations[newLanguage]) {
+      setLanguage(newLanguage);  
+      document.documentElement.lang = newLanguage;  
+      sessionStorage.setItem('language', newLanguage);
+      
+      updatePlaceholder(newLanguage);
+      resetTranslatedText(newLanguage);
+      updateRadioLabels(newLanguage);
+      updateTooltips(newLanguage);
+    }
+  });
+}
+
 function setLanguage(language) {
   const langData = translations[language];
-  
+  if (!langData) return;
+
   for (let key in langData) {
     const element = document.getElementById(key);
-    if (element) {
+    // Only update if it's a string (don't try to inject the tooltips object)
+    if (element && typeof langData[key] === 'string') {
       element.innerHTML = langData[key];
     }
   }
 }
 
-// Update the placeholder text for the textarea based on the selected language
 function updatePlaceholder(language) {
-  const placeholderText = language === 'en' 
-    ? "Type something to be translated here." 
-    : "翻訳するテキストを入力してください。"; // Placeholder text in Japanese
+  const placeholders = {
+      'en': "Type something to be translated here.",
+      'jp': "翻訳するテキストを入力してください。",
+      'zh': "在此输入要翻译的文本。",
+      'ko': "여기에 번역할 텍스트를 입력하세요.",
+      'es': "Escribe algo para traducir aquí.",
+      'fr': "Tapez quelque chose à traduire ici.",
+      'de': "Geben Sie hier etwas zum Übersetzen ein.",
+      'ru': "Введите текст для перевода здесь.",
+      'uk': "Введіть тут текст для перекладу.",
+      'sr': "Унесите текст за превод овде.",
+      'pt': "Digite algo para ser traduzido aqui.",
+      'fi': "Kirjoita tähän käännettävä teksti.",
+      'nl': "Typ hier iets om te vertalen."
+  };
   
   const inputText = document.getElementById('inputText');
   if (inputText) {
-    inputText.setAttribute('placeholder', placeholderText); // Update placeholder
+    inputText.setAttribute('placeholder', placeholders[language] || placeholders['en']);
   }
 }
 
@@ -68,46 +98,47 @@ function resetTranslatedText(language) {
     const inputTextElement = document.getElementById("inputText");
     const translatedTextElement = document.getElementById("translatedText");
 
-    if (inputTextElement.value.length !== 0){
-        translateText();
+    if (inputTextElement && inputTextElement.value.length !== 0){
+        // Check if translateText is available from script.js
+        if (typeof translateText === 'function') translateText();
     }
-    else{
-      translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
-      translatedTextElement.innerHTML = getTranslatedText(language);
+    else if (translatedTextElement && translations[language]) {
+      translatedTextElement.classList.remove('mirror-text'); 
+      translatedTextElement.innerHTML = translations[language]["translatedText"] || "";
       translatedTextElement.style.fontFamily = "RocknRollOne, sans-serif";
+      
       if (typeof window.syncTranslatorCommittedFont === 'function') {
         window.syncTranslatorCommittedFont('RocknRollOne, sans-serif');
       }
     }
 }
 
-// Function to update the radio button labels
 function updateRadioLabels(language) {
-  const gameCubeRadio = document.getElementById("gamecubeOption");
-  const wiiRadio = document.getElementById("wiiOption");
+  // Defensive check to prevent the "undefined" error
+  if (!translations[language]) return;
 
-  if (gameCubeRadio) {
-    gameCubeRadio.innerHTML = translations[language]["gamecubeOption"];
+  const gameCubeRadio = document.getElementById("gamecubeOptionLabel");
+  const wiiRadio = document.getElementById("wiiOptionLabel");
+
+  if (gameCubeRadio && translations[language]["gamecubeOptionLabel"]) {
+    gameCubeRadio.innerHTML = translations[language]["gamecubeOptionLabel"];
   }
 
-  if (wiiRadio) {
-    wiiRadio.innerHTML = translations[language]["wiiOption"];
+  if (wiiRadio && translations[language]["wiiOptionLabel"]) {
+    wiiRadio.innerHTML = translations[language]["wiiOptionLabel"];
   }
 }
 
-// Function to update the tooltips based on the selected language
 function updateTooltips(language) {
-  // Tooltip translations for each language
+  if (!translations[language] || !translations[language].tooltips) return;
+
   const tooltipTexts = translations[language].tooltips;
-  
-  // Select all elements with a 'data-tooltip-key' attribute
   const tooltipElements = document.querySelectorAll('[data-tooltip-key]');
   
   tooltipElements.forEach((el) => {
     const tooltipKey = el.getAttribute('data-tooltip-key');
     if (tooltipKey && tooltipTexts[tooltipKey]) {
-      el.setAttribute('data-tooltip', tooltipTexts[tooltipKey]); // Update tooltip content
+      el.setAttribute('data-tooltip', tooltipTexts[tooltipKey]);
     }
   });
 }
-
