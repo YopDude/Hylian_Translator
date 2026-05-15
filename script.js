@@ -381,62 +381,63 @@ exportPngElement.addEventListener('click', () => {
 
 // Function to handle font change and translation logic
 async function translateText() {
-  const gen = ++translateGeneration;
-  const originalInput = String(inputTextElement.value); // Force String
-  const version = hylianVersionElement.value;
+    const gen = ++translateGeneration;
+    const originalInput = String(inputTextElement.value);
+    const version = hylianVersionElement.value;
 
-  if (!originalInput) {
-    translatedTextElement.textContent = "";
-    return;
-  }
+    if (!originalInput) {
+        translatedTextElement.textContent = "";
+        return;
+    }
 
-  const isJapaneseVersion = version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
-  let targetFont = 'sans-serif';
-  let innerHTML = '';
-  
-  // Clean text through your map file
-  let workingText = originalInput;
-  if (typeof window.normalizeToEnglish === 'function') {
-      // Use await because the map now calls the Pinyin library
-      workingText = await window.normalizeToEnglish(originalInput);
-  }
+    // 1. First, normalize the text (Handled in transliterationMap.js)
+    let workingText = originalInput;
+    if (typeof window.normalizeToEnglish === 'function') {
+        workingText = await window.normalizeToEnglish(originalInput);
+    }
 
-  // Ensure workingText is a string before passing to Wanakana
-  workingText = String(workingText);
+    let romajiOutput = "";
 
-  // 1. FONT & TRANSLATION LOGIC
-  if (isJapaneseVersion) {
-    targetFont = getJapaneseFontFamilyString(version);
-    const glyphIndexMap = getGlyphIndexMap(version);
-    
-    // For Japanese versions, we need the Romaji format to map to syllables
-    const romajiFromJp = convertToRomaji(workingText);
-    const hylianText = convertToHylian(romajiFromJp, glyphIndexMap);
-    innerHTML = hylianText.split('\n').join('<br>');
+    // 2. Check for Kanji/Hanzi left over in the string
+    // If there is still CJK text, we MUST use Kuroshiro to get a phonetic reading
+    if (/[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/.test(workingText)) {
+        const kuro = await ensureKuroshiroInstance();
+        romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+    } else {
+        // Otherwise, use standard wanakana/romaji conversion
+        romajiOutput = convertToRomaji(workingText);
+    }
 
-  } else if (version === 'mudoran') {
-    targetFont = getFontFamilyString(version);
-    innerHTML = mudoranifyToHtml(workingText);
+    // 3. Now route to the specific Zelda game font logic
+    const isJapaneseVersion = version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
+    let targetFont = 'sans-serif';
+    let innerHTML = '';
 
-  } else {
-    // English-based Hylian (BotW, Twilight Princess, Skyward Sword, etc.)
-    targetFont = getFontFamilyString(version);
-    const romajiText = convertToRomaji(workingText);
-    const normalizedText = normalizeString(romajiText);
-    
-    innerHTML = normalizedText.split('\n').join('<br>');
-  }
+    if (isJapaneseVersion) {
+        targetFont = getJapaneseFontFamilyString(version);
+        const glyphIndexMap = getGlyphIndexMap(version);
+        const hylianText = convertToHylian(romajiOutput, glyphIndexMap);
+        innerHTML = hylianText.split('\n').join('<br>');
+    } else if (version === 'mudoran') {
+        targetFont = getFontFamilyString(version);
+        innerHTML = mudoranifyToHtml(romajiOutput);
+    } else {
+        // English-based versions (BotW, TP, Skyward Sword)
+        targetFont = getFontFamilyString(version);
+        const normalizedText = normalizeString(romajiOutput);
+        innerHTML = normalizedText.split('\n').join('<br>');
+    }
 
-  // 3. RENDER
-  if (targetFont !== lastCommittedFontFamily) {
-    await ensureFontReady(targetFont, gen);
-  }
-  if (gen !== translateGeneration) return;
+    // 4. Update the UI
+    if (targetFont !== lastCommittedFontFamily) {
+        await ensureFontReady(targetFont, gen);
+    }
+    if (gen !== translateGeneration) return;
 
-  syncMirrorClassForVersion(version);
-  translatedTextElement.style.fontFamily = targetFont;
-  translatedTextElement.innerHTML = innerHTML;
-  lastCommittedFontFamily = targetFont;
+    syncMirrorClassForVersion(version);
+    translatedTextElement.style.fontFamily = targetFont;
+    translatedTextElement.innerHTML = innerHTML;
+    lastCommittedFontFamily = targetFont;
 }
 
 // Helper function to check if the input contains Japanese characters

@@ -33,45 +33,57 @@ async function normalizeToEnglish(text) {
     if (!text) return "";
     let result = "";
 
-    // Convert input to string just in case it's being passed an event or object
+    // Convert input to string and get the currently selected UI language
     const input = String(text);
+    const currentLang = sessionStorage.getItem('language');
 
     for (let char of input) {
         const charCode = char.charCodeAt(0);
         
-        // 1. Handle Korean (Hangul)
+        // 1. Handle Korean (Hangul) - Always decompose to phonetics
         if (charCode >= 0xAC00 && charCode <= 0xD7AF) {
             result += decomposeHangul(char);
             continue;
         }
 
-        // 2. Handle Chinese (Hanzi)
+        // 2. Handle Hanzi/Kanji (Unified Range)
         if (/[\u4e00-\u9fa5]/.test(char)) {
-            try {
-                const pinyinPro = await window.ensurePinyinInstance();
-                // Ensure we get a string back, use a space to separate pinyin sounds
-                const pinyinResult = pinyinPro.pinyin(char, { toneType: 'none' });
-                result += String(pinyinResult) + " ";
-            } catch (e) {
-                result += char;
+            const currentLang = sessionStorage.getItem('language');
+            
+            // If the UI is Chinese, force it to Pinyin immediately
+            if (currentLang === 'zh') {
+                try {
+                    const pinyinPro = await window.ensurePinyinInstance();
+                    const pinyinResult = pinyinPro.pinyin(char, { toneType: 'none' });
+                    result += String(pinyinResult) + " ";
+                    continue; // Skip to next character
+                } catch (e) {
+                    console.error("Pinyin error:", e);
+                }
             }
+            
+            // DEFAULT (Japanese/Mixed): Keep the character as-is 
+            // This allows the Kuroshiro logic in script.js to see "何" and turn it into "nani"
+            result += char; 
             continue;
         }
 
-        // 3. Handle Japanese (Kana/Kanji)
-        // Keep them as-is so Kuroshiro/Wanakana can handle them later in script.js
+        // 3. Handle Japanese Kana (Hiragana/Katakana)
+        // Keep them as-is so Kuroshiro/Wanakana can handle them in script.js
         if (/[\u3040-\u309F\u30A0-\u30FF]/.test(char)) {
             result += char; 
             continue;
         }
 
-        // 4. Process European/Slavic/Greek/German
+        // 4. Process European/Slavic/Greek/German/Latin
         let processedChar = char.toLowerCase();
+        // Remove accents/diacritics
         processedChar = processedChar.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+        // Map Cyrillic/Greek to Latin equivalents via the map in transliterationMap.js
         result += CYRILLIC_GREEK_MAP[processedChar] || processedChar;
     }
     
-    // Final safety: trim extra spaces and ensure it is a string
+    // Trim extra spaces and return the cleaned string
     return result.trim();
 }
 
