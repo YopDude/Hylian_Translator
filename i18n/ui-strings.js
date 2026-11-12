@@ -15,7 +15,7 @@ module.exports = {
     dirRealWorld: "現実世界", dirHylian: "ハイリアン",
     swapTip: "方向を切り替え：ハイリアン ⇆ 現実世界", outLangLabel: "出力言語",
     revInputPlaceholder: "下のハイリアン文字キーを押して入力してください。", revOutputPlaceholder: "ここに文字の読みが表示されます。",
-    kbLabel: "ハイリアン文字キーボード", kbSpace: "スペース", kbBackspace: "削除", kbClear: "クリア", kbShift: "シフト",
+    kbLabel: "ハイリアン文字キーボード", kbSpace: "スペース", kbBackspace: "削除", kbClear: "クリア", kbShift: "シフト", mirrorText: "テキストを左右反転",
     copyBtn: "コピー", copiedMsg: "コピーしました！",
     revNote: "音を文字に置き換えるだけで、意味は翻訳しません。日本語はひらがなで出力されます。中国語とムドラン語には対応していません。"
   },
@@ -24,7 +24,7 @@ module.exports = {
     dirRealWorld: "现实世界", dirHylian: "海利亚文字",
     swapTip: "切换方向：海利亚文字 ⇆ 现实世界", outLangLabel: "输出语言",
     revInputPlaceholder: "点击下方的海利亚文字键进行输入。", revOutputPlaceholder: "转写结果将显示在这里。",
-    kbLabel: "海利亚文字键盘", kbSpace: "空格", kbBackspace: "退格", kbClear: "清除", kbShift: "大小写",
+    kbLabel: "海利亚文字键盘", kbSpace: "空格", kbBackspace: "退格", kbClear: "清除", kbShift: "大小写", mirrorText: "镜像文字",
     copyBtn: "复制", copiedMsg: "已复制！",
     revNote: "仅做音译（转写），不翻译含义。日语以平假名输出。不支持中文和穆多兰文字。"
   },
@@ -33,7 +33,7 @@ module.exports = {
     dirRealWorld: "현실 세계", dirHylian: "하일리아",
     swapTip: "방향 전환: 하일리아 ⇆ 현실 세계", outLangLabel: "출력 언어",
     revInputPlaceholder: "아래 하일리아 글자 키를 눌러 입력하세요.", revOutputPlaceholder: "여기에 음역 결과가 표시됩니다.",
-    kbLabel: "하일리아 키보드", kbSpace: "스페이스", kbBackspace: "지우기", kbClear: "모두 지우기", kbShift: "대소문자",
+    kbLabel: "하일리아 키보드", kbSpace: "스페이스", kbBackspace: "지우기", kbClear: "모두 지우기", kbShift: "대소문자", mirrorText: "텍스트 좌우 반전",
     copyBtn: "복사", copiedMsg: "복사됨!",
     revNote: "소리를 글자로 옮기는 음역만 지원하며 뜻은 번역하지 않습니다. 일본어는 히라가나로 표시됩니다. 중국어와 무도란 문자는 지원되지 않습니다."
   },
@@ -42,7 +42,7 @@ module.exports = {
     dirRealWorld: "Mundo real", dirHylian: "Hyliano",
     swapTip: "Cambiar dirección: hyliano ⇆ mundo real", outLangLabel: "Idioma de salida",
     revInputPlaceholder: "Pulsa las teclas hylianas para escribir.", revOutputPlaceholder: "La transliteración aparecerá aquí.",
-    kbLabel: "Teclado hyliano", kbSpace: "Espacio", kbBackspace: "Borrar", kbClear: "Limpiar", kbShift: "Mayús.",
+    kbLabel: "Teclado hyliano", kbSpace: "Espacio", kbBackspace: "Borrar", kbClear: "Limpiar", kbShift: "Mayús.", mirrorText: "Reflejar texto",
     copyBtn: "Copiar", copiedMsg: "¡Copiado!",
     revNote: "Solo transliteración: sonidos, no significados. El japonés se escribe en hiragana. El chino y el mudoran no están disponibles."
   },
@@ -51,7 +51,7 @@ module.exports = {
     dirRealWorld: "Mundo real", dirHylian: "Hylian",
     swapTip: "Alternar direção: hylian ⇆ mundo real", outLangLabel: "Idioma de saída",
     revInputPlaceholder: "Toque nas teclas hylianas para escrever.", revOutputPlaceholder: "A transliteração aparecerá aqui.",
-    kbLabel: "Teclado hylian", kbSpace: "Espaço", kbBackspace: "Apagar", kbClear: "Limpar", kbShift: "Maiús.",
+    kbLabel: "Teclado hylian", kbSpace: "Espaço", kbBackspace: "Apagar", kbClear: "Limpar", kbShift: "Maiús.", mirrorText: "Espelhar texto",
     copyBtn: "Copiar", copiedMsg: "Copiado!",
     revNote: "Apenas transliteração: sons, não significados. O japonês é escrito em hiragana. Chinês e mudorano não estão disponíveis."
   },
@@ -60,7 +60,7 @@ module.exports = {
     dirRealWorld: "Monde réel", dirHylian: "Hylien",
     swapTip: "Changer de sens : hylien ⇆ monde réel", outLangLabel: "Langue de sortie",
     revInputPlaceholder: "Appuyez sur les touches hyliennes pour écrire.", revOutputPlaceholder: "La translittération apparaîtra ici.",
-    kbLabel: "Clavier hylien", kbSpace: "Espace", kbBackspace: "Effacer", kbClear: "Tout effacer", kbShift: "Maj.",
+    kbLabel: "Clavier hylien", kbSpace: "Espace", kbBackspace: "Effacer", kbClear: "Tout effacer", kbShift: "Maj.", mirrorText: "Texte en miroir",
     copyBtn: "Copier", copiedMsg: "Copié !",
     revNote: "Translittération uniquement : les sons, pas les sens. Le japonais s’écrit en hiragana. Le chinois et le mudoran ne sont pas disponibles."
   },
@@ -69,7 +69,7 @@ module.exports = {
     dirRealWorld: "Reale Welt", dirHylian: "Hylianisch",
     swapTip: "Richtung wechseln: Hylianisch ⇆ reale Welt", outLangLabel: "Ausgabesprache",
     revInputPlaceholder: "Tippe auf die hylianischen Tasten, um zu schreiben.", revOutputPlaceholder: "Die Transliteration erscheint hier.",
-    kbLabel: "Hylianische Tastatur", kbSpace: "Leertaste", kbBackspace: "Löschen", kbClear: "Leeren", kbShift: "Umschalt",
+    kbLabel: "Hylianische Tastatur", kbSpace: "Leertaste", kbBackspace: "Löschen", kbClear: "Leeren", kbShift: "Umschalt", mirrorText: "Text spiegeln",
     copyBtn: "Kopieren", copiedMsg: "Kopiert!",
     revNote: "Nur Transliteration: Laute, keine Bedeutungen. Japanisch wird in Hiragana geschrieben. Chinesisch und Mudoran sind nicht verfügbar."
   },
@@ -77,7 +77,7 @@ module.exports = {
     dirRealWorld: "Mondo reale", dirHylian: "Hyliano",
     swapTip: "Cambia direzione: hyliano ⇆ mondo reale", outLangLabel: "Lingua di output",
     revInputPlaceholder: "Tocca i tasti hyliani per scrivere.", revOutputPlaceholder: "La traslitterazione apparirà qui.",
-    kbLabel: "Tastiera hyliana", kbSpace: "Spazio", kbBackspace: "Cancella", kbClear: "Svuota", kbShift: "Maiusc",
+    kbLabel: "Tastiera hyliana", kbSpace: "Spazio", kbBackspace: "Cancella", kbClear: "Svuota", kbShift: "Maiusc", mirrorText: "Specchia testo",
     copyBtn: "Copia", copiedMsg: "Copiato!",
     revNote: "Solo traslitterazione: suoni, non significati. Il giapponese è scritto in hiragana. Cinese e mudoran non sono disponibili."
   },
@@ -86,7 +86,7 @@ module.exports = {
     dirRealWorld: "Todellinen maailma", dirHylian: "Hylian",
     swapTip: "Vaihda suuntaa: hylian ⇆ todellinen maailma", outLangLabel: "Tulostekieli",
     revInputPlaceholder: "Napauta hylian-näppäimiä kirjoittaaksesi.", revOutputPlaceholder: "Translitterointi näkyy tässä.",
-    kbLabel: "Hylian-näppäimistö", kbSpace: "Välilyönti", kbBackspace: "Poista", kbClear: "Tyhjennä", kbShift: "Vaihto",
+    kbLabel: "Hylian-näppäimistö", kbSpace: "Välilyönti", kbBackspace: "Poista", kbClear: "Tyhjennä", kbShift: "Vaihto", mirrorText: "Peilaa teksti",
     copyBtn: "Kopioi", copiedMsg: "Kopioitu!",
     revNote: "Vain translitterointi: äänteet, ei merkitykset. Japani kirjoitetaan hiraganalla. Kiina ja mudoran eivät ole käytettävissä."
   },
@@ -95,7 +95,7 @@ module.exports = {
     dirRealWorld: "Echte wereld", dirHylian: "Hylian",
     swapTip: "Richting wisselen: Hylian ⇆ echte wereld", outLangLabel: "Uitvoertaal",
     revInputPlaceholder: "Tik op de Hylian-toetsen om te schrijven.", revOutputPlaceholder: "De transliteratie verschijnt hier.",
-    kbLabel: "Hylian-toetsenbord", kbSpace: "Spatie", kbBackspace: "Wissen", kbClear: "Leegmaken", kbShift: "Shift",
+    kbLabel: "Hylian-toetsenbord", kbSpace: "Spatie", kbBackspace: "Wissen", kbClear: "Leegmaken", kbShift: "Shift", mirrorText: "Tekst spiegelen",
     copyBtn: "Kopiëren", copiedMsg: "Gekopieerd!",
     revNote: "Alleen transliteratie: klanken, geen betekenissen. Japans wordt in hiragana geschreven. Chinees en Mudoran zijn niet beschikbaar."
   },
@@ -104,7 +104,7 @@ module.exports = {
     dirRealWorld: "Реальный мир", dirHylian: "Хайлийский",
     swapTip: "Сменить направление: хайлийский ⇆ реальный мир", outLangLabel: "Язык вывода",
     revInputPlaceholder: "Нажимайте хайлийские клавиши, чтобы писать.", revOutputPlaceholder: "Здесь появится транслитерация.",
-    kbLabel: "Хайлийская клавиатура", kbSpace: "Пробел", kbBackspace: "Удалить", kbClear: "Очистить", kbShift: "Shift",
+    kbLabel: "Хайлийская клавиатура", kbSpace: "Пробел", kbBackspace: "Удалить", kbClear: "Очистить", kbShift: "Shift", mirrorText: "Отразить текст",
     copyBtn: "Копировать", copiedMsg: "Скопировано!",
     revNote: "Только транслитерация: звуки, а не значения. Японский выводится хираганой. Китайский и мудоранский недоступны."
   },
@@ -113,7 +113,7 @@ module.exports = {
     dirRealWorld: "Реальний світ", dirHylian: "Гілійська",
     swapTip: "Змінити напрямок: гілійська ⇆ реальний світ", outLangLabel: "Мова виводу",
     revInputPlaceholder: "Натискайте гілійські клавіші, щоб писати.", revOutputPlaceholder: "Тут з’явиться транслітерація.",
-    kbLabel: "Гілійська клавіатура", kbSpace: "Пробіл", kbBackspace: "Видалити", kbClear: "Очистити", kbShift: "Shift",
+    kbLabel: "Гілійська клавіатура", kbSpace: "Пробіл", kbBackspace: "Видалити", kbClear: "Очистити", kbShift: "Shift", mirrorText: "Віддзеркалити текст",
     copyBtn: "Копіювати", copiedMsg: "Скопійовано!",
     revNote: "Лише транслітерація: звуки, а не значення. Японська виводиться хіраганою. Китайська та мудоранська недоступні."
   },
@@ -122,7 +122,7 @@ module.exports = {
     dirRealWorld: "Стварни свет", dirHylian: "Хилијански",
     swapTip: "Промени смер: хилијански ⇆ стварни свет", outLangLabel: "Излазни језик",
     revInputPlaceholder: "Додирни хилијанске тастере да пишеш.", revOutputPlaceholder: "Овде ће се појавити транслитерација.",
-    kbLabel: "Хилијанска тастатура", kbSpace: "Размак", kbBackspace: "Обриши", kbClear: "Очисти", kbShift: "Shift",
+    kbLabel: "Хилијанска тастатура", kbSpace: "Размак", kbBackspace: "Обриши", kbClear: "Очисти", kbShift: "Shift", mirrorText: "Огледај текст",
     copyBtn: "Копирај", copiedMsg: "Копирано!",
     revNote: "Само транслитерација: гласови, не значења. Јапански се пише хираганом. Кинески и мудоран нису доступни."
   }

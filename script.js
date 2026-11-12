@@ -1,13 +1,37 @@
 // Pages live at / (English) and /<lang>/ (everything else); each page sets its path back to the site root.
 const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
 
-// Cache the sizeable Kuromoji dictionary files between visits. The service worker only
-// intercepts /dict/*.dat.gz; all other requests keep their normal browser/network behaviour.
-const dictionaryCacheReady = ('serviceWorker' in navigator && location.protocol === 'https:')
-    ? navigator.serviceWorker.register(SITE_ROOT + 'sw.js')
-        .then(() => navigator.serviceWorker.ready)
-        .catch((error) => { console.warn('Dictionary cache unavailable; using normal browser caching.', error); return null; })
-    : Promise.resolve(null);
+// The dictionary cache is installed automatically only when Japanese readings are needed.
+// Users do not need to run or configure the service worker themselves.
+const DICTIONARY_CACHE_NAME = 'hylian-kuromoji-dictionary-v1';
+const DICTIONARY_FILES = [
+    'base.dat.gz', 'cc.dat.gz', 'check.dat.gz', 'tid.dat.gz', 'tid_map.dat.gz',
+    'tid_pos.dat.gz', 'unk.dat.gz', 'unk_char.dat.gz', 'unk_compat.dat.gz',
+    'unk_invoke.dat.gz', 'unk_map.dat.gz', 'unk_pos.dat.gz'
+];
+// Prime the browser's own persistent HTTP cache. Kuromoji loads these same
+// same-origin URLs via XHR, which then reuses the cached responses. No service
+// worker or user setup is required.
+async function areDictionaryFilesCached() {
+    try {
+        const results = await Promise.all(DICTIONARY_FILES.map(async (file) => {
+            const url = new URL(KUROMOJI_DICT_BASE + file, location.href);
+            const response = await fetch(url.href, { cache: 'only-if-cached', mode: 'same-origin' });
+            return response.ok;
+        }));
+        return results.every(Boolean);
+    } catch (_) {
+        return false;
+    }
+}
+
+async function primeDictionaryHttpCache() {
+    await Promise.all(DICTIONARY_FILES.map(async (file) => {
+        const url = new URL(KUROMOJI_DICT_BASE + file, location.href);
+        const response = await fetch(url.href, { cache: 'force-cache' });
+        if (!response.ok) throw new Error('Failed to load Japanese dictionary file: ' + file);
+    }));
+}
 
 // Declare DOM elements and other frequently accessed variables at the top
 const inputTextElement = document.getElementById("inputText");
@@ -381,47 +405,43 @@ function loadKanjiScriptOnce(src) {
 }
 
 async function ensureKuroshiroInstance(options = {}) {
-  const showLoading = options.showLoading !== false;
-  if (window.__hylianKuroshiro) {
-    return window.__hylianKuroshiro;
-  }
-  
+  if (window.__hylianKuroshiro) return window.__hylianKuroshiro;
+
   if (!kuroshiroInitPromise) {
     kuroshiroInitPromise = (async function () {
+      // Check the browser HTTP cache before deciding whether the first-download
+      // indicator is needed. The fetches below prime that same cache for Kuromoji.
+      const dictionaryCached = await areDictionaryFilesCached();
+      const showLoading = options.showLoading !== false && !dictionaryCached;
       const spinnerOverlay = showLoading ? document.querySelector('.loadingIndicator') : null;
 
-      // Show the loader only for foreground initialization. Japanese homepage preloading is silent.
+      // Japanese-page warmup is always silent. Elsewhere, show the loader only for the
+      // first uncached dictionary download; cached dictionary initialization stays quiet.
       if (spinnerOverlay) spinnerOverlay.style.display = 'block';
       if (showLoading) document.body.style.cursor = 'wait';
 
       try {
+        await primeDictionaryHttpCache();
         await loadKanjiScriptOnce(KUROSHIRO_SCRIPT);
         await loadKanjiScriptOnce(KUROSHIRO_ANALYZER_SCRIPT);
         const Kuroshiro = umdDefault('Kuroshiro');
         const KuromojiAnalyzer = umdDefault('KuromojiAnalyzer');
-        
+
         if (!Kuroshiro || !KuromojiAnalyzer) {
           throw new Error('Kuroshiro or KuromojiAnalyzer not available');
         }
-        
-        await dictionaryCacheReady;
+
         const kuroshiro = new Kuroshiro();
-        await kuroshiro.init(new KuromojiAnalyzer({
-            dictPath: KUROMOJI_DICT_BASE 
-        }));
-        
+        await kuroshiro.init(new KuromojiAnalyzer({ dictPath: KUROMOJI_DICT_BASE }));
         window.__hylianKuroshiro = kuroshiro;
         return kuroshiro;
       } finally {
-        // 2. Hide the overlay container when completed or failed
-        if (spinnerOverlay) {
-          spinnerOverlay.style.display = 'none';
-        }
+        if (spinnerOverlay) spinnerOverlay.style.display = 'none';
         if (showLoading) document.body.style.cursor = 'default';
       }
     })();
   }
-  
+
   try {
     return await kuroshiroInitPromise;
   } catch (e) {
@@ -461,7 +481,10 @@ async function translateText() {
     // Chinese UI pages normalize Hanzi to Pinyin before this point. Do not initialize the
     // Japanese dictionary there; on other pages, Kanji/Kana use Kuroshiro readings.
     const chineseUi = (document.documentElement.lang || '').toLowerCase().startsWith('zh');
-    if (!chineseUi && /[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/.test(workingText)) {
+    // Only Han characters trigger the Japanese dictionary on non-Japanese,
+    // non-Chinese pages. Kana alone can be handled by the lightweight romaji path.
+    const containsKanji = /[\u4E00-\u9FFF]/.test(originalInput + workingText);
+    if (!chineseUi && containsKanji) {
         const kuro = await ensureKuroshiroInstance();
         romajiOutput = await kuro.convert(workingText, { to: "romaji" });
     } else {
