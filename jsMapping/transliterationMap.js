@@ -35,7 +35,7 @@ async function normalizeToEnglish(text) {
 
     // Convert input to string and get the currently selected UI language
     const input = String(text);
-    const currentLang = sessionStorage.getItem('language');
+    const currentLang = document.documentElement.lang || 'en';
 
     for (let char of input) {
         const charCode = char.charCodeAt(0);
@@ -48,10 +48,8 @@ async function normalizeToEnglish(text) {
 
         // 2. Handle Hanzi/Kanji (Unified Range)
         if (/[\u4e00-\u9fa5]/.test(char)) {
-            const currentLang = sessionStorage.getItem('language');
-            
-            // If the UI is Chinese, force it to Pinyin immediately
-            if (currentLang === 'zh') {
+            // Chinese pages use Pinyin; every other page gives Japanese Kanji readings priority.
+            if (currentLang.toLowerCase().startsWith('zh')) {
                 try {
                     const pinyinPro = await window.ensurePinyinInstance();
                     const pinyinResult = pinyinPro.pinyin(char, { toneType: 'none' });

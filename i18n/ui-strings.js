@@ -5,8 +5,8 @@ module.exports = {
   en: {
     dirRealWorld: "Real world", dirHylian: "Hylian",
     swapTip: "Switch direction: Hylian ⇆ real world", outLangLabel: "Output language",
-    revInputPlaceholder: "Tap the Hylian keys below to write.", revOutputPlaceholder: "The transliteration will appear here.",
-    kbLabel: "Hylian keyboard", kbSpace: "Space", kbBackspace: "Backspace", kbClear: "Clear", kbShift: "Shift",
+    revInputPlaceholder: "Type or tap the Hylian keys below to write.", revOutputPlaceholder: "The transliteration will appear here.",
+    kbLabel: "Hylian keyboard", kbSpace: "Space", kbBackspace: "Backspace", kbClear: "Clear", kbShift: "Shift", mirrorText: "Mirror text",
     copyBtn: "Copy", copiedMsg: "Copied!",
     revNote: "Transliteration only: sounds, not meanings. Japanese is written in hiragana. Chinese and Mudoran are not available."
   },

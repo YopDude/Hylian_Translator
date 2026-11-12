@@ -34,13 +34,7 @@
   <meta name="twitter:description" content="{{metaIndex|a}}"/>
   <meta name="twitter:image" content="{{site}}/images/Hylian_Translator_Home.png"/>
 
-  <!-- Preload only the fonts needed for the initial render -->
-  <link rel="preload" href="{{root}}fonts/RocknRollOne-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="{{root}}fonts/HyliaSerifBeta-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="{{root}}fonts/ReggaeOne-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="{{root}}fonts/HylianSymbols.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="{{root}}fonts/AlbwBotwHylian-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
-
+  <!-- Fonts are loaded on demand by their @font-face declarations. Preloading every game font caused unused-preload warnings. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 </head>
@@ -121,9 +115,10 @@
 
         <!-- Hylian -> real world (built by reverse.js) -->
         <div class="rev-only reverse-panel" id="reversePanel">
-          <div id="hylianInput" class="hylian-input hylian-font" tabindex="0" role="textbox" aria-multiline="true" aria-label="{{kbLabel|a}}" data-placeholder="{{revInputPlaceholder|a}}"></div>
+          <div id="hylianInput" class="hylian-input hylian-font" contenteditable="true" spellcheck="false" tabindex="0" role="textbox" aria-multiline="true" aria-label="{{kbLabel|a}}" data-placeholder="{{revInputPlaceholder|a}}"></div>
           <div id="hylianKeyboard" class="hylian-keyboard" role="group" aria-label="{{kbLabel|a}}"></div>
           <div class="kb-actions">
+            <button type="button" class="kb-action" id="kbMirror" aria-pressed="false" hidden>{{mirrorText}}</button>
             <button type="button" class="kb-action" id="kbShift" aria-pressed="false" hidden>{{kbShift}}</button>
             <button type="button" class="kb-action kb-space" id="kbSpace">{{kbSpace}}</button>
             <button type="button" class="kb-action" id="kbBackspace">{{kbBackspace}}</button>

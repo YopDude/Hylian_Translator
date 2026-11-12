@@ -1,6 +1,14 @@
 // Pages live at / (English) and /<lang>/ (everything else); each page sets its path back to the site root.
 const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
 
+// Cache the sizeable Kuromoji dictionary files between visits. The service worker only
+// intercepts /dict/*.dat.gz; all other requests keep their normal browser/network behaviour.
+const dictionaryCacheReady = ('serviceWorker' in navigator && location.protocol === 'https:')
+    ? navigator.serviceWorker.register(SITE_ROOT + 'sw.js')
+        .then(() => navigator.serviceWorker.ready)
+        .catch((error) => { console.warn('Dictionary cache unavailable; using normal browser caching.', error); return null; })
+    : Promise.resolve(null);
+
 // Declare DOM elements and other frequently accessed variables at the top
 const inputTextElement = document.getElementById("inputText");
 const translatedTextElement = document.getElementById("translatedText");
@@ -32,10 +40,6 @@ async function ensurePinyinInstance() {
     return pinyinLibPromise;
 }
 
-function hasChinese(text) {
-    // Detects Chinese characters but ignores Japanese-specific Kanji ranges if possible
-    return /[\u4e00-\u9fa5]/.test(text);
-}
 
 //Japanese characters
 const KUROMOJI_DICT_BASE = SITE_ROOT + 'dict/';
@@ -217,6 +221,30 @@ hylianVersionElement.addEventListener('change', function () {
   imageToDisplay.onload = function() {
   hylianMapImage.src = imageToDisplay.src; // Update the overlay image
   };
+
+  // Focus the active editor after both translation modes have processed the version change.
+  // reverse.js rebuilds its keyboard synchronously from the same change event, so defer
+  // focus until the next frame to ensure the selected editor is ready.
+  requestAnimationFrame(() => {
+    const reverseInput = document.getElementById('hylianInput');
+    const translatorCard = document.getElementById('translatorCard');
+    const activeInput = translatorCard && translatorCard.classList.contains('reverse-mode')
+      ? reverseInput
+      : inputTextElement;
+    if (activeInput && !activeInput.disabled) {
+      if (activeInput === reverseInput && window.HylianReverseUI && typeof window.HylianReverseUI.focusEnd === 'function') {
+        // The reverse editor is contenteditable; set its DOM selection explicitly.
+        // In mirrored Twilight Princess the DOM end is visually on the left, as intended.
+        window.HylianReverseUI.focusEnd();
+      } else {
+        activeInput.focus({ preventScroll: true });
+        if (typeof activeInput.setSelectionRange === 'function') {
+          const end = activeInput.value.length;
+          activeInput.setSelectionRange(end, end);
+        }
+      }
+    }
+  });
 });
 
 // Check the selected version when the page loads or refreshes
@@ -352,21 +380,19 @@ function loadKanjiScriptOnce(src) {
   });
 }
 
-async function ensureKuroshiroInstance() {
+async function ensureKuroshiroInstance(options = {}) {
+  const showLoading = options.showLoading !== false;
   if (window.__hylianKuroshiro) {
     return window.__hylianKuroshiro;
   }
   
   if (!kuroshiroInitPromise) {
     kuroshiroInitPromise = (async function () {
-      const spinnerOverlay = document.querySelector('.loadingIndicator');
+      const spinnerOverlay = showLoading ? document.querySelector('.loadingIndicator') : null;
 
-      // 1. Display the overlay container
-      if (spinnerOverlay) {
-        spinnerOverlay.style.display = 'block';
-      }
-      
-      document.body.style.cursor = 'wait';
+      // Show the loader only for foreground initialization. Japanese homepage preloading is silent.
+      if (spinnerOverlay) spinnerOverlay.style.display = 'block';
+      if (showLoading) document.body.style.cursor = 'wait';
 
       try {
         await loadKanjiScriptOnce(KUROSHIRO_SCRIPT);
@@ -378,7 +404,7 @@ async function ensureKuroshiroInstance() {
           throw new Error('Kuroshiro or KuromojiAnalyzer not available');
         }
         
-        // Update this section in ensureKuroshiroInstance:
+        await dictionaryCacheReady;
         const kuroshiro = new Kuroshiro();
         await kuroshiro.init(new KuromojiAnalyzer({
             dictPath: KUROMOJI_DICT_BASE 
@@ -391,7 +417,7 @@ async function ensureKuroshiroInstance() {
         if (spinnerOverlay) {
           spinnerOverlay.style.display = 'none';
         }
-        document.body.style.cursor = 'default';
+        if (showLoading) document.body.style.cursor = 'default';
       }
     })();
   }
@@ -404,9 +430,6 @@ async function ensureKuroshiroInstance() {
   }
 }
 
-function hasKanji(input) { return /[\u4E00-\u9FFF]/.test(input); }
-function hasKana(input) { return /[\u3040-\u309F\u30A0-\u30FF]/.test(input); }
-function hasChinese(input) { return /[\u4e00-\u9fa5]/.test(input); }
 
 // Attach event listeners to export buttons (add buttons to your HTML)
 exportPngElement.addEventListener('click', () => {
@@ -435,9 +458,10 @@ async function translateText() {
 
     let romajiOutput = "";
 
-    // 2. Check for Kanji/Hanzi left over in the string
-    // If there is still CJK text, we MUST use Kuroshiro to get a phonetic reading
-    if (/[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/.test(workingText)) {
+    // Chinese UI pages normalize Hanzi to Pinyin before this point. Do not initialize the
+    // Japanese dictionary there; on other pages, Kanji/Kana use Kuroshiro readings.
+    const chineseUi = (document.documentElement.lang || '').toLowerCase().startsWith('zh');
+    if (!chineseUi && /[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/.test(workingText)) {
         const kuro = await ensureKuroshiroInstance();
         romajiOutput = await kuro.convert(workingText, { to: "romaji" });
     } else {
@@ -509,13 +533,7 @@ function convertToRomaji(input) {
   return wanakana.toRomaji(input);
 }
 
-// Function to convert Romaji to Hylian characters with special handling for yoon combinations
-function convertToHylian(input, glyphIndexMap) {
-  let hylianText = "";
-  let modifiedText = input.toLowerCase();
-
-  // Define the yoon syllable combinations and their splits
-  const yoonMap = {
+const HYLIAN_YOON_MAP = {
     "gya": ["gi", "ya"], "gyu": ["gi", "yu"], "gyo": ["gi", "yo"],
     "kya": ["ki", "ya"], "kyu": ["ki", "yu"], "kyo": ["ki", "yo"],
     "sha": ["shi", "ya"], "shu": ["shi", "yu"], "sho": ["shi", "yo"],
@@ -531,13 +549,20 @@ function convertToHylian(input, glyphIndexMap) {
     "pya": ["pi", "ya"], "pyu": ["pi", "yu"], "pyo": ["pi", "yo"]
   };
 
+// Function to convert Romaji to Hylian characters with special handling for yoon combinations
+function convertToHylian(input, glyphIndexMap) {
+  let hylianText = "";
+  let modifiedText = input.toLowerCase();
+
+
+
   // Replace non-japanese letters
   modifiedText = modifiedText.replace(/[lv]/g, match => match === 'l' ? 'r' : 'b');
   modifiedText = modifiedText.replace(/([kgzstcdjhfbpmr])\1(?=(a[aiueo]|[aiueo]|y[aiueo]))/g, (match, consonant) => 'tsu' + consonant);
 
   // Replace yoon combinations with their corresponding syllable pairs
-  for (let yoon in yoonMap) {
-    const [firstSyllable, secondSyllable] = yoonMap[yoon];
+  for (let yoon in HYLIAN_YOON_MAP) {
+    const [firstSyllable, secondSyllable] = HYLIAN_YOON_MAP[yoon];
     modifiedText = modifiedText.replace(new RegExp(yoon, 'g'), `${firstSyllable}${secondSyllable}`);
   }
 
@@ -708,3 +733,14 @@ function preloadImage(version) {
 window.syncTranslatorCommittedFont = function (cssFontFamily) {
   lastCommittedFontFamily = cssFontFamily;
 };
+
+// Warm the Japanese reading dictionary in the background on the Japanese translator homepage.
+// The same in-flight promise is reused if the user starts typing before initialization finishes.
+if (document.documentElement.lang === 'ja' && inputTextElement && translatedTextElement &&
+    /\/(?:ja\/)?(?:index\.html)?$/.test(window.location.pathname)) {
+  const warmKanjiLibrary = () => ensureKuroshiroInstance({ showLoading: false }).catch((err) => {
+    console.warn('Background Kanji library preload failed; it will retry when needed.', err);
+  });
+  if ('requestIdleCallback' in window) window.requestIdleCallback(warmKanjiLibrary, { timeout: 2500 });
+  else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
+}

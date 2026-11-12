@@ -1105,6 +1105,14 @@ html[lang="sr"] header h1 {
   overflow-wrap: anywhere;
 }
 
+.hylian-input {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  cursor: text;
+  user-select: text;
+  caret-color: transparent;
+}
+
 .hylian-input:focus {
   outline: none;
   border-color: #28a745;
@@ -1124,23 +1132,24 @@ html[lang="sr"] header h1 {
   font-family: 'RocknRollOne', sans-serif;
   font-size: 1rem;
   color: #777;
+  direction: ltr;
 }
 
-.hylian-input:focus::after {
-  /* The caret must not take part in the line height: with fonts that have little descent (Skyward Sword, Gerudo)
-     an ordinary inline-block caret made the box grow ~3px whenever the input gained focus.
-     margin-top:-1em cancels its height, so its margin box is zero-high while the bar is still drawn above the baseline. */
-  content: "";
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  margin: -1em 0 0 2px;
-  vertical-align: baseline;
-  background: #28a745;
-  animation: caretBlink 1s steps(1) infinite;
+.hylian-input.mirror-text:empty::before {
+  /* Counter the input's mirror transform so the instructional placeholder stays readable. */
+  transform: scaleX(-1);
 }
 
-@keyframes caretBlink { 50% { opacity: 0; } }
+.hylian-custom-caret {
+  position: fixed;
+  z-index: 9999;
+  width: 1.5px;
+  background: #222;
+  pointer-events: none;
+  animation: hylian-caret-blink 1s steps(2, start) infinite;
+}
+.hylian-custom-caret[hidden] { display: none; }
+@keyframes hylian-caret-blink { to { visibility: hidden; } }
 
 .hylian-keyboard {
   display: flex;
@@ -1188,7 +1197,8 @@ html[lang="sr"] header h1 {
 .kb-row .hk { flex: 1 1 0; max-width: 52px; }
 
 .hk:hover { background: #efe6c8; transform: none; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
-.hk:active { background: #e6dbb4; transform: translateY(1px); box-shadow: none; }
+.hk:active, .hk.is-pressed { background: #e6dbb4; transform: translateY(1px); box-shadow: none; }
+.hk:focus-visible { outline: 2px solid #0b6e63; outline-offset: 2px; }
 
 .hk-glyph {
   display: flex;
@@ -1376,3 +1386,12 @@ html[lang="sr"] header h1 {
 .is-option[aria-selected="true"] { color: #0b6e63; background: #e3f1e6; }
 .is-option[aria-selected="true"].is-active { background: #d2ead8; }
 .is-option[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
+/* Keep the selected script name readable on narrow mobile screens. */
+#exportPNGBtn::after, #downloadFontBtn::after { content: " ↓"; font-family: Arial, sans-serif; font-weight: 700; }
+
+@media (max-width: 480px) {
+  .icon-select { width: min(100%, 340px); }
+  .icon-select-btn { min-width: 0; width: 100%; gap: 7px; padding-right: 9px; }
+  .icon-select .is-text { font-size: 0.88rem; }
+}

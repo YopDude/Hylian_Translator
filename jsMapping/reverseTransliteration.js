@@ -109,25 +109,40 @@
   }
 
   function toHangul(text) {
-    // only runs of letters are converted; spaces, digits and punctuation pass through
+    // General Latin phonetics -> Hangul utility, retained as part of the public helper API.
     return String(text).replace(/[A-Za-z]+/g, (w) => wordToHangul(w.toLowerCase()));
   }
 
-  // ---------- Latin letters -> hiragana ----------
-  // Japanese has no l / v / c / q / x and no stand-alone consonants, so English-style text is first made
-  // pronounceable the way loanwords are: l->r, v->b, c/q->k, x->ks, and a vowel after a lone consonant
-  // ("o" after t/d, "u" otherwise): zelda -> zeruda -> ぜるだ.  Real romaji (from the kana scripts) skips this.
-  function latinToRomaji(src) {
-    const s = src.toLowerCase().replace(/l/g, 'r').replace(/v/g, 'b').replace(/c(?!h)/g, 'k').replace(/q/g, 'k').replace(/x/g, 'ks');
+  // Japanese mora -> closest natural Korean syllable. Used only for Ocarina/Wind Waker,
+  // whose glyphs represent Japanese syllables rather than individual Latin letters.
+  const JAPANESE_MORA_HANGUL = {
+    a:'아', i:'이', u:'우', e:'에', o:'오', n:'응',
+    ka:'카', ki:'키', ku:'쿠', ke:'케', ko:'코',
+    sa:'사', shi:'시', si:'시', su:'스', se:'세', so:'소',
+    ta:'타', chi:'치', ti:'티', tsu:'쓰', tu:'투', te:'테', to:'토',
+    na:'나', ni:'니', nu:'누', ne:'네', no:'노',
+    ha:'하', hi:'히', fu:'후', hu:'후', he:'헤', ho:'호',
+    ma:'마', mi:'미', mu:'무', me:'메', mo:'모',
+    ya:'야', yu:'유', yo:'요',
+    ra:'라', ri:'리', ru:'루', re:'레', ro:'로',
+    wa:'와', wo:'오',
+    ga:'가', gi:'기', gu:'구', ge:'게', go:'고',
+    za:'자', ji:'지', zi:'지', zu:'즈', ze:'제', zo:'조',
+    da:'다', di:'디', du:'두', de:'데', do:'도',
+    ba:'바', bi:'비', bu:'부', be:'베', bo:'보',
+    pa:'파', pi:'피', pu:'푸', pe:'페', po:'포',
+    fa:'파', fi:'피', fe:'페', fo:'포', va:'바', vi:'비', vu:'부', ve:'베', vo:'보'
+  };
+  const JAPANESE_MORA_KEYS = Object.keys(JAPANESE_MORA_HANGUL).sort((a, b) => b.length - a.length);
+
+  function japaneseRomajiToHangul(text) {
+    const source = String(text).toLowerCase();
     let out = '', i = 0;
-    while (i < s.length) {
-      const c = s[i], next = s[i + 1] || '';
-      if (c === 'y' && !isVowel(next)) { out += 'i'; i++; continue; } // "hy-" / "-y": y works as a vowel here
-      if (!/[a-z]/.test(c) || isVowel(c) || c === 'y' || c === 'n') { out += c; i++; continue; }
-      const pair = c + next, afterPair = s[i + 2] || '';
-      if (['sh', 'ch', 'ts', 'th'].includes(pair) && (isVowel(afterPair) || afterPair === 'y')) { out += pair; i += 2; continue; }
-      if (isVowel(next) || next === 'y' || next === c) { out += c; i++; continue; }
-      out += c + (c === 't' || c === 'd' ? 'o' : 'u'); i++;
+    while (i < source.length) {
+      if (source[i] === "'") { i++; continue; }
+      const hit = JAPANESE_MORA_KEYS.find((key) => source.startsWith(key, i));
+      if (hit) { out += JAPANESE_MORA_HANGUL[hit]; i += hit.length; }
+      else { out += source[i]; i++; } // unknown phonetics stay Latin rather than being guessed
     }
     return out;
   }
@@ -143,10 +158,11 @@
     if (!text) return '';
     if (LATIN.includes(lang)) return text;
     if (lang === 'ja') {
+      if (!kana) return text; // alphabet-based Hylian scripts have no Japanese syllable equivalents
       const wanakana = wk || root.wanakana;
-      return wanakana ? wanakana.toHiragana(kana ? text.toLowerCase() : latinToRomaji(text)) : text;
+      return wanakana ? wanakana.toHiragana(text.toLowerCase()) : text;
     }
-    if (lang === 'ko') return toHangul(text);
+    if (lang === 'ko') return kana ? japaneseRomajiToHangul(text) : text;
     if (CYRILLIC[lang]) return toCyrillic(text, lang, kana);
     return text;
   }
