@@ -1,3 +1,6 @@
+// Pages live at / (English) and /<lang>/ (everything else); each page sets its path back to the site root.
+const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
+
 // Declare DOM elements and other frequently accessed variables at the top
 const inputTextElement = document.getElementById("inputText");
 const translatedTextElement = document.getElementById("translatedText");
@@ -35,7 +38,7 @@ function hasChinese(text) {
 }
 
 //Japanese characters
-const KUROMOJI_DICT_BASE = './dict/';
+const KUROMOJI_DICT_BASE = SITE_ROOT + 'dict/';
 // Add this line below:
 const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
 const KUROSHIRO_ANALYZER_SCRIPT =
@@ -138,24 +141,24 @@ function loadHtml2Canvas() {
 
 // Image mapping with mobile versions
 const hylianVersionImages = {
-  "ocarinaOfTime64": 'images/ocarina.png',
-  "ocarinaOfTime64-mobile": 'images/ocarina-mobile.png',
-  "ocarinaOfTime3d": 'images/ocarina.png',
-  "ocarinaOfTime3d-mobile": 'images/ocarina-mobile.png',
-  "windwaker": 'images/windwaker.png',
-  "windwaker-mobile": 'images/windwaker-mobile.png',
-  "twilightPrincess": 'images/twilight.png',
-  "twilightPrincess-mobile": 'images/twilight-mobile.png',
-  "skywardSword": 'images/skyward.png',
-  "skywardSword-mobile": 'images/skyward-mobile.png',
-  "botw": 'images/botw.png',
-  "botw-mobile": 'images/botw-mobile.png',
-  "gerudo": 'images/gerudo.png',
-  "gerudo-mobile": 'images/gerudo-mobile.png',
-  "sheikah": 'images/sheikah.png',
-  "sheikah-mobile": 'images/sheikah-mobile.png',
-  "mudoran": 'images/mudoran.png',
-  "mudoran-mobile": 'images/mudoran-mobile.png',
+  "ocarinaOfTime3d": SITE_ROOT + 'images/ocarina.png',
+  "ocarinaOfTime3d-mobile": SITE_ROOT + 'images/ocarina-mobile.png',
+  "ocarinaOfTime64": SITE_ROOT + 'images/ocarina64.png',
+  "ocarinaOfTime64-mobile": SITE_ROOT + 'images/ocarina-mobile64.png',
+  "windwaker": SITE_ROOT + 'images/windwaker.png',
+  "windwaker-mobile": SITE_ROOT + 'images/windwaker-mobile.png',
+  "twilightPrincess": SITE_ROOT + 'images/twilight.png',
+  "twilightPrincess-mobile": SITE_ROOT + 'images/twilight-mobile.png',
+  "skywardSword": SITE_ROOT + 'images/skyward.png',
+  "skywardSword-mobile": SITE_ROOT + 'images/skyward-mobile.png',
+  "botw": SITE_ROOT + 'images/botw.png',
+  "botw-mobile": SITE_ROOT + 'images/botw-mobile.png',
+  "gerudo": SITE_ROOT + 'images/gerudo.png',
+  "gerudo-mobile": SITE_ROOT + 'images/gerudo-mobile.png',
+  "sheikah": SITE_ROOT + 'images/sheikah.png',
+  "sheikah-mobile": SITE_ROOT + 'images/sheikah-mobile.png',
+  "mudoran": SITE_ROOT + 'images/mudoran.png',
+  "mudoran-mobile": SITE_ROOT + 'images/mudoran-mobile.png',
 };
 
 // Event listeners
@@ -264,7 +267,41 @@ fontSizeSlider.addEventListener("input", function () {
 fontColorInput.addEventListener('input', function (event) {
   const color = event.target.value;
   translatedTextElement.style.color = color;
+  updateOutputContrast();
 });
+
+// ---- Contrast auto-guard ----------------------------------------------------------------------------------------
+// If the chosen text colour would be hard to read on the (light) card, the output panel switches to a dark theme.
+// It is re-evaluated only when the colour changes, and any normal / dark colour keeps the default light panel.
+const outputPanel = document.getElementById('outputPanel');
+const MIN_CONTRAST = 3; // WCAG AA for large text (the output is always large)
+
+function relativeLuminance(r, g, b) {
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+function parseCssColor(value) {
+  const hex = /^#([0-9a-f]{6})$/i.exec(value.trim());
+  if (hex) return [parseInt(hex[1].slice(0, 2), 16), parseInt(hex[1].slice(2, 4), 16), parseInt(hex[1].slice(4, 6), 16)];
+  const rgb = /rgba?\((\d+)[ ,]+(\d+)[ ,]+(\d+)/.exec(value);
+  return rgb ? [+rgb[1], +rgb[2], +rgb[3]] : null;
+}
+
+function contrastRatio(a, b) {
+  const la = relativeLuminance(...a), lb = relativeLuminance(...b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+function updateOutputContrast() {
+  if (!outputPanel) return;
+  const text = parseCssColor(fontColorInput.value);
+  const card = outputPanel.closest('.text-block') || document.body;
+  const light = parseCssColor(getComputedStyle(card).backgroundColor) || [247, 241, 225]; // the card's default background
+  if (!text) return;
+  outputPanel.classList.toggle('output-dark', contrastRatio(text, light) < MIN_CONTRAST);
+}
+updateOutputContrast();
 
 function umdDefault(globalName) {
   const mod = window[globalName];
@@ -600,7 +637,7 @@ downloadFontElement.addEventListener('click', function () {
   const fontFileName = fontFileMap[selectedFontVersion];
 
   if (fontFileName) {
-    const fontUrl = `fonts/${fontFileName}.ttf`;
+    const fontUrl = `${SITE_ROOT}fonts/${fontFileName}.ttf`;
     downloadFont(fontUrl, `${fontFileName}.ttf`);
   } else {
     alert('Font file not found for the selected font version.');
@@ -615,26 +652,19 @@ function downloadFont(fontUrl, fontName) {
   link.click();  // Programmatically click the link to trigger the download
 }
 
-// Function to get translated text for the 'translatedText' key
-function getTranslatedText(languageCode) {
-  if (translations[languageCode] && translations[languageCode].translatedText) {
-    return translations[languageCode].translatedText;
-  } else {
-    console.error(`Translation not found for language code: ${languageCode}`);
-    return null; // or some default value if needed
-  }
+// The "your translated text will appear here" placeholder of the current page language (set inline by the page)
+function getTranslatedText() {
+  return (window.PAGE_TEXT && window.PAGE_TEXT.translatedText) || '';
 }
 
 // Function to export translated text as PNG
 async function exportAsPNG() {
   const computedStyle = window.getComputedStyle(translatedTextElement);
-  const englishText = getTranslatedText("en");
-  const japaneseText = getTranslatedText("jp");
+  const placeholderText = getTranslatedText();
 
   if (translatedTextElement.textContent.length !== 0 &&
     !computedStyle.fontFamily.includes("RocknRollOne") &&
-    translatedTextElement.textContent !== englishText &&
-    translatedTextElement.textContent !== japaneseText) {
+    translatedTextElement.textContent !== placeholderText) {
 
     try {
       const html2canvas = await loadHtml2Canvas();

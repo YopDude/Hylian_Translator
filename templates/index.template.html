@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="{{htmlLang}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+  <link rel="stylesheet" href="{{root}}styles.css?v={{ver}}">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="{{root}}images/favicon.ico?v={{ver}}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{root}}images/icon-192.png?v={{ver}}">
+  <link rel="apple-touch-icon" href="{{root}}images/apple-touch-icon.png?v={{ver}}">
+  <link rel="manifest" href="{{root}}site.webmanifest">
+  <meta name="theme-color" content="#0d2238">
+  <link rel="canonical" href="{{canonical}}">
+{{hreflangTags}}
+
+  <!-- Meta Tags for SEO -->
+  <meta name="google-site-verification" content="M3v6mA89lqm7s9SAOmznz_Mjrrf83O6cnnkcVkuGaJc"/>
+  <meta name="description" content="{{metaIndex|a}}"/>
+{{keywordsTag}}  <meta name="author" content="Hylian Translator"/>
+  <meta name="robots" content="index, follow"/>
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="{{headerTitle|a}}"/>
+  <meta property="og:description" content="{{metaIndex|a}}"/>
+  <meta property="og:image" content="{{site}}/images/Hylian_Translator_Home.png"/>
+  <meta property="og:url" content="{{canonical}}"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="Zelda Hylian Translator"/>
+  <meta property="og:locale" content="{{ogLocale}}"/>
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="{{headerTitle|a}}"/>
+  <meta name="twitter:description" content="{{metaIndex|a}}"/>
+  <meta name="twitter:image" content="{{site}}/images/Hylian_Translator_Home.png"/>
+
+  <!-- Preload only the fonts needed for the initial render -->
+  <link rel="preload" href="{{root}}fonts/RocknRollOne-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="{{root}}fonts/HyliaSerifBeta-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="{{root}}fonts/ReggaeOne-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="{{root}}fonts/HylianSymbols.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="{{root}}fonts/AlbwBotwHylian-Regular.woff2?v={{fontVer}}" as="font" type="font/woff2" crossorigin="anonymous">
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+</head>
+<body>
+{{banner}}
+  <header>
+    <h1 id="headerTitle">{{headerTitle}}</h1>
+    <p id="headerSubtitle">{{headerSubtitle}}</p>
+    <div class="language-selector">
+{{languageSelect}}
+    </div>
+  </header>
+  <main class="content">
+    <section class="section odd">
+      <div class="text-block" id="translatorCard">
+        <!-- Direction: real world -> Hylian (default) or Hylian -> real world (swap) -->
+        <div class="direction-bar" id="directionBar">
+          <div class="dir-side dir-real">
+            <span class="dir-label" id="dirRealLabel">{{dirRealWorld}}</span>
+            <select id="outputLanguage" aria-label="{{outLangLabel|a}}">
+{{outputLanguageOptions}}
+            </select>
+          </div>
+          <button type="button" id="swapBtn" class="swap-btn tooltip-element" aria-pressed="false" aria-label="{{swapTip|a}}" data-tooltip="{{swapTip|a}}">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M7 7h11M15 4l3 3-3 3M17 17H6M9 14l-3 3 3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="dir-side dir-hylian" id="dirHylian">{{dirHylian}}</div>
+        </div>
+        <div>
+            <label for="hylianVersion" id="chooseHylianVersionLabel">{{chooseHylianVersionLabel}}</label>
+            <select id="hylianVersion">
+              <optgroup label="{{hylianLanguageGroup|a}}" id="hylianLanguageGroup">
+                <option selected="selected" value="ocarinaOfTime3d" data-icon="{{root}}images/icons/ocarinaOfTime3d.{{iconExt}}" id="chooseHylianVersionOcarina3d">{{chooseHylianVersionOcarina3d}}</option>
+                <option value="ocarinaOfTime64" data-icon="{{root}}images/icons/ocarinaOfTime64.{{iconExt}}" id="chooseHylianVersionOcarina64">{{chooseHylianVersionOcarina64}}</option>
+                <option value="windwaker" data-icon="{{root}}images/icons/windwaker.{{iconExt}}" id="chooseHylianVersionWindwaker">{{chooseHylianVersionWindwaker}}</option>
+                <option value="twilightPrincess" data-icon="{{root}}images/icons/twilightPrincess.{{iconExt}}" id="chooseHylianVersionTwilightPrincess">{{chooseHylianVersionTwilightPrincess}}</option>
+                <option value="skywardSword" data-icon="{{root}}images/icons/skywardSword.{{iconExt}}" id="chooseHylianVersionSkywardSword">{{chooseHylianVersionSkywardSword}}</option>
+                <option value="botw" data-icon="{{root}}images/icons/botw.{{iconExt}}" id="chooseHylianVersionBotw">{{chooseHylianVersionBotw}}</option>
+              </optgroup>
+              <optgroup label="{{otherLanguageGroup|a}}" id="otherLanguageGroup">
+                <option value="gerudo" data-icon="{{root}}images/icons/gerudo.{{iconExt}}" id="chooseHylianVersionGerudo">{{chooseHylianVersionGerudo}}</option>
+                <option value="sheikah" data-icon="{{root}}images/icons/sheikah.{{iconExt}}" id="chooseHylianVersionSheikah">{{chooseHylianVersionSheikah}}</option>
+                <option value="mudoran" data-icon="{{root}}images/icons/mudoran.{{iconExt}}" id="chooseHylianVersionMudoran">{{chooseHylianVersionMudoran}}</option>
+              </optgroup>
+            </select>
+            <button id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="{{tip_showHylianMapBtn|a}}">f</button>
+        </div>
+        <!-- Radio Buttons for Twilight Princess -->
+        <div id="twilightPrincessOptions" style="display: none;">
+          <input type="radio" name="tpVersion" value="gamecube" id="gamecubeOption" checked>
+          <label id="gamecubeOptionLabel" for="gamecubeOption">{{gamecubeOptionLabel}}</label>
+          <br>
+          <input type="radio" name="tpVersion" value="wii" id="wiiOption">
+          <label id="wiiOptionLabel" for="wiiOption">{{wiiOptionLabel}}</label>
+        </div>
+
+        <!-- Real world -> Hylian -->
+        <div class="fwd-only">
+          <textarea id="inputText" rows="5" aria-label="{{inputTextPlaceholder|a}}" placeholder="{{inputTextPlaceholder|a}}"></textarea>
+        </div>
+        <div class="controls fwd-only">
+          <label for="fontColor" id="fontColorLabel">{{fontColorLabel}}</label>
+          <input type="color" id="fontColor" value="#000000">
+
+          <label for="fontSizeSlider" id="fontSizeLabel">
+            <span id="fontSizeValue">2.5x</span>
+          </label>
+          <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="2.5">
+        </div>
+        <div class="fwd-only">
+          <div class="output-panel" id="outputPanel">
+            <p id="translatedText">{{translatedText}}</p>
+          </div>
+        </div>
+        <div class="fwd-only">
+          <button id="exportPNGBtn" class="tooltip-element" data-tooltip-key="exportPNGBtn" data-tooltip="{{tip_exportPNGBtn|a}}">{{exportPNGBtn}}</button>
+        </div>
+
+        <!-- Hylian -> real world (built by reverse.js) -->
+        <div class="rev-only reverse-panel" id="reversePanel">
+          <div id="hylianInput" class="hylian-input hylian-font" tabindex="0" role="textbox" aria-multiline="true" aria-label="{{kbLabel|a}}" data-placeholder="{{revInputPlaceholder|a}}"></div>
+          <div id="hylianKeyboard" class="hylian-keyboard" role="group" aria-label="{{kbLabel|a}}"></div>
+          <div class="kb-actions">
+            <button type="button" class="kb-action" id="kbShift" aria-pressed="false" hidden>{{kbShift}}</button>
+            <button type="button" class="kb-action kb-space" id="kbSpace">{{kbSpace}}</button>
+            <button type="button" class="kb-action" id="kbBackspace">{{kbBackspace}}</button>
+            <button type="button" class="kb-action" id="kbClear">{{kbClear}}</button>
+          </div>
+          <p id="reverseOutput" class="reverse-output" aria-live="polite" data-placeholder="{{revOutputPlaceholder|a}}"></p>
+          <button type="button" id="copyBtn" class="copy-btn" disabled>{{copyBtn}}</button>
+          <!-- Scope note (translated in i18n/ui-strings.js). Hidden for now: remove the "hidden" attribute to show it again. -->
+          <p class="rev-note" hidden>{{revNote}}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <p id="noteText">{{noteText}}</p>
+      <div>
+        <button id="downloadFontBtn" class="tooltip-element" data-tooltip-key="downloadFontBtn" data-tooltip="{{tip_downloadFontBtn|a}}">{{downloadFontBtn}}</button>
+        <a id="aboutPageBtn" class="button-link tooltip-element" data-tooltip-key="aboutPageBtn" data-tooltip="{{tip_aboutPageBtn|a}}" href="{{aboutHref}}">{{aboutPageLink}}</a>
+      </div>
+    </div>
+{{languageLinks}}
+    <div class="disclaimer">
+      <p id="disclaimerText">{{disclaimerText}}</p>
+      <img class="linebeck" src="{{root}}images/black.png" width="116" height="112" loading="lazy" decoding="async" alt="" />
+      <a href="https://ko-fi.com/yopdude" target="_blank" rel="noopener noreferrer"><img class="kofi" src="{{root}}images/kofi.png" width="980" height="198" loading="lazy" decoding="async" alt="Support me on Ko-fi"/></a>
+      <img class="linebeck" src="{{root}}images/linebeck.gif" width="116" height="112" loading="lazy" decoding="async" alt="Mr. Krabs" />
+    </div>
+  </footer>
+
+  <!-- Image Overlay (Initially Hidden) -->
+  <div id="overlay" class="overlay">
+    <div class="overlay-content">
+      <img id="hylianMapImage" src="" loading="lazy" decoding="async" alt="Hylian Alphabet Mapping">
+      <img id="closeOverlayBtn" class="close-icon" src="{{root}}images/close.png" width="128" height="128" loading="lazy" decoding="async" alt="Close">
+    </div>
+  </div>
+
+  <!-- Loading Spinner (Hidden by default) -->
+  <div id="loadingIndicator" class="loadingIndicator">
+    <div id="loadingGifContainer"></div>
+    <div class="loading-bubble">
+      <div id="loadingMessage">{{loadingMessage}}</div>
+    </div>
+  </div>
+
+  <script>window.PAGE_TEXT = {{pageTextJson}};</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js" crossorigin="anonymous"></script> <!-- Load the UMD version of Wanakana JPN-->
+  <script defer src="{{root}}jsMapping/transliterationMap.js?v={{ver}}"></script> <!-- Convert non-english characters into their english counterpart -->
+  <script defer src="{{root}}jsMapping/WWHylianMap.js?v={{ver}}"></script> <!-- Load the WW glyph map -->
+  <script defer src="{{root}}jsMapping/64HylianMap.js?v={{ver}}"></script> <!-- Load the N64 glyph map -->
+  <script defer src="{{root}}jsMapping/3dHylianMap.js?v={{ver}}"></script> <!-- Load the 3ds glyph map -->
+  <script defer src="{{root}}jsMapping/fontFileMap.js?v={{ver}}"></script> <!-- Load the FontFile map to be able to download -->
+  <!-- html2canvas is loaded on-demand (only when exporting) -->
+  <script defer src="{{root}}script.js?v={{ver}}"></script> <!-- Main script -->
+  <script defer src="{{root}}ui-select.js?v={{ver}}"></script> <!-- Icon dropdown for the Hylian version -->
+  <script defer src="{{root}}jsMapping/reverseTransliteration.js?v={{ver}}"></script> <!-- Hylian -> real world: transliteration engines -->
+  <script defer src="{{root}}reverse.js?v={{ver}}"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
+  <script defer src="{{root}}state.js?v={{ver}}"></script> <!-- Remembers the session (localStorage) -->
+
+</body>
+</html>

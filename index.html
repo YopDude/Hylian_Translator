@@ -3,162 +3,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Zelda Hylian Translator – Convert English to Zelda's Hylian Languages (Breath of the Wild, Ocarina, Wind Waker)</title>
-  <link rel="stylesheet" href="styles.css?v=2026-05-11">
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <link rel="canonical" href="https://zeldatranslator.com/" />
+  <title>Zelda Hylian Translator – Convert real world languages to Zelda's Hylian Languages (Breath of the Wild, Ocarina, Wind Waker)</title>
+  <link rel="stylesheet" href="styles.css?v=2026-11-11">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="images/favicon.ico?v=2026-11-11">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png?v=2026-11-11">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2026-11-11">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#0d2238">
+  <link rel="canonical" href="https://zeldatranslator.com/">
+  <link rel="alternate" hreflang="en" href="https://zeldatranslator.com/">
+  <link rel="alternate" hreflang="ja" href="https://zeldatranslator.com/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://zeldatranslator.com/zh/">
+  <link rel="alternate" hreflang="ko" href="https://zeldatranslator.com/ko/">
+  <link rel="alternate" hreflang="es" href="https://zeldatranslator.com/es/">
+  <link rel="alternate" hreflang="pt" href="https://zeldatranslator.com/pt/">
+  <link rel="alternate" hreflang="fr" href="https://zeldatranslator.com/fr/">
+  <link rel="alternate" hreflang="de" href="https://zeldatranslator.com/de/">
+  <link rel="alternate" hreflang="it" href="https://zeldatranslator.com/it/">
+  <link rel="alternate" hreflang="fi" href="https://zeldatranslator.com/fi/">
+  <link rel="alternate" hreflang="nl" href="https://zeldatranslator.com/nl/">
+  <link rel="alternate" hreflang="ru" href="https://zeldatranslator.com/ru/">
+  <link rel="alternate" hreflang="uk" href="https://zeldatranslator.com/uk/">
+  <link rel="alternate" hreflang="sr" href="https://zeldatranslator.com/sr/">
+  <link rel="alternate" hreflang="x-default" href="https://zeldatranslator.com/">
 
   <!-- Meta Tags for SEO -->
   <meta name="google-site-verification" content="M3v6mA89lqm7s9SAOmznz_Mjrrf83O6cnnkcVkuGaJc"/>
-  <meta name="description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!"/>
+  <meta name="description" content="Translate English to Hylian and Hylian to English. Free Zelda Hylian translator for Breath of the Wild, Ocarina of Time, Wind Waker and more!"/>
   <meta name="keywords" content="Zelda, Hylian Translator, Zelda translator, Hylian language, Zelda fonts, Ocarina of Time, Wind Waker, Twilight Princess, Sheikah, Gerudo, Hylian alphabet"/>
   <meta name="author" content="Hylian Translator"/>
   <meta name="robots" content="index, follow"/>
-  
+
   <!-- Open Graph Tags -->
   <meta property="og:title" content="Zelda Hylian Translator"/>
-  <meta property="og:description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!"/>
-  <meta property="og:image" content="https://ZeldaTranslator.com/images/Hylian_Translator_Home.png"/>
-  <meta property="og:url" content="https://ZeldaTranslator.com/"/>
+  <meta property="og:description" content="Translate English to Hylian and Hylian to English. Free Zelda Hylian translator for Breath of the Wild, Ocarina of Time, Wind Waker and more!"/>
+  <meta property="og:image" content="https://zeldatranslator.com/images/Hylian_Translator_Home.png"/>
+  <meta property="og:url" content="https://zeldatranslator.com/"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Zelda Hylian Translator"/>
   <meta property="og:locale" content="en_US"/>
-  
-  <!-- Twitter Card Tags (for Twitter Preview) -->
+
+  <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Zelda Hylian Translator"/>
-  <meta name="twitter:description" content="Translate English text to various versions of Hylian from The Legend of Zelda series. Explore Breath of the Wild, Ocarina of Time, Wind Waker, Twilight Princess, and more!"/>
-  <meta name="twitter:image" content="https://ZeldaTranslator.com/images/Hylian_Translator_Home.png"/>
+  <meta name="twitter:description" content="Translate English to Hylian and Hylian to English. Free Zelda Hylian translator for Breath of the Wild, Ocarina of Time, Wind Waker and more!"/>
+  <meta name="twitter:image" content="https://zeldatranslator.com/images/Hylian_Translator_Home.png"/>
+
   <!-- Preload only the fonts needed for the initial render -->
-  <link rel="preload" href="fonts/RocknRollOne-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="fonts/HyliaSerifBeta-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="fonts/ReggaeOne-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="fonts/HylianSymbols.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/RocknRollOne-Regular.woff2?v=3" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/HyliaSerifBeta-Regular.woff2?v=3" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/ReggaeOne-Regular.woff2?v=3" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/HylianSymbols.woff2?v=3" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="fonts/AlbwBotwHylian-Regular.woff2?v=3" as="font" type="font/woff2" crossorigin="anonymous">
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 </head>
 <body>
-  
+  <div id="eventBanner" class="event-banner" hidden data-id="oot-switch2-2026" data-start="2026-11-05T00:00:00Z" data-end="2027-01-05T00:00:00Z">
+    <span class="event-banner__icon" aria-hidden="true">b</span>
+    <p class="event-banner__text"><strong>The Legend of Zelda: Ocarina of Time</strong> is out now on Nintendo Switch 2!</p>
+    <button type="button" class="event-banner__close" aria-label="Dismiss">&times;</button>
+  </div>
+  <script>(function () {
+  var el = document.getElementById('eventBanner');
+  if (!el) return;
+  var now = Date.now();
+  var start = Date.parse(el.getAttribute('data-start'));
+  var end = Date.parse(el.getAttribute('data-end'));
+  var key = 'eventBannerDismissed:' + el.getAttribute('data-id');
+  if (isNaN(start) || isNaN(end) || now < start || now >= end) { el.remove(); return; }
+  try { if (localStorage.getItem(key) === '1') { el.remove(); return; } } catch (e) {}
+  el.hidden = false;
+  var btn = el.querySelector('.event-banner__close');
+  if (btn) btn.addEventListener('click', function () {
+    el.remove();
+    try { localStorage.setItem(key, '1'); } catch (e) {}
+  });
+})();</script>
   <header>
     <h1 id="headerTitle">Zelda Hylian Translator</h1>
     <p id="headerSubtitle">Translate English text to various versions of Hylian!</p>
     <div class="language-selector">
-        <select id="languageSelect">
-          <option value="en">🇬🇧 English</option>
-          <option value="jp">🇯🇵 日本語</option>
-          <option value="zh">🇨🇳 中文</option>
-          <option value="ko">🇰🇷 한국어</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="pt">🇵🇹 Português</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="de">🇩🇪 Deutsch</option>
-          <option value="fi">🇫🇮 Suomi</option>
-          <option value="nl">🇳🇱 Nederlands</option>
-          <option value="ru">🇷🇺 Русский</option>
-          <option value="uk">🇺🇦 Українська</option>
-          <option value="sr">🇷🇸 Српски</option>
-        </select>
+      <select id="languageSelect" aria-label="Language" onchange="if(this.value)location.href=this.value">
+        <option value="index.html" lang="en" selected>🇬🇧 English</option>
+        <option value="ja/index.html" lang="ja">🇯🇵 日本語</option>
+        <option value="zh/index.html" lang="zh-Hans">🇨🇳 中文</option>
+        <option value="ko/index.html" lang="ko">🇰🇷 한국어</option>
+        <option value="es/index.html" lang="es">🇪🇸 Español</option>
+        <option value="pt/index.html" lang="pt">🇵🇹 Português</option>
+        <option value="fr/index.html" lang="fr">🇫🇷 Français</option>
+        <option value="de/index.html" lang="de">🇩🇪 Deutsch</option>
+        <option value="it/index.html" lang="it">🇮🇹 Italiano</option>
+        <option value="fi/index.html" lang="fi">🇫🇮 Suomi</option>
+        <option value="nl/index.html" lang="nl">🇳🇱 Nederlands</option>
+        <option value="ru/index.html" lang="ru">🇷🇺 Русский</option>
+        <option value="uk/index.html" lang="uk">🇺🇦 Українська</option>
+        <option value="sr/index.html" lang="sr">🇷🇸 Српски</option>
+      </select>
     </div>
   </header>
-  <div class="content">
+  <main class="content">
     <section class="section odd">
-      <div class="text-block">
+      <div class="text-block" id="translatorCard">
+        <!-- Direction: real world -> Hylian (default) or Hylian -> real world (swap) -->
+        <div class="direction-bar" id="directionBar">
+          <div class="dir-side dir-real">
+            <span class="dir-label" id="dirRealLabel">Real world</span>
+            <select id="outputLanguage" aria-label="Output language">
+        <option value="en" selected>🇬🇧 English</option>
+        <option value="ja">🇯🇵 日本語 (ひらがな)</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="pt">🇵🇹 Português</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="fi">🇫🇮 Suomi</option>
+        <option value="nl">🇳🇱 Nederlands</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="uk">🇺🇦 Українська</option>
+        <option value="sr">🇷🇸 Српски</option>
+            </select>
+          </div>
+          <button type="button" id="swapBtn" class="swap-btn tooltip-element" aria-pressed="false" aria-label="Switch direction: Hylian ⇆ real world" data-tooltip="Switch direction: Hylian ⇆ real world">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M7 7h11M15 4l3 3-3 3M17 17H6M9 14l-3 3 3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="dir-side dir-hylian" id="dirHylian">Hylian</div>
+        </div>
         <div>
             <label for="hylianVersion" id="chooseHylianVersionLabel">Choose Hylian Version:</label>
             <select id="hylianVersion">
               <optgroup label="Hylian Languages" id="hylianLanguageGroup">
-                <option value="ocarinaOfTime64" id="chooseHylianVersionOcarina64">Ocarina of Time (Original)</option>
-                <option value="ocarinaOfTime3d" id="chooseHylianVersionOcarina3d">Ocarina of Time (3DS Remake)</option>
-                <option value="windwaker" id="chooseHylianVersionWindwaker">Wind Waker</option>
-                <option value="twilightPrincess" id="chooseHylianVersionTwilightPrincess">Twilight Princess</option>
-                <option value="skywardSword" id="chooseHylianVersionSkywardSword">Skyward Sword</option>
-                <option selected="selected" value="botw" id="chooseHylianVersionBotw">Breath of the Wild</option>
+                <option selected="selected" value="ocarinaOfTime3d" data-icon="images/icons/ocarinaOfTime3d.svg" id="chooseHylianVersionOcarina3d">Ocarina of Time</option>
+                <option value="ocarinaOfTime64" data-icon="images/icons/ocarinaOfTime64.svg" id="chooseHylianVersionOcarina64">Ocarina of Time (N64)</option>
+                <option value="windwaker" data-icon="images/icons/windwaker.svg" id="chooseHylianVersionWindwaker">Wind Waker</option>
+                <option value="twilightPrincess" data-icon="images/icons/twilightPrincess.svg" id="chooseHylianVersionTwilightPrincess">Twilight Princess</option>
+                <option value="skywardSword" data-icon="images/icons/skywardSword.svg" id="chooseHylianVersionSkywardSword">Skyward Sword</option>
+                <option value="botw" data-icon="images/icons/botw.svg" id="chooseHylianVersionBotw">Breath of the Wild</option>
               </optgroup>
               <optgroup label="Other" id="otherLanguageGroup">
-                <option value="gerudo" id="chooseHylianVersionGerudo">Gerudo</option>
-                <option value="sheikah" id="chooseHylianVersionSheikah">Sheikah</option>
-                <option value="mudoran" id="chooseHylianVersionMudoran">Mudoran</option>
+                <option value="gerudo" data-icon="images/icons/gerudo.svg" id="chooseHylianVersionGerudo">Gerudo</option>
+                <option value="sheikah" data-icon="images/icons/sheikah.svg" id="chooseHylianVersionSheikah">Sheikah</option>
+                <option value="mudoran" data-icon="images/icons/mudoran.svg" id="chooseHylianVersionMudoran">Mudoran</option>
               </optgroup>
             </select>
-            <button id="showHylianMapBtn" class="eye-btn tooltip-element"  data-tooltip-key="showHylianMapBtn">f</button>
+            <button id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="View the Alphabet Chart">f</button>
         </div>
         <!-- Radio Buttons for Twilight Princess -->
         <div id="twilightPrincessOptions" style="display: none;">
-        <input type="radio" name="tpVersion" value="gamecube" id="gamecubeOption" checked>
-        <label id="gamecubeOptionLabel" for="gamecubeOption">GameCube (original)</label>
+          <input type="radio" name="tpVersion" value="gamecube" id="gamecubeOption" checked>
+          <label id="gamecubeOptionLabel" for="gamecubeOption">GameCube (original)</label>
           <br>
-        <input type="radio" name="tpVersion" value="wii" id="wiiOption">
-        <label id="wiiOptionLabel" for="wiiOption">Wii (mirrored)</label>
-        </div>
-        <div>
-          <textarea id="inputText"rows="5" aria-label="Enter Text for Translation" placeholder="Type something to be translated here."></textarea>
+          <input type="radio" name="tpVersion" value="wii" id="wiiOption">
+          <label id="wiiOptionLabel" for="wiiOption">Wii (mirrored)</label>
         </div>
 
-        <div><br>
+        <!-- Real world -> Hylian -->
+        <div class="fwd-only">
+          <textarea id="inputText" rows="5" aria-label="Type something to be translated here." placeholder="Type something to be translated here."></textarea>
+        </div>
+        <div class="controls fwd-only">
           <label for="fontColor" id="fontColorLabel">Font Color: </label>
           <input type="color" id="fontColor" value="#000000">
-          
-          <label for="fontSizeSlider" id="fontSizeLabel"> 
+
+          <label for="fontSizeSlider" id="fontSizeLabel">
             <span id="fontSizeValue">2.5x</span>
           </label>
           <input type="range" id="fontSizeSlider" min="1" max="5" step="0.1" value="2.5">
         </div>
-        <div>
-          <p id="translatedText"></p>
+        <div class="fwd-only">
+          <div class="output-panel" id="outputPanel">
+            <p id="translatedText">Your translated text will appear here.</p>
+          </div>
         </div>
-    <div>
-      <button id="exportPNGBtn" class="tooltip-element" data-tooltip-key="exportPNGBtn">Export as PNG ↓</button>
-    </div>
+        <div class="fwd-only">
+          <button id="exportPNGBtn" class="tooltip-element" data-tooltip-key="exportPNGBtn" data-tooltip="Download the translation as a PNG image">Export as PNG ⮟</button>
+        </div>
+
+        <!-- Hylian -> real world (built by reverse.js) -->
+        <div class="rev-only reverse-panel" id="reversePanel">
+          <div id="hylianInput" class="hylian-input hylian-font" tabindex="0" role="textbox" aria-multiline="true" aria-label="Hylian keyboard" data-placeholder="Tap the Hylian keys below to write."></div>
+          <div id="hylianKeyboard" class="hylian-keyboard" role="group" aria-label="Hylian keyboard"></div>
+          <div class="kb-actions">
+            <button type="button" class="kb-action" id="kbShift" aria-pressed="false" hidden>Shift</button>
+            <button type="button" class="kb-action kb-space" id="kbSpace">Space</button>
+            <button type="button" class="kb-action" id="kbBackspace">Backspace</button>
+            <button type="button" class="kb-action" id="kbClear">Clear</button>
+          </div>
+          <p id="reverseOutput" class="reverse-output" aria-live="polite" data-placeholder="The transliteration will appear here."></p>
+          <button type="button" id="copyBtn" class="copy-btn" disabled>Copy</button>
+          <!-- Scope note (translated in i18n/ui-strings.js). Hidden for now: remove the "hidden" attribute to show it again. -->
+          <p class="rev-note" hidden>Transliteration only: sounds, not meanings. Japanese is written in hiragana. Chinese and Mudoran are not available.</p>
+        </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <footer>
     <div>
-    <p id="noteText">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
-    <a id="aboutPageLink"href="about.html" style="text-decoration: underline;">About page →</a><br><br>
-      <button id="downloadFontBtn" class="tooltip-element" data-tooltip-key="downloadFontBtn">Download Font ↓</button>
+      <p id="noteText">Note: All languages are being displayed via custom fonts and won't persist with copy&paste.</p>
+      <div>
+        <button id="downloadFontBtn" class="tooltip-element" data-tooltip-key="downloadFontBtn" data-tooltip="Download the currently selected language font file">Download Font ⮟</button>
+        <a id="aboutPageBtn" class="button-link tooltip-element" data-tooltip-key="aboutPageBtn" data-tooltip="Learn more about the Zelda Hylian Translator, fonts, contributions, and resources" href="about.html">About page ➤</a>
+      </div>
     </div>
-
+    <nav class="lang-links" aria-label="Language">
+      <a href="index.html" hreflang="en" lang="en" aria-current="page">English</a>
+      <a href="ja/index.html" hreflang="ja" lang="ja">日本語</a>
+      <a href="zh/index.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+      <a href="ko/index.html" hreflang="ko" lang="ko">한국어</a>
+      <a href="es/index.html" hreflang="es" lang="es">Español</a>
+      <a href="pt/index.html" hreflang="pt" lang="pt">Português</a>
+      <a href="fr/index.html" hreflang="fr" lang="fr">Français</a>
+      <a href="de/index.html" hreflang="de" lang="de">Deutsch</a>
+      <a href="it/index.html" hreflang="it" lang="it">Italiano</a>
+      <a href="fi/index.html" hreflang="fi" lang="fi">Suomi</a>
+      <a href="nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
+      <a href="ru/index.html" hreflang="ru" lang="ru">Русский</a>
+      <a href="uk/index.html" hreflang="uk" lang="uk">Українська</a>
+      <a href="sr/index.html" hreflang="sr" lang="sr">Српски</a>
+    </nav>
     <div class="disclaimer">
-      <p id="disclaimerText"><strong>Disclaimer:</strong> *The Legend of Zelda* and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
-        <img class="linebeck" src="images/black.png" width="116" height="112" loading="lazy" decoding="async" alt="" />
-         <a href="https://ko-fi.com/yopdude" target="_blank" rel="noopener noreferrer"><img class="kofi" src="images/kofi.png" width="980" height="198" loading="lazy" decoding="async" alt="Support me on Ko-fi"/></a>
-        <img class="linebeck" src="images/linebeck.gif" width="116" height="112" loading="lazy" decoding="async" alt="Mr. Krabs" />
+      <p id="disclaimerText"><em>The Legend of Zelda</em> and all associated characters, trademarks, and logos are the property of <strong>Nintendo</strong>. This fan site is not affiliated with, endorsed, or sponsored by Nintendo.</p>
+      <img class="linebeck" src="images/black.png" width="116" height="112" loading="lazy" decoding="async" alt="" />
+      <a href="https://ko-fi.com/yopdude" target="_blank" rel="noopener noreferrer"><img class="kofi" src="images/kofi.png" width="980" height="198" loading="lazy" decoding="async" alt="Support me on Ko-fi"/></a>
+      <img class="linebeck" src="images/linebeck.gif" width="116" height="112" loading="lazy" decoding="async" alt="Mr. Krabs" />
     </div>
-
   </footer>
 
-    <!-- Image Overlay (Initially Hidden) -->
-    <div id="overlay" class="overlay">
-      <div class="overlay-content">
-        <!-- Dynamic Image -->
-        <img id="hylianMapImage" src="" loading="lazy" decoding="async" alt="Hylian Alphabet Mapping">
-        <!-- Close Icon -->
-        <img id="closeOverlayBtn" class="close-icon" src="images/close.png" width="128" height="128" loading="lazy" decoding="async" alt="Close">
-      </div>
+  <!-- Image Overlay (Initially Hidden) -->
+  <div id="overlay" class="overlay">
+    <div class="overlay-content">
+      <img id="hylianMapImage" src="" loading="lazy" decoding="async" alt="Hylian Alphabet Mapping">
+      <img id="closeOverlayBtn" class="close-icon" src="images/close.png" width="128" height="128" loading="lazy" decoding="async" alt="Close">
     </div>
-        
-    <!-- Loading Spinner (Hidden by default) -->
-    <div id="loadingIndicator" class="loadingIndicator">
-      <div id="loadingGifContainer"></div> 
-      <div class="loading-bubble">
-        <div id="loadingMessage"></div>
-      </div>
-    </div>
+  </div>
 
-  <script defer src="jsMapping/translations.js?v=2026-05-11"></script> <!-- Load the text content in selected language-->
+  <!-- Loading Spinner (Hidden by default) -->
+  <div id="loadingIndicator" class="loadingIndicator">
+    <div id="loadingGifContainer"></div>
+    <div class="loading-bubble">
+      <div id="loadingMessage">Loading Kanji library...</div>
+    </div>
+  </div>
+
+  <script>window.PAGE_TEXT = {"root":"","translatedText":"Your translated text will appear here.","copyLabel":"Copy","copiedMsg":"Copied!"};</script>
   <script defer src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js" crossorigin="anonymous"></script> <!-- Load the UMD version of Wanakana JPN-->
-  <script defer src="jsMapping/transliterationMap.js?v=2026-05-15"></script> <!-- Convert non-english characters into their english counterpart -->
-  <script defer src="jsMapping/WWHylianMap.js?v=2026-05-11"></script> <!-- Load the WW glyph map -->
-  <script defer src="jsMapping/64HylianMap.js?v=2026-05-11"></script> <!-- Load the N64 glyph map -->
-  <script defer src="jsMapping/3dHylianMap.js?v=2026-05-11"></script> <!-- Load the 3ds glyph map -->
-  <script defer src="jsMapping/fontFileMap.js?v=2026-05-11"></script> <!-- Load the FontFile map to be able to download -->
+  <script defer src="jsMapping/transliterationMap.js?v=2026-11-11"></script> <!-- Convert non-english characters into their english counterpart -->
+  <script defer src="jsMapping/WWHylianMap.js?v=2026-11-11"></script> <!-- Load the WW glyph map -->
+  <script defer src="jsMapping/64HylianMap.js?v=2026-11-11"></script> <!-- Load the N64 glyph map -->
+  <script defer src="jsMapping/3dHylianMap.js?v=2026-11-11"></script> <!-- Load the 3ds glyph map -->
+  <script defer src="jsMapping/fontFileMap.js?v=2026-11-11"></script> <!-- Load the FontFile map to be able to download -->
   <!-- html2canvas is loaded on-demand (only when exporting) -->
-  <script defer src="languageSet.js?v=2026-05-12"></script> <!-- Change language -->
-  <script defer src="script.js?v=2026-05-15"></script> <!-- Then load main script -->
+  <script defer src="script.js?v=2026-11-11"></script> <!-- Main script -->
+  <script defer src="ui-select.js?v=2026-11-11"></script> <!-- Icon dropdown for the Hylian version -->
+  <script defer src="jsMapping/reverseTransliteration.js?v=2026-11-11"></script> <!-- Hylian -> real world: transliteration engines -->
+  <script defer src="reverse.js?v=2026-11-11"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
+  <script defer src="state.js?v=2026-11-11"></script> <!-- Remembers the session (localStorage) -->
 
 </body>
 </html>

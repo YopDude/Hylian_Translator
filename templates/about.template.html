@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="{{htmlLang}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{aboutPageTitle}}</title>
+  <link rel="stylesheet" href="{{root}}styles.css?v={{ver}}">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="{{root}}images/favicon.ico?v={{ver}}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{root}}images/icon-192.png?v={{ver}}">
+  <link rel="apple-touch-icon" href="{{root}}images/apple-touch-icon.png?v={{ver}}">
+  <link rel="manifest" href="{{root}}site.webmanifest">
+  <meta name="theme-color" content="#0d2238">
+  <link rel="canonical" href="{{canonical}}">
+{{hreflangTags}}
+
+  <!-- Meta Tags for SEO -->
+  <meta name="description" content="{{metaAbout|a}}">
+{{keywordsTag}}  <meta name="author" content="Hylian Translator">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="{{aboutShortTitle|a}}">
+  <meta property="og:description" content="{{metaAbout|a}}">
+  <meta property="og:image" content="{{site}}/images/Hylian_Translator_About.png">
+  <meta property="og:url" content="{{canonical}}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zelda Hylian Translator">
+  <meta property="og:locale" content="{{ogLocale}}">
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{aboutShortTitle|a}}">
+  <meta name="twitter:description" content="{{metaAbout|a}}">
+  <meta name="twitter:image" content="{{site}}/images/Hylian_Translator_About.png">
+</head>
+
+<body class="about-page">
+{{banner}}
+  <header>
+    <a href="{{homeHref}}">
+      <h1 id="aboutPageHeader">{{aboutPageHeader}}</h1>
+    </a>
+    <div class="language-selector">
+{{languageSelect}}
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="section odd">
+      <div class="text-block">
+        <p id="aboutIntro">{{aboutIntro}}</p>
+        <h3 id="fontsForJpAndEn">{{fontsForJpAndEn}}</h3>
+        <p class="symbol" style="color: #b99f65;">b</p>
+        <p id="wwOoFonts">{{wwOoFonts}}</p>
+        <p id="otherFonts">{{otherFonts}}</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="{{root}}images/hylian-collage.webp" type="image/webp">
+        <img src="{{root}}images/hylian-collage.jpg" alt="A collage showcasing different Hylian fonts from Zelda games like Ocarina of Time and Breath of the Wild" width="3264" height="3264" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section odd">
+      <div class="text-block">
+        <h2 id="downloadsContributionsTitle">{{downloadsContributionsTitle}}</h2>
+        <p class="symbol" style="color: #d84a17">l</p>
+        <p id="contributionsText">{{contributionsText}}</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="{{root}}images/github.webp" type="image/webp">
+        <img src="{{root}}images/github.png" alt="GitHub Repository" width="1021" height="813" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section even">
+      <div class="text-block">
+        <h3 id="fontsByTitle">{{fontsByTitle}}</h3>
+        <p id="sarinilliFontText">{{sarinilliFontText}}</p>
+        <p id="plaguelilyFontText">{{plaguelilyFontText}}</p>
+        <p id="yopdudeFontText">{{yopdudeFontText}}</p>
+      </div>
+    </section>
+
+    <section class="section odd">
+      <div class="text-block">
+        <h2 id="fontModificationsTitle">{{fontModificationsTitle}}</h2>
+        <p class="symbol" style="color: #2f5d9b">n</p>
+        <p id="fontModificationsText">{{fontModificationsText}}</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="{{root}}images/glyphr.webp" type="image/webp">
+        <img src="{{root}}images/glyphr.png" alt="Glyphr Studio Interface" width="1545" height="821" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section even">
+      <div class="text-block">
+        <h2 id="additionalResourcesTitle">{{additionalResourcesTitle}}</h2>
+        <p class="symbol" style="color: #448933">m</p>
+        <p id="hylianResourcesIntro">{{hylianResourcesIntro}}</p>
+        <p><a href="https://zeldawiki.wiki/wiki/Hylian_(Language)" id="zeldaWikiLink">{{zeldaWikiLink}}</a></p>
+        <p><a href="https://zeldauniverse.net/media/fonts/" id="zeldaUniverseLink">{{zeldaUniverseLink}}</a></p>
+        <p><a href="https://www.omniglot.com/conscripts/hylian2.htm" id="omniglotLink">{{omniglotLink}}</a></p>
+        <p><a href="https://zeldauniverse.net/2022/09/27/zeldas-study-lost-in-localization/" id="mudoranLink">{{mudoranLink}}</a></p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="{{root}}images/intro.webp" type="image/webp">
+        <img src="{{root}}images/intro.png" alt="Hylian Language Overview" width="400" height="240" loading="lazy" decoding="async">
+      </picture>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <a href="{{homeHref}}" id="backToHomeLink" class="button-link">{{backToHomeLink}}</a>
+    </div>
+{{languageLinks}}
+    <div class="disclaimer">
+      <p id="disclaimerText">{{disclaimerText}}</p>
+    </div>
+  </footer>
+
+</body>
+</html>
