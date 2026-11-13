@@ -487,16 +487,27 @@ header a:hover, footer a:hover {
     height: auto;
 }
 
-.kofi {
-    width: auto;
-    height: 40px;
-    transition: all 0.3s ease;
+/* Ko-fi button: real, translatable text (the old kofi.png had English baked into the image) */
+.kofi-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 20px 0 12px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: #28a745;
+  color: #fff;
+  font-family: 'ReggaeOne', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
 }
-
-.kofi:hover {
-  filter: brightness(80%);  /* Darker green on hover */
-  transform: translateY(-2px);  /* Slight lift effect */
-}
+.kofi-cup { height: 26px; width: auto; flex: none; }
+.kofi-btn:hover { background: #218838; transform: translateY(-2px); text-decoration: none; }
+.kofi-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.5); }
 
 /* Mobile Styles */
 @media (max-width: 768px) {
@@ -1388,10 +1399,21 @@ html[lang="sr"] header h1 {
 .is-option[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
 
 /* Keep the selected script name readable on narrow mobile screens. */
-#exportPNGBtn::after, #downloadFontBtn::after { content: " ↓"; font-family: Arial, sans-serif; font-weight: 700; }
 
 @media (max-width: 480px) {
   .icon-select { width: min(100%, 340px); }
   .icon-select-btn { min-width: 0; width: 100%; gap: 7px; padding-right: 9px; }
   .icon-select .is-text { font-size: 0.88rem; }
 }
+
+
+/* Share actions and temporary shared-configuration notice */
+#shareLinkBtn, #shareImageBtn { margin: 0.35rem 0.35rem 0.35rem 0; }
+.shared-config-notice { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.8rem 1rem; background: #edf3f8; color: #18334d; border-bottom: 1px solid #cbd8e4; text-align: center; }
+.shared-config-notice button { border: 1px solid currentColor; border-radius: 6px; padding: 0.4rem 0.75rem; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.shared-config-notice button:hover { background: rgba(24, 51, 77, 0.08); }
+@media (max-width: 520px) { .shared-config-notice { flex-direction: column; } }
+
+/* Buttons with a leading icon (Export, Share) */
+.btn-with-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; }
+.btn-icon { width: 1.15em; height: 1.15em; flex: none; }

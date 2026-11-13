@@ -110,7 +110,8 @@
           </div>
         </div>
         <div class="fwd-only">
-          <button id="exportPNGBtn" class="tooltip-element" data-tooltip-key="exportPNGBtn" data-tooltip="{{tip_exportPNGBtn|a}}">{{exportPNGBtn}}</button>
+          <button id="exportPNGBtn" class="tooltip-element btn-with-icon" data-tooltip-key="exportPNGBtn" data-tooltip="{{tip_exportPNGBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{exportPNGBtn}}</span></button>
+          <button id="shareLinkBtn" type="button" class="tooltip-element btn-with-icon" data-tooltip-key="shareLinkBtn" data-tooltip="{{tip_shareLinkBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.4M8.3 13.3l7.4 4.4"/></g></svg><span class="btn-label">{{shareLinkBtn}}</span></button>
         </div>
 
         <!-- Hylian -> real world (built by reverse.js) -->
@@ -137,15 +138,15 @@
     <div>
       <p id="noteText">{{noteText}}</p>
       <div>
-        <button id="downloadFontBtn" class="tooltip-element" data-tooltip-key="downloadFontBtn" data-tooltip="{{tip_downloadFontBtn|a}}">{{downloadFontBtn}}</button>
-        <a id="aboutPageBtn" class="button-link tooltip-element" data-tooltip-key="aboutPageBtn" data-tooltip="{{tip_aboutPageBtn|a}}" href="{{aboutHref}}">{{aboutPageLink}}</a>
+        <button id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="{{tip_downloadFontBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{downloadFontBtn}}</span></button>
+        <a id="aboutPageBtn" class="button-link tooltip-element btn-with-icon" data-tooltip-key="aboutPageBtn" data-tooltip="{{tip_aboutPageBtn|a}}" href="{{aboutHref}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></g><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/></svg><span class="btn-label">{{aboutPageLink}}</span></a>
       </div>
     </div>
 {{languageLinks}}
     <div class="disclaimer">
       <p id="disclaimerText">{{disclaimerText}}</p>
       <img class="linebeck" src="{{root}}images/black.png" width="116" height="112" loading="lazy" decoding="async" alt="" />
-      <a href="https://ko-fi.com/yopdude" target="_blank" rel="noopener noreferrer"><img class="kofi" src="{{root}}images/kofi.png" width="980" height="198" loading="lazy" decoding="async" alt="Support me on Ko-fi"/></a>
+      <a class="kofi-btn" href="https://ko-fi.com/yopdude" target="_blank" rel="noopener noreferrer"><img class="kofi-cup" src="{{root}}images/kofi-cup.svg" width="126" height="103" loading="lazy" decoding="async" alt=""/><span>{{kofiText}}</span></a>
       <img class="linebeck" src="{{root}}images/linebeck.gif" width="116" height="112" loading="lazy" decoding="async" alt="Mr. Krabs" />
     </div>
   </footer>
@@ -179,6 +180,7 @@
   <script defer src="{{root}}jsMapping/reverseTransliteration.js?v={{ver}}"></script> <!-- Hylian -> real world: transliteration engines -->
   <script defer src="{{root}}reverse.js?v={{ver}}"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
   <script defer src="{{root}}state.js?v={{ver}}"></script> <!-- Remembers the session (localStorage) -->
+  <script defer src="{{root}}share.js?v={{ver}}"></script> <!-- Shareable configurations and branded image sharing -->
 
 </body>
 </html>

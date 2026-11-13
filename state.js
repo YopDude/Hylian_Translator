@@ -34,6 +34,7 @@
   }
   function flush() {
     clearTimeout(timer);
+    if (sharedMode) return;
     try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch (e) { /* storage unavailable */ }
   }
 
@@ -52,11 +53,32 @@
   }
 
   restore();
+
+  // Shared links are temporary overlays: preserve the visitor's own restored
+  // local settings and never write the shared configuration back to storage.
+  const personalSnapshot = snapshot();
+  let sharedMode = false;
+  window.HylianTranslatorState = {
+    get: snapshot,
+    apply: (s) => {
+      if (!s || typeof s !== 'object') return;
+      if (typeof s.version === 'string' && [...version.options].some((o) => o.value === s.version)) { version.value = s.version; fire(version, 'change'); }
+      if (s.tp === 'wii' && wii) { wii.checked = true; fire(wii, 'change'); }
+      else if (gc) { gc.checked = true; fire(gc, 'change'); }
+      if (color && /^#[0-9a-f]{6}$/i.test(s.color || '')) { color.value = s.color; fire(color, 'input'); }
+      if (size && Number.isFinite(parseFloat(s.size))) { size.value = s.size; fire(size, 'input'); }
+      if (typeof s.text === 'string') { text.value = s.text; fire(text, 'input'); }
+      if (ui && s.rev) ui.set(s.rev);
+    },
+    setSharedMode: (on) => { sharedMode = !!on; },
+    restorePersonal: () => { sharedMode = false; window.HylianTranslatorState.apply(personalSnapshot); }
+  };
+
   [text, version, color, size, gc, wii].forEach((el) => {
     if (!el) return;
-    el.addEventListener('input', save);
-    el.addEventListener('change', save);
+    el.addEventListener('input', () => { if (!sharedMode) save(); });
+    el.addEventListener('change', () => { if (!sharedMode) save(); });
   });
-  if (ui) ui.onChange(save);
+  if (ui) ui.onChange(() => { if (!sharedMode) save(); });
   window.addEventListener('pagehide', flush);
 })();

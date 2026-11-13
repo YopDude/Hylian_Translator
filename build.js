@@ -17,7 +17,7 @@ const vm = require('vm');
 
 const ROOT = __dirname;
 const SITE = 'https://zeldatranslator.com';
-const VER = '2026-11-13b'; // cache-buster for css/js/icon query strings; bump when you change them
+const VER = '2026-11-13h'; // cache-buster for css/js/icon query strings; bump when you change them
 const FONT_VER = '3'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
 const ICON_EXT = 'svg'; // images/icons/<version>.<ext>: drop real game logos in with the same names (change this for png/webp)
 
@@ -160,7 +160,7 @@ for (const lang of LANGS) {
       keywordsTag: lang.code === 'en' ? `  <meta name="keywords" content="${esc(KEYWORDS_EN)}"/>\n` : '',
       banner: bannerHtml(s),
       outputLanguageOptions: outputOptions(lang),
-      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg }).replace(/</g, '\\u003c'),
+      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, sharedLinkInvalid: s.sharedLinkInvalid, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
       languageSelect: languageSelect(lang, page),
       languageLinks: languageLinks(lang, page),
       homeHref: rel(from, urlPath(lang, 'index')),
