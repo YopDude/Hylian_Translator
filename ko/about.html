@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>젤다 하일리아 번역기 소개 – 폰트, 기여 및 자료에 대해 더 알아보기</title>
+  <link rel="stylesheet" href="../styles.css?v=2026-11-13i">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=2026-11-13i">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=2026-11-13i">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=2026-11-13i">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#0d2238">
+  <link rel="canonical" href="https://zeldatranslator.com/ko/about.html">
+  <link rel="alternate" hreflang="en" href="https://zeldatranslator.com/about.html">
+  <link rel="alternate" hreflang="ja" href="https://zeldatranslator.com/ja/about.html">
+  <link rel="alternate" hreflang="zh-Hans" href="https://zeldatranslator.com/zh/about.html">
+  <link rel="alternate" hreflang="ko" href="https://zeldatranslator.com/ko/about.html">
+  <link rel="alternate" hreflang="es" href="https://zeldatranslator.com/es/about.html">
+  <link rel="alternate" hreflang="pt" href="https://zeldatranslator.com/pt/about.html">
+  <link rel="alternate" hreflang="fr" href="https://zeldatranslator.com/fr/about.html">
+  <link rel="alternate" hreflang="de" href="https://zeldatranslator.com/de/about.html">
+  <link rel="alternate" hreflang="it" href="https://zeldatranslator.com/it/about.html">
+  <link rel="alternate" hreflang="fi" href="https://zeldatranslator.com/fi/about.html">
+  <link rel="alternate" hreflang="nl" href="https://zeldatranslator.com/nl/about.html">
+  <link rel="alternate" hreflang="ru" href="https://zeldatranslator.com/ru/about.html">
+  <link rel="alternate" hreflang="uk" href="https://zeldatranslator.com/uk/about.html">
+  <link rel="alternate" hreflang="sr" href="https://zeldatranslator.com/sr/about.html">
+  <link rel="alternate" hreflang="x-default" href="https://zeldatranslator.com/about.html">
+
+  <!-- Meta Tags for SEO -->
+  <meta name="description" content="젤다 하일리아 번역기 소개: 하일리아 문자 양방향 번역, 폰트 제작자, 기여 방법, 학습 자료를 확인하세요.">
+  <meta name="author" content="Hylian Translator">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="젤다 하일리아 번역기 소개">
+  <meta property="og:description" content="젤다 하일리아 번역기 소개: 하일리아 문자 양방향 번역, 폰트 제작자, 기여 방법, 학습 자료를 확인하세요.">
+  <meta property="og:image" content="https://zeldatranslator.com/images/Hylian_Translator_About.png">
+  <meta property="og:url" content="https://zeldatranslator.com/ko/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zelda Hylian Translator">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="젤다 하일리아 번역기 소개">
+  <meta name="twitter:description" content="젤다 하일리아 번역기 소개: 하일리아 문자 양방향 번역, 폰트 제작자, 기여 방법, 학습 자료를 확인하세요.">
+  <meta name="twitter:image" content="https://zeldatranslator.com/images/Hylian_Translator_About.png">
+</head>
+
+<body class="about-page">
+  <div id="eventBanner" class="event-banner" hidden data-id="oot-switch2-2026" data-start="2026-11-05T00:00:00Z" data-end="2027-01-05T00:00:00Z">
+    <span class="event-banner__icon" aria-hidden="true">b</span>
+    <p class="event-banner__text"><strong>「젤다의 전설 시간의 오카리나」</strong>가 Nintendo Switch 2로 발매되었습니다!</p>
+    <button type="button" class="event-banner__close" aria-label="닫기">&times;</button>
+  </div>
+  <script>(function () {
+  var el = document.getElementById('eventBanner');
+  if (!el) return;
+  var now = Date.now();
+  var start = Date.parse(el.getAttribute('data-start'));
+  var end = Date.parse(el.getAttribute('data-end'));
+  var key = 'eventBannerDismissed:' + el.getAttribute('data-id');
+  if (isNaN(start) || isNaN(end) || now < start || now >= end) { el.remove(); return; }
+  try { if (localStorage.getItem(key) === '1') { el.remove(); return; } } catch (e) {}
+  el.hidden = false;
+  var btn = el.querySelector('.event-banner__close');
+  if (btn) btn.addEventListener('click', function () {
+    el.remove();
+    try { localStorage.setItem(key, '1'); } catch (e) {}
+  });
+})();</script>
+  <header>
+    <a href="index.html">
+      <h1 id="aboutPageHeader">젤다 하일리아 번역기</h1>
+    </a>
+    <div class="language-selector">
+      <select id="languageSelect" aria-label="언어" onchange="if(this.value)location.href=this.value">
+        <option value="../about.html" lang="en">🇬🇧 English</option>
+        <option value="../ja/about.html" lang="ja">🇯🇵 日本語</option>
+        <option value="../zh/about.html" lang="zh-Hans">🇨🇳 中文</option>
+        <option value="about.html" lang="ko" selected>🇰🇷 한국어</option>
+        <option value="../es/about.html" lang="es">🇪🇸 Español</option>
+        <option value="../pt/about.html" lang="pt">🇵🇹 Português</option>
+        <option value="../fr/about.html" lang="fr">🇫🇷 Français</option>
+        <option value="../de/about.html" lang="de">🇩🇪 Deutsch</option>
+        <option value="../it/about.html" lang="it">🇮🇹 Italiano</option>
+        <option value="../fi/about.html" lang="fi">🇫🇮 Suomi</option>
+        <option value="../nl/about.html" lang="nl">🇳🇱 Nederlands</option>
+        <option value="../ru/about.html" lang="ru">🇷🇺 Русский</option>
+        <option value="../uk/about.html" lang="uk">🇺🇦 Українська</option>
+        <option value="../sr/about.html" lang="sr">🇷🇸 Српски</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="section odd">
+      <div class="text-block">
+        <p id="aboutIntro">젤다 하일리아 번역기에 오신 것을 환영합니다! 이 번역기는 영어, 일본어, 중국어, 한국어, 주요 유럽 언어(독일어, 프랑스어, 스페인어 등) 및 슬라브 언어(러시아어, 세르비아어, 우크라이나어)를 하일리아 문자에 사용되는 발음 체계로 자동 변환합니다.</p>
+        <h3 id="fontsForJpAndEn">일본어 및 영어 입력용 폰트</h3>
+        <p class="symbol" style="color: #b99f65;">b</p>
+        <p id="wwOoFonts">시간의 오카리나와 바람의 지휘봉의 하일리아 문자는 일본어를 기반으로 제작되었습니다.</p>
+        <p id="otherFonts">황혼의 공주, 스카이워드 소드, 브레스 오브 더 와일드 등 나머지 폰트들은 영어 알파벳 기반으로 설계되었습니다.</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="../images/hylian-collage.webp" type="image/webp">
+        <img src="../images/hylian-collage.jpg" alt="A collage showcasing different Hylian fonts from Zelda games like Ocarina of Time and Breath of the Wild" width="3264" height="3264" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section odd">
+      <div class="text-block">
+        <h2 id="downloadsContributionsTitle">다운로드 및 기여</h2>
+        <p class="symbol" style="color: #d84a17">l</p>
+        <p id="contributionsText">모든 파일, 폰트 및 관련 자료는 다운로드할 수 있습니다. 저장소를 포크하거나 Pull Request를 보내거나 댓글을 남겨 프로젝트에 기여할 수 있습니다. 개선 사항, 제안 또는 새로운 폰트가 있다면 <a href="https://github.com/YopDude/Hylian_Translator">GitHub 저장소</a>를 통해 자유롭게 참여해 주세요.</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="../images/github.webp" type="image/webp">
+        <img src="../images/github.png" alt="GitHub Repository" width="1021" height="813" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section even">
+      <div class="text-block">
+        <h3 id="fontsByTitle">폰트 제작:</h3>
+        <p id="sarinilliFontText"><strong>Sarinilli</strong>는 스카이워드 소드, 시커, 게루도 폰트를 제작했습니다: <a href="https://www.deviantart.com/sarinilli">Sarinilli의 DeviantArt</a></p>
+        <p id="plaguelilyFontText"><strong>Plaguelily</strong>는 브레스 오브 더 와일드 폰트를 제작했습니다: <a href="https://www.deviantart.com/plaguelily/art/aLBW-BotW-Hylian-font-848441076">Plaguelily의 DeviantArt</a></p>
+        <p id="yopdudeFontText"><strong>YopDude</strong>는 <em>시간의 오카리나 (3DS 리메이크)</em> 폰트를 제작했습니다: <a href="https://github.com/YopDude">YopDude의 GitHub</a></p>
+      </div>
+    </section>
+
+    <section class="section odd">
+      <div class="text-block">
+        <h2 id="fontModificationsTitle">폰트 수정</h2>
+        <p class="symbol" style="color: #2f5d9b">n</p>
+        <p id="fontModificationsText">일부 폰트는 누락된 글리프를 수정하거나 유니코드 할당을 개선하기 위해 <a href="https://www.glyphrstudio.com/">Glyphr Studio</a> 및 <a href="https://fontforge.org/">Font Forge</a>와 같은 무료 오픈소스 폰트 편집기를 사용해 수정되었습니다. (일본어 추가 포함)</p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="../images/glyphr.webp" type="image/webp">
+        <img src="../images/glyphr.png" alt="Glyphr Studio Interface" width="1545" height="821" loading="lazy" decoding="async">
+      </picture>
+    </section>
+
+    <section class="section even">
+      <div class="text-block">
+        <h2 id="additionalResourcesTitle">추가 자료</h2>
+        <p class="symbol" style="color: #448933">m</p>
+        <p id="hylianResourcesIntro">하일리아 문자에 대해 더 배우고 싶다면 아래 자료를 참고해 보세요:</p>
+        <p><a href="https://zeldawiki.wiki/wiki/Hylian_(Language)" id="zeldaWikiLink">하일리아 언어 개요 (젤다 위키)</a></p>
+        <p><a href="https://zeldauniverse.net/media/fonts/" id="zeldaUniverseLink">Zelda Universe - 폰트</a></p>
+        <p><a href="https://www.omniglot.com/conscripts/hylian2.htm" id="omniglotLink">Omniglot - 하일리아 문자</a></p>
+        <p><a href="https://zeldauniverse.net/2022/09/27/zeldas-study-lost-in-localization/" id="mudoranLink">Mudora - 신비로운 고대 하일리아 문자</a></p>
+      </div>
+      <picture class="about-section-media">
+        <source srcset="../images/intro.webp" type="image/webp">
+        <img src="../images/intro.png" alt="Hylian Language Overview" width="400" height="240" loading="lazy" decoding="async">
+      </picture>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <a href="index.html" id="backToHomeLink" class="button-link">홈으로 돌아가기 ↩</a>
+    </div>
+    <nav class="lang-links" aria-label="언어">
+      <a href="../about.html" hreflang="en" lang="en">English</a>
+      <a href="../ja/about.html" hreflang="ja" lang="ja">日本語</a>
+      <a href="../zh/about.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+      <a href="about.html" hreflang="ko" lang="ko" aria-current="page">한국어</a>
+      <a href="../es/about.html" hreflang="es" lang="es">Español</a>
+      <a href="../pt/about.html" hreflang="pt" lang="pt">Português</a>
+      <a href="../fr/about.html" hreflang="fr" lang="fr">Français</a>
+      <a href="../de/about.html" hreflang="de" lang="de">Deutsch</a>
+      <a href="../it/about.html" hreflang="it" lang="it">Italiano</a>
+      <a href="../fi/about.html" hreflang="fi" lang="fi">Suomi</a>
+      <a href="../nl/about.html" hreflang="nl" lang="nl">Nederlands</a>
+      <a href="../ru/about.html" hreflang="ru" lang="ru">Русский</a>
+      <a href="../uk/about.html" hreflang="uk" lang="uk">Українська</a>
+      <a href="../sr/about.html" hreflang="sr" lang="sr">Српски</a>
+    </nav>
+    <div class="disclaimer">
+      <p id="disclaimerText"><em>젤다의 전설</em> 및 모든 관련 캐릭터, 상표와 로고는 <strong>Nintendo</strong>의 자산입니다. 이 팬 사이트는 Nintendo와 관련이 없으며 후원이나 승인을 받지 않았습니다.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -13,16 +13,20 @@ body {
   background-image: linear-gradient(rgba(2, 38, 32, 0.90), rgba(10, 126, 163, 0.75)), url('images/pattern-triforce.png');
   overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: auto; /* Allow vertical scroll */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* keeps the footer at the bottom on tall screens */
+  min-height: 100dvh;
 }
 
-/* Ensure header is relatively positioned */
 header {
-  position: relative;  /* Needed for absolute positioning of child elements */
+  position: relative;
+  flex: none;
   width: 100%;
-  padding: 0px 0;
+  padding: 20px 0 40px 0; /* Adjusted padding for better vertical balance */
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black */
-  color: #f7f1e1; /* Off-white (cream) text color */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #f7f1e1;
 }
 
 /* Add Zelda insignia (the repeating ribbon) */
@@ -40,28 +44,43 @@ header::after {
   z-index: 1;  /* Ensure it's above any background but below other content */
 }
 
-/* Position the language selector to the right */
+/* Language selector: sits under the title, and is pinned to the right on wide screens
+   (below ~1100px the centred title would collide with it). */
 .language-selector {
-  padding: 10px 30px;
-  text-align: right;  /* Vertically center the flags */
-  z-index: 10; /* Above other elements */
+  padding: 12px 0 0;
 }
 
-#languageIcon {
-  cursor: pointer;
-  width: 3rem; 
-  height: auto;  /* Maintain aspect ratio */
-  transition: transform 0.2s ease;
+#languageSelect {
+  padding: 5px 10px;
+  margin: 0;
+  font-size: 0.9rem;
+  border-radius: 4px;
 }
 
+#headerSubtitle {
+  margin: 5px 0 0 0;
+  padding: 0 20px;
+}
 
-#languageIcon:hover {
-  transform: scale(1.1);  /* Zoom the image slightly on hover */
+@media (min-width: 1101px) {
+  .language-selector {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    padding: 0;
+    z-index: 10;
+  }
+
+  #headerSubtitle {
+    padding: 0 150px; /* keeps the subtitle clear of the selector */
+  }
 }
 
 
 footer {
-  padding: 15px 0;
+  flex: none;
+  padding: 15px 0 calc(15px + env(safe-area-inset-bottom, 0px));
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black for header */
   width: 100%;
@@ -87,7 +106,7 @@ textarea, button, select {
 }
 
 /* Button Styles */
-button, select {
+button, select{
   padding: 12px 20px;  /* Add more padding for larger buttons */
   margin: 10px;
   font-size: 1.2em;
@@ -99,12 +118,13 @@ button, select {
   border-radius: 8px;  /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Subtle shadow effect */
   transition: all 0.3s ease;  /* Smooth transition for color, box-shadow */
+  text-decoration: none; /* Remove default underline */
 }
 
 /* Button Hover Effect */
 button:hover, select:hover {
   background-color: #218838;  /* Darker green on hover */
-  transform: translateY(-2px);  /* Slight lift effect */
+  transform: translateY(-1px);  /* Slight lift effect */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);  /* More pronounced shadow */
 }
 
@@ -123,11 +143,56 @@ button:disabled, select:disabled {
 }
 
 textarea {
+  font-family: 'RocknRollOne', sans-serif;
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 1em;
   width: 90%;
+  max-width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+input[type="range"], input[type="color"] {
+  accent-color: #28a745; /* match the green buttons instead of the browser's default blue */
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+/* An <a> that looks like the site's buttons (used for the About link so crawlers can follow it) */
+.button-link {
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 1.2em;
+  font-family: 'ReggaeOne', sans-serif;
+  background-color: #28a745;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.button-link:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  filter: none;
+  text-decoration: none;
+}
+
+.button-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.5);
 }
 
 #translatedText {
@@ -139,10 +204,17 @@ textarea {
   overflow-wrap: break-word; /* More reliable word breaking */
   white-space: normal; /* Allow line breaks */
   max-width: 100%; /* Prevent overflow */
+  /* Fixed, font-independent line box: every Hylian font has the same 1.25em line height (the font files'
+     ascent/descent were normalised too), so switching scripts no longer makes the card jump. */
+  line-height: 1.25;
+  min-height: 1.25em;
+  margin: 0.3em 0;
 }
 
 /* Page Content Styles */
 .content {
+  flex: 1 0 auto;
+  width: 100%;
   max-width: 75%;
   margin: 30px auto;
   padding: 0px;
@@ -159,8 +231,20 @@ textarea {
   justify-content: space-between; /* Space between content */
 }
 
+/* About page: text card + image side by side, vertically centred, images never cropped */
 .about-page .section {
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+
+.about-page .text-block {
+  margin-bottom: 0;
+}
+
+.about-page .text-block:only-child {
+  grid-column: 1 / -1;
 }
 
 .about-page .about-section-media {
@@ -169,30 +253,16 @@ textarea {
   border-radius: 8px;
 }
 
-.about-page .about-section-media-46 {
-  flex: 1 1 46%;
-  max-width: 46%;
-}
-
-.about-page .about-section-media-47 {
-  flex: 1 1 47%;
-  max-width: 47%;
-}
-
 .about-page .about-section-media img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.section img {
-    margin-left: 10px;
+  height: auto;
+  margin: 0;
 }
 
 .text-block {
   flex: 1 1 48%;
-  margin-bottom: 10px;
+  margin-bottom: 0; /* was 10px: made the gap below the card larger than above/left/right */
   padding: 15px;
   background-color: #f7f1e1; /* Off-white (cream) background */
   border: 1px solid #c5a200; /* Gold border */
@@ -212,20 +282,35 @@ h2, h3 {
   color: #333333; /* Dark grey for the paragraph text */
 }
 
-/* Link Hover Effect */
+/* ===== Links ===== */
 a {
-  color: #0066cc; /* Base color for links */
-  text-decoration: none; /* Remove default underline */
-  transition: all 0.3s ease; /* Smooth transition for color and underline */
+  color: #0b6e63; /* deep teal, matches the headings and buttons */
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease, text-underline-offset 0.2s ease, opacity 0.2s ease;
 }
 
-/* Link Hover Effect */
-a:hover {
-  filter: brightness(60%); /* Darken the color slightly on hover */
-  text-decoration: underline; /* Underline on hover */
-  text-decoration-color: inherit; /* Make the underline inherit the text color */
-  text-decoration-thickness: 3px; /* Thicker underline */
-  transform: translateY(-2px); /* Lift effect on hover */
+/* links inside the cream cards: a soft underline that firms up on hover */
+.text-block a {
+  text-decoration: underline;
+  text-decoration-color: rgba(11, 110, 99, 0.35);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+}
+
+.text-block a:hover {
+  color: #064a42;
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.34em;
+}
+
+a:focus-visible {
+  outline: 2px solid #28a745;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+header a:hover, footer a:hover {
+  opacity: 0.85;
 }
 /* Overlay background */
 .overlay {
@@ -299,31 +384,38 @@ a:hover {
   overflow: hidden;
 }
 
-/* Spinner styling */
-.loading-indicator {
+.loadingIndicator {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;
-  display: none; /* Hidden by default */
+  display: none;
+  text-align: center;
 }
 
-.spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3); /* Light border */
-  border-top: 4px solid #3498db; /* Blue color for the spinning part */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+#loadingGifContainer {
+  width: 64px; 
+  height: 64px;
+  background-image: url('images/phantom-hourglass.gif'); 
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
 }
 
-/* Spinner animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* White bubble styles */
+.loading-bubble {
+  background-color: #ffffff;
+  color: #333333;             /* Dark text for contrast */
+  padding: 8px 16px;
+  border-radius: 20px;        /* Rounded pill/bubble look */
+  margin-top: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow to pop out */
+  display: inline-block;      /* Shrinks the bubble width to fit the text */
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 0.95rem;
 }
-
 /* Style the button */
 .eye-btn {
   font-family: 'HylianSymbols', sans-serif;
@@ -365,10 +457,23 @@ a:hover {
   padding: 5px;
   font-size: 12px;
   border-radius: 5px;
-  white-space: nowrap;
+  width: max-content;
+  max-width: min(280px, 80vw);
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+  z-index: 50;
+  pointer-events: none;
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease;
+}
+
+/* the chart button sits near the card's right edge: anchor its tooltip to the right */
+.eye-btn:hover::after {
+  left: auto;
+  right: 0;
+  transform: none;
 }
 
 /* Hide the tooltip when not hovered */
@@ -382,16 +487,27 @@ a:hover {
     height: auto;
 }
 
-.kofi {
-    width: auto;
-    height: 40px;
-    transition: all 0.3s ease;
+/* Ko-fi button: real, translatable text (the old kofi.png had English baked into the image) */
+.kofi-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 20px 0 12px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: #28a745;
+  color: #fff;
+  font-family: 'ReggaeOne', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
 }
-
-.kofi:hover {
-  filter: brightness(80%);  /* Darker green on hover */
-  transform: translateY(-2px);  /* Slight lift effect */
-}
+.kofi-cup { height: 26px; width: auto; flex: none; }
+.kofi-btn:hover { background: #218838; transform: translateY(-2px); text-decoration: none; }
+.kofi-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.5); }
 
 /* Mobile Styles */
 @media (max-width: 768px) {
@@ -422,7 +538,7 @@ a:hover {
   /* Ensure images are full width on mobile */
   .section img {
     width: 100%;    /* Images take up full width */
-    margin: 0 0 20px 0;  /* Space below the image */
+    margin: 0;
     display: block;   /* Ensure images are block-level */
   }
 
@@ -438,6 +554,15 @@ a:hover {
       transform: translateY(-4%);
       z-index: 1200;  /* Ensure hover state is above other content */
     }
+
+  .about-page .section {
+    grid-template-columns: minmax(0, 1fr); /* text first, then the image at full width */
+    gap: 10px;
+  }
+
+  #languageSelect {
+    font-size: 0.85rem;
+  }
 }
 
 /* Mobile Styles for width < 412px */
@@ -486,109 +611,136 @@ p.symbol{
 /* Font Faces */
 @font-face {
   font-family: 'Albw Botw Hylian';
-  src: url('fonts/AlbwBotwHylian-Regular.woff2') format('woff2'),
-       url('fonts/AlbwBotwHylian-Regular.woff') format('woff'),
-       url('fonts/AlbwBotwHylian-Regular.ttf') format('truetype');
+  src: url('fonts/AlbwBotwHylian-Regular.woff2?v=3') format('woff2'),
+       url('fonts/AlbwBotwHylian-Regular.woff?v=3') format('woff'),
+       url('fonts/AlbwBotwHylian-Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 90%; 
+  size-adjust: 90%;
+  ascent-override: 92.40%;
+  descent-override: 32.60%;
+  line-gap-override: 0%;
 }
 
 @font-face {
   font-family: 'TP Hylian - GCN';
-  src: url('fonts/TPHylian-GCNRegular.woff2') format('woff2'),
-       url('fonts/TPHylian-GCNRegular.woff') format('woff'),
-       url('fonts/TPHylian-GCNRegular.ttf') format('truetype');
+  src: url('fonts/TPHylian-GCNRegular.woff2?v=3') format('woff2'),
+       url('fonts/TPHylian-GCNRegular.woff?v=3') format('woff'),
+       url('fonts/TPHylian-GCNRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 150%; 
+  size-adjust: 150%;
+  ascent-override: 92.14%;
+  descent-override: 32.86%;
+  line-gap-override: 0%;
 }
 
 @font-face {
   font-family: 'Hero Hylian';
-  src: url('fonts/HeroHylianRegular.woff2') format('woff2'),
-       url('fonts/HeroHylianRegular.woff') format('woff'),
-       url('fonts/HeroHylianRegular.ttf') format('truetype');
+  src: url('fonts/HeroHylianRegular.woff2?v=3') format('woff2'),
+       url('fonts/HeroHylianRegular.woff?v=3') format('woff'),
+       url('fonts/HeroHylianRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 190%; 
+  size-adjust: 190%;
+  ascent-override: 87.01%;
+  descent-override: 37.99%;
+  line-gap-override: 0%;
 }
 
 @font-face {
   font-family: 'Hylian64';
-  src: url('fonts/Hylian64Regular.woff2') format('woff2'),
-       url('fonts/Hylian64Regular.woff') format('woff'),
-       url('fonts/Hylian64Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 140%; 
-}
-
-@font-face {
-  font-family: 'Ancient Hylian';
-  src: url('fonts/AncientHylian-English.woff2') format('woff2'),
-       url('fonts/AncientHylian-English.woff') format('woff'),
-       url('fonts/AncientHylian-English.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 140%; 
-}
-
-@font-face {
-  font-family: 'SS Ancient Hylian';
-  src: url('fonts/SSAncientHylian.woff2') format('woff2'),
-       url('fonts/SSAncientHylian.woff') format('woff'),
-       url('fonts/SSAncientHylian.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 110%;
-}
-
-@font-face {
-  font-family: 'Gerudo';
-  src: url('fonts/GerudoTypographyRegular.woff2') format('woff2'),
-       url('fonts/GerudoTypographyRegular.woff') format('woff'),
-       url('fonts/GerudoTypographyRegular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 130%;
-}
-
-@font-face {
-  font-family: 'BotW Sheikah';
-  src: url('fonts/BotWSheikahRegular.woff2') format('woff2'),
-       url('fonts/BotWSheikahRegular.woff') format('woff'),
-       url('fonts/BotWSheikahRegular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 125%;
-}
-
-@font-face {
-  font-family: 'Mudoran';
-  src: url('fonts/MudoranRegular.woff2') format('woff2'),
-       url('fonts/MudoranRegular.woff') format('woff'),
-       url('fonts/MudoranRegular.ttf') format('truetype');
+  src: url('fonts/Hylian64Regular.woff2?v=3') format('woff2'),
+       url('fonts/Hylian64Regular.woff?v=3') format('woff'),
+       url('fonts/Hylian64Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
   size-adjust: 140%;
+  ascent-override: 97.51%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Ancient Hylian';
+  src: url('fonts/AncientHylian-English.woff2?v=3') format('woff2'),
+       url('fonts/AncientHylian-English.woff?v=3') format('woff'),
+       url('fonts/AncientHylian-English.ttf?v=3') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 140%;
+  ascent-override: 95.02%;
+  descent-override: 29.98%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'SS Ancient Hylian';
+  src: url('fonts/SSAncientHylian.woff2?v=3') format('woff2'),
+       url('fonts/SSAncientHylian.woff?v=3') format('woff'),
+       url('fonts/SSAncientHylian.ttf?v=3') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 110%;
+  ascent-override: 118.95%;
+  descent-override: 6.05%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Gerudo';
+  src: url('fonts/GerudoTypographyRegular.woff2?v=3') format('woff2'),
+       url('fonts/GerudoTypographyRegular.woff?v=3') format('woff'),
+       url('fonts/GerudoTypographyRegular.ttf?v=3') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 130%;
+  ascent-override: 108.11%;
+  descent-override: 16.89%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'BotW Sheikah';
+  src: url('fonts/BotWSheikahRegular.woff2?v=3') format('woff2'),
+       url('fonts/BotWSheikahRegular.woff?v=3') format('woff'),
+       url('fonts/BotWSheikahRegular.ttf?v=3') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 125%;
+  ascent-override: 97.51%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Mudoran';
+  src: url('fonts/MudoranRegular.woff2?v=3') format('woff2'),
+       url('fonts/MudoranRegular.woff?v=3') format('woff'),
+       url('fonts/MudoranRegular.ttf?v=3') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 140%;
+  ascent-override: 96.68%;
+  descent-override: 28.32%;
+  line-gap-override: 0%;
 }
 
 /*Styling fonts*/
 @font-face {
   font-family: 'RocknRollOne';
-  src: url('fonts/RocknRollOne-Regular.woff2') format('woff2'),
-       url('fonts/RocknRollOne-Regular.woff') format('woff'),
-       url('fonts/RocknRollOne-Regular.ttf') format('truetype');
+  src: url('fonts/RocknRollOne-Regular.woff2?v=3') format('woff2'),
+       url('fonts/RocknRollOne-Regular.woff?v=3') format('woff'),
+       url('fonts/RocknRollOne-Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -596,9 +748,9 @@ p.symbol{
 
 @font-face {
   font-family: 'ReggaeOne';
-  src: url('fonts/ReggaeOne-Regular.woff2') format('woff2'),
-       url('fonts/ReggaeOne-Regular.woff') format('woff'),
-       url('fonts/ReggaeOne-Regular.ttf') format('truetype');
+  src: url('fonts/ReggaeOne-Regular.woff2?v=3') format('woff2'),
+       url('fonts/ReggaeOne-Regular.woff?v=3') format('woff'),
+       url('fonts/ReggaeOne-Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -606,9 +758,9 @@ p.symbol{
 
 @font-face {
   font-family: 'MinishCap';
-  src: url('fonts/MinishCap--v10.woff2') format('woff2'),
-       url('fonts/MinishCap--v10.woff') format('woff'),
-       url('fonts/MinishCap--v10.ttf') format('truetype');
+  src: url('fonts/MinishCap--v10.woff2?v=3') format('woff2'),
+       url('fonts/MinishCap--v10.woff?v=3') format('woff'),
+       url('fonts/MinishCap--v10.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -616,9 +768,9 @@ p.symbol{
 
 @font-face {
   font-family: 'HyliaSerif';
-  src: url('fonts/HyliaSerifBeta-Regular.woff2') format('woff2'),
-       url('fonts/HyliaSerifBeta-Regular.woff') format('woff'),
-       url('fonts/HyliaSerifBeta-Regular.ttf') format('truetype');
+  src: url('fonts/HyliaSerifBeta-Regular.woff2?v=3') format('woff2'),
+       url('fonts/HyliaSerifBeta-Regular.woff?v=3') format('woff'),
+       url('fonts/HyliaSerifBeta-Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -626,10 +778,642 @@ p.symbol{
 
 @font-face {
     font-family: 'HylianSymbols';
-    src: url('fonts/HylianSymbols.woff2') format('woff2'),
-         url('fonts/HylianSymbols.woff') format('woff'),
-         url('fonts/HylianSymbols.ttf') format('truetype');
+    src: url('fonts/HylianSymbols.woff2?v=3') format('woff2'),
+         url('fonts/HylianSymbols.woff?v=3') format('woff'),
+         url('fonts/HylianSymbols.ttf?v=3') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
+
+/* 1. Global override for the entire site (including About page and Footer) */
+html[lang="ru"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect):not(.event-banner__icon):not(.hylian-font):not(h1), 
+html[lang="uk"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect):not(.event-banner__icon):not(.hylian-font):not(h1), 
+html[lang="sr"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageSelect):not(.event-banner__icon):not(.hylian-font):not(h1) {
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif !important;
+    letter-spacing: normal !important;
+}
+
+
+
+/* Footer language links (crawlable alternative to the dropdown) */
+.lang-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+  max-width: 900px;
+  margin: 16px auto 0;
+  padding: 0 16px 22px; /* breathing room before the disclaimer / page edge */
+  font-size: 0.95rem;
+}
+
+.lang-links a {
+  color: #b99f65;
+  padding: 2px 4px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; /* underline that draws in on hover */
+  transition: background-size 0.25s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.lang-links a:hover {
+  color: #f2d27a;
+  background-size: 100% 1.5px;
+  opacity: 1;
+}
+
+.disclaimer a img {
+  transition: transform 0.2s ease;
+}
+
+.disclaimer a:hover img {
+  transform: translateY(-2px);
+}
+
+.lang-links a[aria-current="page"] {
+  color: #f7f1e1;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Temporary event banner (see banner.js / build.js) */
+.event-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 52px;
+  color: #f7f1e1;
+  font-family: 'RocknRollOne', sans-serif;
+  font-size: 1rem;
+  line-height: 1.35;
+  border-bottom: 2px solid #c5a200;
+  background: linear-gradient(100deg, #0a5a3a 0%, #1f9460 25%, #0a5a3a 50%, #1f9460 75%, #0a5a3a 100%); /* starts and ends on the same colour so the looping animation has no seam */
+  background-size: 200% 100%;
+  animation: bannerShimmer 14s linear infinite;
+}
+
+.event-banner[hidden] {
+  display: none;
+}
+
+.event-banner__icon {
+  flex: none;
+  font-family: 'HylianSymbols', sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #f2d27a;
+}
+
+.event-banner__text {
+  margin: 0;
+}
+
+.event-banner__text strong {
+  color: #f2d27a;
+}
+
+.event-banner .event-banner__close {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #f7f1e1;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 50%;
+}
+
+.event-banner .event-banner__close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-50%);
+  box-shadow: none;
+}
+
+.event-banner .event-banner__close:focus-visible {
+  box-shadow: 0 0 0 3px rgba(247, 241, 225, 0.6);
+}
+
+@keyframes bannerShimmer {
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-banner { animation: none; }
+}
+
+@media (max-width: 480px) {
+  .event-banner {
+    padding: 10px 44px 10px 14px;
+    gap: 8px;
+    font-size: 0.92rem;
+  }
+}
+
+/* Cyrillic (ru / uk / sr): the Japanese UI fonts only have full-width Cyrillic glyphs, which look
+   letter-spaced. These faces come last, so they win for Cyrillic characters only. */
+@font-face {
+  font-family: 'RocknRollOne';
+  src: local('Segoe UI'), local('Helvetica Neue'), local('Arial'), local('Roboto'), local('Noto Sans'), local('DejaVu Sans'), local('Liberation Sans');
+  unicode-range: U+0400-052F;
+}
+
+@font-face {
+  font-family: 'ReggaeOne';
+  src: local('Segoe UI Semibold'), local('Helvetica Neue'), local('Arial'), local('Roboto'), local('Noto Sans'), local('DejaVu Sans'), local('Liberation Sans');
+  unicode-range: U+0400-052F;
+}
+
+/* Chinese: RocknRollOne / ReggaeOne are Japanese fonts, so many simplified characters are missing and the
+   browser mixes in a different fallback font. Use one complete Chinese font (Noto Sans SC, SIL OFL,
+   subset to common simplified characters) for all UI text instead. */
+@font-face {
+  font-family: 'NotoSansSC';
+  src: url('fonts/NotoSansSC-Regular.subset.woff2?v=3') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansSC';
+  src: url('fonts/NotoSansSC-Bold.subset.woff2?v=3') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html[lang^="zh"] *:not(.eye-btn):not(.symbol):not(.event-banner__icon):not(.hylian-font):not(h1):not(#languageSelect):not(#translatedText),
+html[lang^="zh"] #translatedText,
+html[lang^="zh"] .tooltip-element:hover::after {
+  font-family: 'NotoSansSC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+}
+
+/* Korean: the Japanese UI fonts have no hangul, so the browser used a thin system font. Same fix as Chinese. */
+@font-face {
+  font-family: 'NotoSansKR';
+  src: url('fonts/NotoSansKR-Regular.subset.woff2?v=3') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansKR';
+  src: url('fonts/NotoSansKR-Bold.subset.woff2?v=3') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html[lang^="ko"] *:not(.eye-btn):not(.symbol):not(.event-banner__icon):not(.hylian-font):not(h1):not(#languageSelect):not(#translatedText),
+html[lang^="ko"] #translatedText,
+html[lang^="ko"] .tooltip-element:hover::after {
+  font-family: 'NotoSansKR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+/* ===== Title fonts =====
+   There is no official Zelda-style title font for Japanese, Chinese, Korean or Cyrillic, so these pages get a
+   classical serif in the same gold: Noto Serif (CJK) and Forum (Cyrillic, Trajan-like capitals). Only the
+   characters of the two titles are embedded (a few KB each). */
+@font-face { font-family: 'TitleJP'; src: url('fonts/NotoSerifJP-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleSC'; src: url('fonts/NotoSerifSC-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleKR'; src: url('fonts/NotoSerifKR-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleCyr'; src: url('fonts/Forum-Title.subset.woff2?v=3') format('woff2'); font-weight: 400; font-display: swap; }
+
+html[lang="ja"] header h1,
+html[lang^="zh"] header h1,
+html[lang="ko"] header h1 {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55);
+}
+
+html[lang="ja"] header h1 { font-family: 'TitleJP', 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif; }
+html[lang^="zh"] header h1 { font-family: 'TitleSC', 'Noto Serif SC', 'Songti SC', 'SimSun', serif; }
+html[lang="ko"] header h1 { font-family: 'TitleKR', 'Noto Serif KR', 'Batang', serif; }
+
+html[lang="ru"] header h1,
+html[lang="uk"] header h1,
+html[lang="sr"] header h1 {
+  font-family: 'HyliaSerif', 'TitleCyr', 'Times New Roman', serif; /* Latin "Zelda" keeps the Hylia look */
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55);
+  -webkit-text-stroke: 0.7px currentColor; /* Forum is lighter than Hylia Serif: even out the weight */
+  paint-order: stroke fill;
+}
+
+/* ===== Contrast auto-guard: the output sits on a panel that turns dark when the text colour is too light ===== */
+.output-panel {
+  margin: 14px 0;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+}
+
+.output-panel.output-dark {
+  background-color: #1e2b2f;
+}
+
+/* ===== Direction toggle (real world <-> Hylian) ===== */
+.direction-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 6px;
+}
+
+.direction-bar.reversed {
+  flex-direction: row-reverse;
+}
+
+.dir-side {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 200px;
+  min-height: 42px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border: 1px solid #c5a200;
+  border-radius: 999px;
+  background: #fffdf6;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.dir-hylian {
+  font-weight: bold;
+  color: #0b6e63;
+}
+
+.dir-real select {
+  display: none;
+  margin: 0;
+  padding: 4px 8px;
+  max-width: 100%;
+  font-size: 0.95rem;
+}
+
+.reverse-mode .dir-real select { display: block; width: 100%; }
+.reverse-mode .dir-real .dir-label { display: none; }
+/* in reverse mode the language dropdown is the pill itself (no pill-in-a-pill, so long names fit on phones) */
+.reverse-mode .dir-real { padding: 0; border: none; background: none; }
+.reverse-mode .dir-real select { min-height: 42px; padding: 6px 12px; border-radius: 999px; font-size: 0.95rem; }
+
+.swap-btn {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swap-btn svg { transition: transform 0.35s ease; }
+.swap-btn[aria-pressed="true"] svg { transform: rotate(180deg); }
+
+/* forward-only / reverse-only parts of the card */
+.rev-only { display: none; }
+.reverse-mode .rev-only { display: block; }
+.reverse-mode .fwd-only { display: none; }
+.reverse-mode #twilightPrincessOptions { display: none !important; }
+
+/* ===== Hylian -> real world ===== */
+.hylian-input {
+  box-sizing: border-box;
+  width: 90%;
+  max-width: 100%;
+  min-height: calc(2.5rem + 22px);
+  margin: 10px auto;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  font-size: 2rem;
+  line-height: 1.25;
+  text-align: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.hylian-input {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  cursor: text;
+  user-select: text;
+  caret-color: transparent;
+}
+
+.hylian-input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.45);
+}
+
+.hylian-input:empty::before {
+  /* A fixed-height block exactly as tall as one line of Hylian text (2rem x 1.25), so the box does not
+     change height when the first glyph is typed (small text next to a big Hylian font sized the line differently). */
+  content: attr(data-placeholder);
+  display: block;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: 'RocknRollOne', sans-serif;
+  font-size: 1rem;
+  color: #777;
+  direction: ltr;
+}
+
+.hylian-input.mirror-text:empty::before {
+  /* Counter the input's mirror transform so the instructional placeholder stays readable. */
+  transform: scaleX(-1);
+}
+
+.hylian-custom-caret {
+  position: fixed;
+  z-index: 9999;
+  width: 1.5px;
+  background: #222;
+  pointer-events: none;
+  animation: hylian-caret-blink 1s steps(2, start) infinite;
+}
+.hylian-custom-caret[hidden] { display: none; }
+@keyframes hylian-caret-blink { to { visibility: hidden; } }
+
+.hylian-keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.kb-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.kb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+  gap: 6px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.hk {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0;
+  padding: 6px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font-size: 1rem;
+  background: #fffdf6;
+  color: #222;
+  border: 1px solid #c5a200;
+  border-radius: 8px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+}
+
+.kb-row .hk { flex: 1 1 0; max-width: 52px; }
+
+.hk:hover { background: #efe6c8; transform: none; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.hk:active, .hk.is-pressed { background: #e6dbb4; transform: translateY(1px); box-shadow: none; }
+.hk:focus-visible { outline: 2px solid #0b6e63; outline-offset: 2px; }
+
+.hk-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(var(--ink, 1) * 1em + 2px); /* just the glyph's real height (see INK in reverse.js) */
+  line-height: calc(var(--ink, 1) * 1em + 2px);
+  font-size: 1.7rem;
+}
+
+.hk-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12px;
+  font-family: 'RocknRollOne', sans-serif;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: #555;
+}
+
+.kb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+
+.kb-action {
+  min-width: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+.kb-action[hidden] { display: none; }
+.kb-action[aria-pressed="true"] { background-color: #0b6e63; }
+.kb-space { flex: 1 1 160px; max-width: 260px; }
+
+.reverse-output {
+  box-sizing: border-box;
+  width: 90%;
+  max-width: 100%;
+  min-height: calc(1.25em + 24px);
+  margin: 10px auto;
+  padding: 12px 14px;
+  border: 1px dashed #c5a200;
+  border-radius: 8px;
+  background: #fffdf6;
+  color: #222;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.reverse-output:empty::before {
+  content: attr(data-placeholder);
+  font-size: 1rem;
+  color: #777;
+}
+
+.reverse-output:lang(ko) { font-family: 'NotoSansKR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; }
+.reverse-output:lang(ru), .reverse-output:lang(uk), .reverse-output:lang(sr) { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+
+.copy-btn { margin: 6px 0; }
+
+.rev-note {
+  margin: 8px 14px 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #555;
+}
+
+@media (max-width: 480px) {
+  .dir-side { padding: 6px 8px; font-size: 0.9rem; }
+  .hylian-input { font-size: 1.7rem; min-height: calc(2.125rem + 22px); }
+  .hylian-input:empty::before { height: 2.125rem; line-height: 2.125rem; }
+  .reverse-output { font-size: 1.4rem; }
+}
+
+/* ===== Icon dropdown (progressive enhancement of a <select>, see ui-select.js) ===== */
+.is-native-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.icon-select {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.icon-select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px 14px 8px 10px;
+  text-align: left;
+}
+
+.icon-select .is-icon {          /* .icon-select raises the specificity above the mobile ".section img { width: 100% }" rule */
+  flex: none;
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  max-width: none;
+  margin: 0;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.is-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.is-chevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.icon-select-btn[aria-expanded="true"] .is-chevron { transform: rotate(180deg); }
+
+.icon-select-list {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: 10px;
+  z-index: 60;
+  min-width: calc(100% - 10px);
+  max-width: min(340px, 86vw);
+  max-height: min(60vh, 420px);
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  text-align: left;
+  background: #fffdf6;
+  border: 1px solid #c5a200;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.icon-select-list[hidden] { display: none; }
+
+.is-group {
+  padding: 8px 10px 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+
+.is-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #222;
+  font-family: 'ReggaeOne', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.icon-select .is-option .is-icon { width: 26px; height: 26px; }
+.is-option.is-active { background: #efe6c8; }
+.is-option[aria-selected="true"] { color: #0b6e63; background: #e3f1e6; }
+.is-option[aria-selected="true"].is-active { background: #d2ead8; }
+.is-option[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
+/* Keep the selected script name readable on narrow mobile screens. */
+
+@media (max-width: 480px) {
+  .icon-select { width: min(100%, 340px); }
+  .icon-select-btn { min-width: 0; width: 100%; gap: 7px; padding-right: 9px; }
+  .icon-select .is-text { font-size: 0.88rem; }
+}
+
+
+/* Share actions and temporary shared-configuration notice */
+#shareLinkBtn, #shareImageBtn { margin: 0.35rem 0.35rem 0.35rem 0; }
+.shared-config-notice { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.8rem 1rem; background: #edf3f8; color: #18334d; border-bottom: 1px solid #cbd8e4; text-align: center; }
+.shared-config-notice button { border: 1px solid currentColor; border-radius: 6px; padding: 0.4rem 0.75rem; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.shared-config-notice button:hover { background: rgba(24, 51, 77, 0.08); }
+@media (max-width: 520px) { .shared-config-notice { flex-direction: column; } }
+
+/* Buttons with a leading icon (Export, Share) */
+.btn-with-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; }
+.btn-icon { width: 1.15em; height: 1.15em; flex: none; }
