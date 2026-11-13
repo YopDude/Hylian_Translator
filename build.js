@@ -17,7 +17,7 @@ const vm = require('vm');
 
 const ROOT = __dirname;
 const SITE = 'https://zeldatranslator.com';
-const VER = '2026-11-13i'; // cache-buster for css/js/icon query strings; bump when you change them
+const VER = '2026-11-13k'; // cache-buster for css/js/icon query strings; bump when you change them
 const FONT_VER = '3'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
 const ICON_EXT = 'svg'; // images/icons/<version>.<ext>: drop real game logos in with the same names (change this for png/webp)
 

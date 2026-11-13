@@ -504,12 +504,16 @@ async function translateText() {
         innerHTML = hylianText.split('\n').join('<br>');
     } else if (version === 'mudoran') {
         targetFont = getFontFamilyString(version);
-        innerHTML = mudoranifyToHtml(romajiOutput);
+        // Nod to ALttP: Japanese input uses the D/E/F glyph set (one glyph per Japanese character, as in the Japanese
+        // release), anything else uses A/B/C. Detect on the ORIGINAL input: romajiOutput is already Latin by now.
+        // (On Chinese pages Han characters are Chinese, not Japanese, so only kana switches the set there.)
+        const japaneseInput = /[\u3040-\u30FF]/.test(originalInput) || (!chineseUi && /[\u4E00-\u9FFF]/.test(originalInput));
+        innerHTML = mudoranifyToHtml(japaneseInput ? originalInput : romajiOutput, japaneseInput);
     } else {
         // English-based versions (BotW, TP, Skyward Sword)
         targetFont = getFontFamilyString(version);
         const normalizedText = normalizeString(romajiOutput);
-        innerHTML = normalizedText.split('\n').join('<br>');
+        innerHTML = escapeHtml(normalizedText).split('\n').join('<br>');
     }
 
     // 4. Update the UI
@@ -634,9 +638,15 @@ function convertToHylian(input, glyphIndexMap) {
   return hylianText;
 }
 
+// Typed text is inserted with innerHTML (to keep <br> line breaks), so it must be escaped: otherwise text such as
+// "<img onerror=...>" - typed, or arriving through a shared link - would run as markup.
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // Mudoranify function for joke translation (returns HTML fragment)
-function mudoranifyToHtml(input) {
-  const choices = isJapanese(input) ? ['D', 'E', 'F'] : ['A', 'B', 'C'];
+function mudoranifyToHtml(input, japanese) {
+  const choices = japanese ? ['D', 'E', 'F'] : ['A', 'B', 'C'];
   let translatedText = '';
 
   for (let i = 0; i < input.length; i++) {
@@ -651,7 +661,7 @@ function mudoranifyToHtml(input) {
       const idx = (code + i) % choices.length;
       translatedText += choices[idx];
     } else {
-      translatedText += char;
+      translatedText += escapeHtml(char);
     }
   }
 
