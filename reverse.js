@@ -38,7 +38,7 @@
   // Rendered height of each script's key glyphs, in em (measured). It sizes the glyph area of a key so the space between
   // glyph and label is the same for every font.
   const INK = { ocarinaOfTime3d: 0.93, ocarinaOfTime64: 0.98, windwaker: 0.98, twilightPrincess: 0.91, skywardSword: 0.85, botw: 0.87, gerudo: 1.18, sheikah: 0.87 };
-  const SYMBOLS = "0123456789!?.,:;-'\"()ー";
+  const SYMBOLS = "0123456789!?.,:;-'\"()";
   const QWERTY = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
 
   function fontFor(version) {
@@ -136,7 +136,7 @@
         if (isSymbol && !SYMBOLS.includes(k)) continue;
         if (k === ' ') continue;
         seen.add(g);
-        const rom = k === 'ー' ? '-' : k;
+        const rom = k;
         const all = sharing.get(g).filter((x) => /^[a-z]+$/.test(x));
         keys.push({ rom, glyph: g, label: all.length > 1 ? all.slice(0, 2).join('/') : rom, title: all.join(' / ') || rom, symbol: isSymbol, all: all.length ? all : null });
         byRom.set(rom, g);

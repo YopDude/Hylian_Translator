@@ -94,7 +94,7 @@ const windwakerGlyphMap = {
   "na": "®",
   "mo": "»",
   "¿": "¿",
-  "ー": "—",
+  "ー": "-",   // the long vowel mark is drawn with the same short hyphen glyph as "-" (the long dash glyph is not used)
   "‘": "‘",
   "’": "’",
   "‚": "‚",
