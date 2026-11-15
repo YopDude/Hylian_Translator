@@ -93,7 +93,6 @@
     const on = current.version === 'twilightPrincess' && mirrorEnabled;
     input.classList.toggle('mirror-text', on);
     input.style.direction = on ? 'rtl' : 'ltr';
-    input.style.textAlign = 'left';
     return on;
   }
 
