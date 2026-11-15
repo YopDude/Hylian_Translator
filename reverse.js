@@ -19,14 +19,13 @@
   const TEXT = window.PAGE_TEXT || {};
 
   // ---- keyboard definitions --------------------------------------------------------------------------------------
-  // Scripts that are just the English alphabet drawn in a Hylian font. `cased` (currently unused by every script) would
-  // mean upper and lower case are different glyphs.
+  // Scripts that are just the English alphabet drawn in a Hylian font (upper and lower case look the same, so there is no Shift key).
   const LATIN = {
-    twilightPrincess: { cased: false, digits: '',           punct: '.,!:;' }, // no Shift: capitals only changed the font weight
-    skywardSword:     { cased: false, digits: '',           punct: '' },
-    botw:             { cased: false, digits: '',           punct: '' }, // upper/lower case look (almost) the same
-    gerudo:           { cased: false, digits: '15',        punct: ".,!?':;" },
-    sheikah:          { cased: false, digits: '0123456789', punct: '.!?-' }
+    twilightPrincess: { digits: '',           punct: '.,!:;' }, // no Shift: capitals only changed the font weight
+    skywardSword:     { digits: '',           punct: '' },
+    botw:             { digits: '',           punct: '' }, // upper/lower case look (almost) the same
+    gerudo:           { digits: '15',        punct: ".,!?':;" },
+    sheikah:          { digits: '0123456789', punct: '.!?-' }
   };
   // Scripts built from kana: one glyph per syllable. The maps (script.js side) are romaji -> font character.
   const KANA = {
@@ -96,12 +95,34 @@
     return on;
   }
 
+  // Hylian glyphs are hidden (not drawn in a fallback font) until the selected game font has loaded, so switching
+  // script never flashes the plain mapping characters. HylianFonts comes from script.js; the fonts are warmed on idle,
+  // so this normally resolves at once.
+  let fontGateFor = null;
+  function applyFontGate() {
+    const font = fontFor(current.version);
+    const fonts = window.HylianFonts;
+    if (!fonts || fonts.isReady(font)) {
+      fontGateFor = null;
+      kb.classList.remove('fonts-pending'); input.classList.remove('fonts-pending');
+      return;
+    }
+    kb.classList.add('fonts-pending'); input.classList.add('fonts-pending');
+    if (fontGateFor === font) return; // already waiting for this font
+    fontGateFor = font;
+    fonts.ready(font).then(() => {
+      if (fontGateFor !== font) return; // the script changed again meanwhile
+      fontGateFor = null;
+      kb.classList.remove('fonts-pending'); input.classList.remove('fonts-pending');
+    });
+  }
+
   let tokens = [];            // [{ rom }]  what the user has typed, as romanisation
   let pendingRomaji = '';
   let compositionRange = null;
   let isComposing = false;
   let skipCommittedComposition = null;
-  let current = null;         // { version, kana, cased, keys: [...], byRom: Map(rom -> glyph) }
+  let current = null;         // { version, kana, keys: [...], byRom: Map(rom -> glyph) }
 
   function buildLayout(version) {
     if (KANA[version]) {
@@ -124,14 +145,14 @@
       }
       const rank = (key) => key.symbol ? 1e6 : (ORDER.indexOf(key.rom) === -1 ? 1e5 : ORDER.indexOf(key.rom));
       keys.sort((a, b) => rank(a) - rank(b));
-      return { version, kana: true, cased: false, keys, byRom };
+      return { version, kana: true, keys, byRom };
     }
     const cfg = LATIN[version] || LATIN.botw;
     const keys = [], byRom = new Map();
     for (const row of QWERTY) for (const ch of row) { keys.push({ rom: ch, glyph: ch, label: ch, title: ch, row: QWERTY.indexOf(row) }); }
     for (const ch of cfg.digits + cfg.punct) keys.push({ rom: ch, glyph: ch, label: ch, title: ch, row: 3 });
     for (const k of keys) byRom.set(k.rom, k.glyph);
-    return { version, kana: false, cased: cfg.cased, keys, byRom, latinOnly: true };
+    return { version, kana: false, keys, byRom, latinOnly: true };
   }
 
   // ---- rendering -------------------------------------------------------------------------------------------------
@@ -139,7 +160,7 @@
     if (token.rom === '\n' || token.rom === ' ') return token.rom;
     if (current.kana) return current.byRom.get(token.rom) || token.rom;
     const base = token.rom.toLowerCase();
-    return current.byRom.has(base) || token.rom === ' ' ? (current.cased ? token.rom : base) : token.rom;
+    return current.byRom.has(base) || token.rom === ' ' ? base : token.rom;
   }
 
   // Key labels: for Japanese / Korean / Russian / Ukrainian / Serbian output they show that script
@@ -190,6 +211,7 @@
         kb.appendChild(row);
       });
     }
+    applyFontGate();
   }
 
   function romanization(forJapaneseOrLatin) {
@@ -208,6 +230,7 @@
     input.style.fontFamily = fontFor(current.version);
     input.textContent = tokens.map(glyphOf).join('');
     applyMirror();
+    applyFontGate();
     // real-world side
     const lang = outLang.value;
     const keepApostrophe = lang === 'ja' || HylianReverse.LATIN.includes(lang);
@@ -309,8 +332,7 @@
 
   function tokenizeRomaji(value, allowPending, discardInvalid = false) {
     const result = [];
-    const original = String(value);
-    let rest = original.toLowerCase();
+    let rest = String(value).toLowerCase();
     if (current.kana) rest = rest.replace(/l/g, 'r').replace(/v/g, 'b');
     const choices = [...current.byRom.keys()].filter(k => /^[a-z]+$/.test(k)).sort((a,b) => b.length-a.length);
     while (rest) {
@@ -328,7 +350,7 @@
         result.push('tsu'); rest = rest.slice(1); continue;
       }
       const hit = choices.find(k => rest.startsWith(k));
-      if (hit) { result.push(current.cased ? original.slice(original.length - rest.length, original.length - rest.length + hit.length) : hit); rest = rest.slice(hit.length); continue; }
+      if (hit) { result.push(hit); rest = rest.slice(hit.length); continue; }
       if (rest[0] === 'n' && rest.length > 1 && !/[aiueoy]/.test(rest[1]) && current.byRom.has('n')) { result.push('n'); rest = rest.slice(1); continue; }
       const pendingChoices = current.kana && typeof HYLIAN_YOON_MAP !== 'undefined' ? choices.concat(Object.keys(HYLIAN_YOON_MAP)) : choices;
       if (allowPending && pendingChoices.some(k => k.startsWith(rest))) return { result, pending: rest };

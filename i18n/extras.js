@@ -90,10 +90,7 @@ module.exports = {
     bannerClose: "Закрити",
     bannerText: "<strong>The Legend of Zelda: Ocarina of Time</strong> вже доступна на Nintendo Switch 2!",
     metaIndex: "Перекладайте текст гілійською та з гілійської українською. Безкоштовний перекладач Zelda: Breath of the Wild, Ocarina of Time, Wind Waker та інші.",
-    metaAbout: "Дізнайтеся більше про перекладач гілійської мови Zelda: переклад в обидва боки, автори шрифтів, внески та ресурси для вивчення гілійської.",
-    // missing from the original uk translations
-    hylianLanguageGroup: "Гілійські мови",
-    otherLanguageGroup: "Інше"
+    metaAbout: "Дізнайтеся більше про перекладач гілійської мови Zelda: переклад в обидва боки, автори шрифтів, внески та ресурси для вивчення гілійської."
   },
   sr: {
     langLabel: "Језик",

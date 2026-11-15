@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>塞尔达海利亚语翻译器 – 将现实世界语言转换为《塞尔达传说》的海利亚文字（旷野之息、时之笛、风之杖）</title>
-  <link rel="stylesheet" href="../styles.css?v=2026-11-13k">
-  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=2026-11-13k">
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=2026-11-13k">
-  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=2026-11-13k">
+  <link rel="stylesheet" href="../styles.css?v=05c23550">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=05c23550">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=05c23550">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=05c23550">
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0d2238">
   <link rel="canonical" href="https://zeldatranslator.com/zh/">
@@ -49,8 +49,6 @@
   <meta name="twitter:image" content="https://zeldatranslator.com/images/Hylian_Translator_Home.png"/>
 
   <!-- Fonts are loaded on demand by their @font-face declarations. Preloading every game font caused unused-preload warnings. -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 </head>
 <body>
   <div id="eventBanner" class="event-banner" hidden data-id="oot-switch2-2026" data-start="2026-11-05T00:00:00Z" data-end="2027-01-05T00:00:00Z">
@@ -78,7 +76,7 @@
     <h1 id="headerTitle">塞尔达海利亚语翻译器</h1>
     <p id="headerSubtitle">将中文文本翻译成各种版本的海利亚文字！</p>
     <div class="language-selector">
-      <select id="languageSelect" aria-label="语言" onchange="if(this.value)location.href=this.value">
+      <select id="languageSelect" aria-label="语言">
         <option value="../index.html" lang="en">🇬🇧 English</option>
         <option value="../ja/index.html" lang="ja">🇯🇵 日本語</option>
         <option value="index.html" lang="zh-Hans" selected>🇨🇳 中文</option>
@@ -128,17 +126,17 @@
             <label for="hylianVersion" id="chooseHylianVersionLabel">选择海利亚文字版本:</label>
             <select id="hylianVersion">
               <optgroup label="海利亚语系" id="hylianLanguageGroup">
-                <option selected="selected" value="ocarinaOfTime3d" data-icon="../images/icons/ocarinaOfTime3d.svg" id="chooseHylianVersionOcarina3d">时之笛</option>
-                <option value="ocarinaOfTime64" data-icon="../images/icons/ocarinaOfTime64.svg" id="chooseHylianVersionOcarina64">时之笛（N64）</option>
-                <option value="windwaker" data-icon="../images/icons/windwaker.svg" id="chooseHylianVersionWindwaker">风之杖</option>
-                <option value="twilightPrincess" data-icon="../images/icons/twilightPrincess.svg" id="chooseHylianVersionTwilightPrincess">黄昏公主</option>
-                <option value="skywardSword" data-icon="../images/icons/skywardSword.svg" id="chooseHylianVersionSkywardSword">天空之剑</option>
-                <option value="botw" data-icon="../images/icons/botw.svg" id="chooseHylianVersionBotw">旷野之息</option>
+                <option selected="selected" value="ocarinaOfTime3d" data-icon="../images/icons/ocarinaOfTime3d.webp" id="chooseHylianVersionOcarina3d">时之笛</option>
+                <option value="ocarinaOfTime64" data-icon="../images/icons/ocarinaOfTime64.webp" id="chooseHylianVersionOcarina64">时之笛（N64）</option>
+                <option value="windwaker" data-icon="../images/icons/windwaker.webp" id="chooseHylianVersionWindwaker">风之杖</option>
+                <option value="twilightPrincess" data-icon="../images/icons/twilightPrincess.webp" id="chooseHylianVersionTwilightPrincess">黄昏公主</option>
+                <option value="skywardSword" data-icon="../images/icons/skywardSword.webp" id="chooseHylianVersionSkywardSword">天空之剑</option>
+                <option value="botw" data-icon="../images/icons/botw.webp" id="chooseHylianVersionBotw">旷野之息</option>
               </optgroup>
               <optgroup label="其他" id="otherLanguageGroup">
-                <option value="gerudo" data-icon="../images/icons/gerudo.svg" id="chooseHylianVersionGerudo">格鲁德</option>
-                <option value="sheikah" data-icon="../images/icons/sheikah.svg" id="chooseHylianVersionSheikah">希卡</option>
-                <option value="mudoran" data-icon="../images/icons/mudoran.svg" id="chooseHylianVersionMudoran">穆多拉</option>
+                <option value="gerudo" data-icon="../images/icons/gerudo.webp" id="chooseHylianVersionGerudo">格鲁德</option>
+                <option value="sheikah" data-icon="../images/icons/sheikah.webp" id="chooseHylianVersionSheikah">希卡</option>
+                <option value="mudoran" data-icon="../images/icons/mudoran.webp" id="chooseHylianVersionMudoran">穆多拉</option>
               </optgroup>
             </select>
             <button id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="查看字母表">f</button>
@@ -242,20 +240,21 @@
     </div>
   </div>
 
-  <script>window.PAGE_TEXT = {"root":"../","translatedText":"翻译后的文本将显示在这里。","copyLabel":"复制","copiedMsg":"已复制！","shareLinkCopied":"链接已复制！","sharedLinkNotice":"你正在查看他人分享的设置。你保存的设置不会被更改。","returnToMySettings":"返回我的设置"};</script>
-  <script defer src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js" crossorigin="anonymous"></script> <!-- Load the UMD version of Wanakana JPN-->
-  <script defer src="../jsMapping/transliterationMap.js?v=2026-11-13k"></script> <!-- Convert non-english characters into their english counterpart -->
-  <script defer src="../jsMapping/WWHylianMap.js?v=2026-11-13k"></script> <!-- Load the WW glyph map -->
-  <script defer src="../jsMapping/64HylianMap.js?v=2026-11-13k"></script> <!-- Load the N64 glyph map -->
-  <script defer src="../jsMapping/3dHylianMap.js?v=2026-11-13k"></script> <!-- Load the 3ds glyph map -->
-  <script defer src="../jsMapping/fontFileMap.js?v=2026-11-13k"></script> <!-- Load the FontFile map to be able to download -->
-  <!-- html2canvas is loaded on-demand (only when exporting) -->
-  <script defer src="../script.js?v=2026-11-13k"></script> <!-- Main script -->
-  <script defer src="../ui-select.js?v=2026-11-13k"></script> <!-- Icon dropdown for the Hylian version -->
-  <script defer src="../jsMapping/reverseTransliteration.js?v=2026-11-13k"></script> <!-- Hylian -> real world: transliteration engines -->
-  <script defer src="../reverse.js?v=2026-11-13k"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
-  <script defer src="../state.js?v=2026-11-13k"></script> <!-- Remembers the session (localStorage) -->
-  <script defer src="../share.js?v=2026-11-13k"></script> <!-- Shareable configurations and branded image sharing -->
+  <script>window.PAGE_TEXT = {"root":"../","ver":"05c23550","translatedText":"翻译后的文本将显示在这里。","copyLabel":"复制","copiedMsg":"已复制！","shareLinkCopied":"链接已复制！","sharedLinkNotice":"你正在查看他人分享的设置。你保存的设置不会被更改。","returnToMySettings":"返回我的设置"};</script>
+  <script>(function(){var s=document.getElementById('languageSelect');if(s)s.addEventListener('change',function(){if(s.value)location.href=s.value;});})();</script>
+  <script defer src="../vendor/wanakana.min.js?v=05c23550"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
+  <script defer src="../jsMapping/transliterationMap.js?v=05c23550"></script> <!-- Convert non-english characters into their english counterpart -->
+  <script defer src="../jsMapping/WWHylianMap.js?v=05c23550"></script> <!-- Load the WW glyph map -->
+  <script defer src="../jsMapping/64HylianMap.js?v=05c23550"></script> <!-- Load the N64 glyph map -->
+  <script defer src="../jsMapping/3dHylianMap.js?v=05c23550"></script> <!-- Load the 3ds glyph map -->
+  <script defer src="../jsMapping/fontFileMap.js?v=05c23550"></script> <!-- Load the FontFile map to be able to download -->
+  <!-- html2canvas, kuroshiro and pinyin-pro (all self-hosted in vendor/) are loaded on demand -->
+  <script defer src="../script.js?v=05c23550"></script> <!-- Main script -->
+  <script defer src="../ui-select.js?v=05c23550"></script> <!-- Icon dropdown for the Hylian version -->
+  <script defer src="../jsMapping/reverseTransliteration.js?v=05c23550"></script> <!-- Hylian -> real world: transliteration engines -->
+  <script defer src="../reverse.js?v=05c23550"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
+  <script defer src="../state.js?v=05c23550"></script> <!-- Remembers the session (localStorage) -->
+  <script defer src="../share.js?v=05c23550"></script> <!-- Shareable configurations and branded image sharing -->
 
 </body>
 </html>

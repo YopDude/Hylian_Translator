@@ -17,9 +17,29 @@ const vm = require('vm');
 
 const ROOT = __dirname;
 const SITE = 'https://zeldatranslator.com';
-const VER = '2026-11-13k'; // cache-buster for css/js/icon query strings; bump when you change them
+// Cache-buster for the css/js/vendor/icon query strings. It is a hash of the files themselves, so it changes exactly
+// when one of them changes and can no longer be forgotten.
+const VER = (() => {
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha1');
+  const files = [];
+  const walk = (dir) => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).forEach((e) => {
+    const rel = path.join(dir, e.name);
+    if (e.isDirectory()) walk(rel); else files.push(rel);
+  });
+  ['jsMapping', 'vendor'].forEach(walk);
+  ['script.js', 'reverse.js', 'state.js', 'share.js', 'ui-select.js', 'banner.js'].forEach((f) => files.push(f));
+  files.push('styles.css');
+  files.sort().forEach((f) => {
+    let data = fs.readFileSync(path.join(ROOT, f));
+    // the font URLs inside styles.css carry their own ?v=FONT_VER, which is rewritten later in this script
+    if (f === 'styles.css') data = Buffer.from(data.toString('utf8').replace(/\?v=[^')]*/g, ''));
+    hash.update(f).update(data);
+  });
+  return hash.digest('hex').slice(0, 8);
+})();
 const FONT_VER = '3'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
-const ICON_EXT = 'svg'; // images/icons/<version>.<ext>: drop real game logos in with the same names (change this for png/webp)
+const ICON_EXT = 'webp'; // images/icons/<version>.<ext> (96x96 WebP; drop real game logos in with the same names)
 
 // Temporary banner. It hides itself after `end` (UTC), so forgetting it is safe.
 // To remove it completely, set BANNER = null and re-run the build.
@@ -54,6 +74,8 @@ const X = require('./i18n/extras.js');
 const UI = require('./i18n/ui-strings.js'); // About tooltip + reverse-mode strings
 const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const templates = { index: read('templates/index.template.html'), about: read('templates/about.template.html') };
+// Navigates to the chosen language (the <select> carries no inline handler).
+const languageSelectScript = "(function(){var s=document.getElementById('languageSelect');if(s)s.addEventListener('change',function(){if(s.value)location.href=s.value;});})();";
 const bannerScript = read('banner.js').replace(/^\s*\/\/.*$/gm, '').trim();
 
 // ---------- helpers ----------
@@ -105,7 +127,7 @@ function languageSelect(lang, page) {
   const from = urlPath(lang, page);
   const opts = LANGS.map((l) =>
     `        <option value="${rel(from, urlPath(l, page))}" lang="${l.html}"${l.code === lang.code ? ' selected' : ''}>${l.label}</option>`).join('\n');
-  return `      <select id="languageSelect" aria-label="${esc(X[lang.key].langLabel)}" onchange="if(this.value)location.href=this.value">\n${opts}\n      </select>`;
+  return `      <select id="languageSelect" aria-label="${esc(X[lang.key].langLabel)}">\n${opts}\n      </select>`;
 }
 
 function languageLinks(lang, page) {
@@ -147,6 +169,19 @@ function render(tpl, vars, where) {
 }
 
 // ---------- build ----------
+// <lastmod> in the sitemap should only change when a page's content changes, not on every build. tools/lastmod.json
+// remembers a hash of each page (ignoring the cache-buster) and the date it last changed.
+const LASTMOD_FILE = path.join(ROOT, 'tools', 'lastmod.json');
+let lastmod = {};
+try { lastmod = JSON.parse(fs.readFileSync(LASTMOD_FILE, 'utf8')); } catch (_) { /* first build */ }
+const today = new Date().toISOString().slice(0, 10);
+const nextLastmod = {};
+function recordLastmod(url, html) {
+  const hash = require('crypto').createHash('sha1')
+    .update(html.replace(/\?v=[0-9a-f]{8}/g, '').replace(/"ver":"[0-9a-f]{8}"/g, '')).digest('hex').slice(0, 12);
+  const prev = lastmod[url];
+  nextLastmod[url] = prev && prev.hash === hash ? prev : { hash, date: today };
+}
 let count = 0;
 for (const lang of LANGS) {
   const s = strings(lang);
@@ -159,8 +194,9 @@ for (const lang of LANGS) {
       hreflangTags: hreflangTags(page),
       keywordsTag: lang.code === 'en' ? `  <meta name="keywords" content="${esc(KEYWORDS_EN)}"/>\n` : '',
       banner: bannerHtml(s),
+      languageSelectScript,
       outputLanguageOptions: outputOptions(lang),
-      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
+      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', ver: VER, translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
       languageSelect: languageSelect(lang, page),
       languageLinks: languageLinks(lang, page),
       homeHref: rel(from, urlPath(lang, 'index')),
@@ -169,19 +205,21 @@ for (const lang of LANGS) {
     const out = render(templates[page], vars, `${lang.code}/${page}`);
     fs.mkdirSync(path.dirname(filePath(lang, page)), { recursive: true });
     fs.writeFileSync(filePath(lang, page), out);
+    recordLastmod(urlPath(lang, page), out);
     count++;
   }
 }
 
 // sitemap with hreflang alternates
-const today = new Date().toISOString().slice(0, 10);
+fs.mkdirSync(path.dirname(LASTMOD_FILE), { recursive: true });
+fs.writeFileSync(LASTMOD_FILE, JSON.stringify(nextLastmod, null, 1) + '\n');
 const urls = [];
 for (const page of PAGES) {
   for (const lang of LANGS) {
     const alts = LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="${SITE}${urlPath(l, page)}"/>`);
     alts.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${urlPath(LANGS[0], page)}"/>`);
     const priority = page === 'index' ? (lang.code === 'en' ? '1.00' : '0.90') : (lang.code === 'en' ? '0.80' : '0.70');
-    urls.push(`  <url>\n    <loc>${SITE}${urlPath(lang, page)}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>\n${alts.join('\n')}\n  </url>`);
+    urls.push(`  <url>\n    <loc>${SITE}${urlPath(lang, page)}</loc>\n    <lastmod>${nextLastmod[urlPath(lang, page)].date}</lastmod>\n    <priority>${priority}</priority>\n${alts.join('\n')}\n  </url>`);
   }
 }
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
@@ -198,6 +236,7 @@ console.log(`Built ${count} pages + sitemap.xml (${LANGS.length} languages).`);
   for (const m of read('jsMapping/fontFileMap.js').matchAll(/:"([^"]+)"/g)) need(`fonts/${m[1]}.ttf`);                         // downloadable fonts
   for (const tpl of Object.values(templates)) for (const m of tpl.matchAll(/\{\{root\}\}(images\/[^"'?{]+)/g)) if (!m[1].endsWith('.')) need(m[1]);      // images used by the pages
   for (const v of ['ocarinaOfTime3d', 'ocarinaOfTime64', 'windwaker', 'twilightPrincess', 'skywardSword', 'botw', 'gerudo', 'sheikah', 'mudoran']) need(`images/icons/${v}.${ICON_EXT}`);
+  for (const v of ['wanakana.min.js', 'kuroshiro.min.js', 'kuroshiro-analyzer-kuromoji.min.js', 'pinyin-pro.js', 'html2canvas.min.js']) need(`vendor/${v}`);   // self-hosted libraries
   need('site.webmanifest');
   if (missing.size) console.warn(`\n⚠ ${missing.size} file(s) used by the site are missing from this folder:\n  ` + [...missing].sort().join('\n  '));
   else console.log('All referenced fonts, images and icons are present.');

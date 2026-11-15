@@ -1,5 +1,7 @@
 // Pages live at / (English) and /<lang>/ (everything else); each page sets its path back to the site root.
 const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
+// Cache-buster for the self-hosted libraries in vendor/ (build.js derives it from the file contents).
+const SITE_VER = (window.PAGE_TEXT && window.PAGE_TEXT.ver) ? '?v=' + window.PAGE_TEXT.ver : '';
 
 // The dictionary cache is installed automatically only when Japanese readings are needed.
 // Users do not need to run or configure the service worker themselves.
@@ -51,7 +53,7 @@ const hylianMapImage = document.getElementById('hylianMapImage');
 const hylianVersionSelect = document.getElementById('hylianVersion');
 const loadingIndicator = document.getElementById('loadingIndicator');
 //Chinese characters
-const PINYIN_SCRIPT = 'https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.3/dist/index.js';
+const PINYIN_SCRIPT = SITE_ROOT + 'vendor/pinyin-pro.js' + SITE_VER;
 let pinyinLibPromise = null;
 
 async function ensurePinyinInstance() {
@@ -65,10 +67,8 @@ async function ensurePinyinInstance() {
 
 //Japanese characters
 const KUROMOJI_DICT_BASE = SITE_ROOT + 'dict/';
-// Add this line below:
-const KUROSHIRO_SCRIPT = 'https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js';
-const KUROSHIRO_ANALYZER_SCRIPT =
-  'https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js';
+const KUROSHIRO_SCRIPT = SITE_ROOT + 'vendor/kuroshiro.min.js' + SITE_VER;
+const KUROSHIRO_ANALYZER_SCRIPT = SITE_ROOT + 'vendor/kuroshiro-analyzer-kuromoji.min.js' + SITE_VER;
 
 /** @type {Promise<unknown>|null} */
 let kuroshiroInitPromise = null;
@@ -87,6 +87,39 @@ function primaryFamilyFromCssFontFamily(cssFontFamily) {
   const first = trimmed.split(',')[0].trim();
   return first.replace(/^["']|["']$/g, '');
 }
+
+// ---- Hylian font readiness ------------------------------------------------------------------------------------
+// The game fonts are tiny (1-12 KB each as woff2) but are only fetched when first used. Until then the browser would
+// draw the mapping characters (u, v, w, ...) in a plain system font. The @font-face rules therefore use
+// `font-display: block` (text stays invisible instead of showing the wrong font), the fonts are warmed in the
+// background once the page is idle, and every place that shows Hylian glyphs waits for isReady()/ready().
+const HYLIAN_FONT_FAMILIES = ['Hero Hylian', 'Hylian64', 'Ancient Hylian', 'TP Hylian - GCN', 'SS Ancient Hylian',
+    'Albw Botw Hylian', 'Gerudo', 'BotW Sheikah', 'Mudoran'];
+window.HylianFonts = {
+    families: HYLIAN_FONT_FAMILIES,
+    // true when the first family of a CSS font-family string is loaded (or is not a webfont at all)
+    isReady(cssFontFamily) {
+        const primary = primaryFamilyFromCssFontFamily(cssFontFamily || '');
+        if (!primary || primary === 'sans-serif' || !document.fonts) return true;
+        try { return document.fonts.check('1em "' + primary + '"'); } catch (_) { return true; }
+    },
+    // resolves when the font can be drawn; never rejects (a failed font must not leave text hidden forever)
+    ready(cssFontFamily) {
+        const primary = primaryFamilyFromCssFontFamily(cssFontFamily || '');
+        if (!primary || primary === 'sans-serif' || !document.fonts) return Promise.resolve();
+        return document.fonts.load('1em "' + primary + '"').then(() => undefined, () => undefined);
+    },
+    // fetch every game font (about 45 KB in total) so that switching script is instant
+    warm() {
+        if (!document.fonts) return Promise.resolve();
+        return Promise.all(HYLIAN_FONT_FAMILIES.map((f) => document.fonts.load('1em "' + f + '"').catch(() => undefined)));
+    }
+};
+(function scheduleFontWarmup() {
+    const run = () => window.HylianFonts.warm();
+    const later = () => ('requestIdleCallback' in window) ? window.requestIdleCallback(run, { timeout: 4000 }) : setTimeout(run, 1500);
+    if (document.readyState === 'complete') later(); else window.addEventListener('load', later, { once: true });
+})();
 
 async function ensureFontReady(targetFont, gen) {
   if (gen !== translateGeneration) return;
@@ -154,10 +187,9 @@ function loadHtml2Canvas() {
     }
 
     const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js';
+    script.src = SITE_ROOT + 'vendor/html2canvas.min.js' + SITE_VER;
     script.async = true;
     script.defer = true;
-    script.crossOrigin = 'anonymous';
     script.dataset.html2canvas = 'true';
     script.onload = () => resolve(window.html2canvas);
     script.onerror = reject;
@@ -167,46 +199,55 @@ function loadHtml2Canvas() {
 
 // Image mapping with mobile versions
 const hylianVersionImages = {
-  "ocarinaOfTime3d": SITE_ROOT + 'images/ocarina.png',
-  "ocarinaOfTime3d-mobile": SITE_ROOT + 'images/ocarina-mobile.png',
-  "ocarinaOfTime64": SITE_ROOT + 'images/ocarina64.png',
-  "ocarinaOfTime64-mobile": SITE_ROOT + 'images/ocarina-mobile64.png',
-  "windwaker": SITE_ROOT + 'images/windwaker.png',
-  "windwaker-mobile": SITE_ROOT + 'images/windwaker-mobile.png',
-  "twilightPrincess": SITE_ROOT + 'images/twilight.png',
-  "twilightPrincess-mobile": SITE_ROOT + 'images/twilight-mobile.png',
-  "skywardSword": SITE_ROOT + 'images/skyward.png',
-  "skywardSword-mobile": SITE_ROOT + 'images/skyward-mobile.png',
-  "botw": SITE_ROOT + 'images/botw.png',
-  "botw-mobile": SITE_ROOT + 'images/botw-mobile.png',
-  "gerudo": SITE_ROOT + 'images/gerudo.png',
-  "gerudo-mobile": SITE_ROOT + 'images/gerudo-mobile.png',
-  "sheikah": SITE_ROOT + 'images/sheikah.png',
-  "sheikah-mobile": SITE_ROOT + 'images/sheikah-mobile.png',
-  "mudoran": SITE_ROOT + 'images/mudoran.png',
-  "mudoran-mobile": SITE_ROOT + 'images/mudoran-mobile.png',
+  "ocarinaOfTime3d": SITE_ROOT + 'images/ocarina.webp',
+  "ocarinaOfTime3d-mobile": SITE_ROOT + 'images/ocarina-mobile.webp',
+  "ocarinaOfTime64": SITE_ROOT + 'images/ocarina64.webp',
+  "ocarinaOfTime64-mobile": SITE_ROOT + 'images/ocarina-mobile64.webp',
+  "windwaker": SITE_ROOT + 'images/windwaker.webp',
+  "windwaker-mobile": SITE_ROOT + 'images/windwaker-mobile.webp',
+  "twilightPrincess": SITE_ROOT + 'images/twilight.webp',
+  "twilightPrincess-mobile": SITE_ROOT + 'images/twilight-mobile.webp',
+  "skywardSword": SITE_ROOT + 'images/skyward.webp',
+  "skywardSword-mobile": SITE_ROOT + 'images/skyward-mobile.webp',
+  "botw": SITE_ROOT + 'images/botw.webp',
+  "botw-mobile": SITE_ROOT + 'images/botw-mobile.webp',
+  "gerudo": SITE_ROOT + 'images/gerudo.webp',
+  "gerudo-mobile": SITE_ROOT + 'images/gerudo-mobile.webp',
+  "sheikah": SITE_ROOT + 'images/sheikah.webp',
+  "sheikah-mobile": SITE_ROOT + 'images/sheikah-mobile.webp',
+  "mudoran": SITE_ROOT + 'images/mudoran.webp',
+  "mudoran-mobile": SITE_ROOT + 'images/mudoran-mobile.webp',
 };
 
 // Event listeners
 inputTextElement.addEventListener("input", translateText); // Attach event listener to the inputTextArea
-hylianVersionElement.addEventListener('change', inputTextReady); // Add an event listener for the <select> element 'change' event
+
+// The alphabet chart is only downloaded when it is wanted: on hover/focus of the eye button (so it is usually ready by
+// the time it is clicked) or on click, never on page load, resize or script change.
+let chartImageForVersion = null;
+function chartFor(version) {
+  if (!chartImageForVersion || chartImageForVersion.version !== version || chartImageForVersion.mobile !== isMobileChart()) {
+    chartImageForVersion = { version, mobile: isMobileChart(), image: preloadImage(version) };
+  }
+  return chartImageForVersion.image;
+}
+['pointerenter', 'focus', 'touchstart'].forEach((type) => showHylianMapBtn.addEventListener(type, () => chartFor(hylianVersionSelect.value), { passive: true }));
 
 showHylianMapBtn.addEventListener('click', () => {
-  const selectedVersion = hylianVersionSelect.value;
-  const imageToDisplay = preloadImage(selectedVersion);
+  const imageToDisplay = chartFor(hylianVersionSelect.value);
 
-  // Show loading indicator
-  loadingIndicator.style.display = 'block';
-
-  // Wait for the image to load before showing it
-  imageToDisplay.onload = function() {
-    loadingIndicator.style.display = 'none'; // Hide loading indicator when image is loaded
-    hylianMapImage.src = imageToDisplay.src; // Set the source of the image once it's loaded
+  const show = () => {
+    loadingIndicator.style.display = 'none';
+    hylianMapImage.src = imageToDisplay.src;
     overlay.classList.add('open');
   };
 
-  // In case the image fails to load, handle the error
-  imageToDisplay.onerror = function() {
+  if (imageToDisplay.complete && imageToDisplay.naturalWidth > 0) { show(); return; }
+
+  // Show loading indicator while the image is fetched
+  loadingIndicator.style.display = 'block';
+  imageToDisplay.onload = show;
+  imageToDisplay.onerror = function () {
     loadingIndicator.style.display = 'none'; // Hide loading indicator on error
     console.error('Failed to load the image.');
   };
@@ -224,25 +265,20 @@ overlay.addEventListener('click', (event) => {
   }
 });
 
+// Switching between the desktop and mobile chart while the overlay is open (rotating a phone, resizing a window).
+let resizeTimer;
 window.addEventListener('resize', () => {
-  const selectedVersion = hylianVersionSelect.value;
-  const imageToDisplay = preloadImage(selectedVersion); // Preload the image again based on the current version
-
-  // Update the image source
-  hylianMapImage.src = imageToDisplay.src;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (overlay.classList.contains('open')) hylianMapImage.src = chartFor(hylianVersionSelect.value).src;
+  }, 150);
 });
 
-// Event listener for the dropdown change
+// Event listener for the dropdown change (the only one: translating, the Twilight options and focus all happen here)
 hylianVersionElement.addEventListener('change', function () {
   const selectedVersion = this.value;
   showTwilight(selectedVersion);  // Call the function to show or hide Twilight Princess options based on the selection
-  // Preload and update the selected overlay image
-  const imageToDisplay = preloadImage(selectedVersion);
-  
-  // Wait for the image to load before updating the overlay
-  imageToDisplay.onload = function() {
-  hylianMapImage.src = imageToDisplay.src; // Update the overlay image
-  };
+  inputTextReady();               // re-translate in the newly selected script
 
   // Focus the active editor after both translation modes have processed the version change.
   // reverse.js rebuilds its keyboard synchronously from the same change event, so defer
@@ -277,8 +313,9 @@ window.addEventListener('load', function () {
   if (selectedVersion === 'twilightPrincess') {
     showTwilight(selectedVersion);
   }
-  // If the text input is not empty on reload, run translate function
-  inputTextReady();
+  // If the browser restored text into the input on reload and nothing has translated it yet, translate it now
+  // (state.js restoring the session already triggers a translation, which must not be repeated).
+  if (translateGeneration === 0) inputTextReady();
 
   // Apply the current font size from the slider (if any) on page load
   const fontSizeValue = fontSizeSlider.value;
@@ -288,21 +325,12 @@ window.addEventListener('load', function () {
   // Apply the current font color from the color picker (if any) on page load
   const fontColorValue = fontColorInput.value;
   translatedTextElement.style.color = fontColorValue; // Apply the font color
-  preloadImage(selectedVersion);  // Preload the selected over lay image for the version
 });
 
-// Change the font when a radio button is selected
-gamecubeOption.addEventListener('change', function () {
-  if (this.checked) {
-    inputTextReady();
-  }
-});
-
-wiiOption.addEventListener('change', function () {
-  if (this.checked) {
-    inputTextReady();
-  }
-});
+// Change the font when a Twilight Princess variant (GameCube / Wii) is selected
+[gamecubeOption, wiiOption].forEach((radio) => radio.addEventListener('change', function () {
+  if (this.checked) inputTextReady();
+}));
 
 // Function to update the font size and display it as a multiplier (x)
 fontSizeSlider.addEventListener("input", function () {
@@ -389,7 +417,6 @@ function loadKanjiScriptOnce(src) {
     const s = document.createElement('script');
     s.src = src;
     s.async = true;
-    s.crossOrigin = 'anonymous';
     s.setAttribute('data-hylian-kanji-src', marker);
     s.addEventListener('load', function () {
       s.setAttribute('data-loaded', '1');
@@ -457,8 +484,17 @@ exportPngElement.addEventListener('click', () => {
   });
 });
 
-// Function to handle font change and translation logic
+// Function to handle font change and translation logic. A failure (a library that did not load, ...) is logged and leaves
+// the previous output in place instead of surfacing as an unhandled promise rejection.
 async function translateText() {
+    try {
+        await translateTextCore();
+    } catch (err) {
+        console.error('Translation failed:', err);
+    }
+}
+
+async function translateTextCore() {
     const gen = ++translateGeneration;
     const originalInput = String(inputTextElement.value);
     const version = hylianVersionElement.value;
@@ -483,15 +519,21 @@ async function translateText() {
     // non-Chinese pages. Kana alone can be handled by the lightweight romaji path.
     const containsKanji = /[\u4E00-\u9FFF]/.test(originalInput + workingText);
     if (!chineseUi && containsKanji) {
-        const kuro = await ensureKuroshiroInstance();
-        if (isKanaScript(version)) {
-            // Kana-based scripts need one glyph per kana, so read the text as hiragana and romanize that with
-            // wanakana, exactly like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes
-            // long vowels with macrons (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the
-            // particles \u3078 / \u306f / \u3092 into "e" / "wa" / "o".
-            romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }));
-        } else {
-            romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+        try {
+            const kuro = await ensureKuroshiroInstance();
+            if (isKanaScript(version)) {
+                // Kana-based scripts need one glyph per kana, so read the text as hiragana and romanize that with
+                // wanakana, exactly like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes
+                // long vowels with macrons (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the
+                // particles \u3078 / \u306f / \u3092 into "e" / "wa" / "o".
+                romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }));
+            } else {
+                romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+            }
+        } catch (err) {
+            // The Japanese dictionary could not be loaded: kana and Latin text still work, kanji are skipped.
+            console.warn('Kanji readings unavailable; converting the kana only.', err);
+            romajiOutput = convertToRomaji(workingText);
         }
     } else {
         // Otherwise, use standard wanakana/romaji conversion
@@ -567,7 +609,7 @@ function isKanaScript(version) {
 
 // Function to convert input to Romaji using wanakana
 function convertToRomaji(input) {
-  return wanakana.toRomaji(input);
+  return (typeof wanakana !== 'undefined') ? wanakana.toRomaji(input) : input;
 }
 
 const HYLIAN_YOON_MAP = {
@@ -692,10 +734,6 @@ function inputTextReady() {
 function showTwilight(selectedVersion) {
   if (selectedVersion === 'twilightPrincess') {
     twilightPrincessOptions.style.display = 'block'; // Show the options
-
-    if (gamecubeOption.checked || wiiOption.checked) {
-      inputTextReady();
-    }
   } else {
     twilightPrincessOptions.style.display = 'none'; // Hide the options
     translatedTextElement.classList.remove('mirror-text'); // Remove mirror effect
@@ -739,17 +777,19 @@ async function exportAsPNG() {
 
     try {
       const html2canvas = await loadHtml2Canvas();
-      html2canvas(translatedTextElement, {
-        onrendered: function (canvas) {
-          const imgData = canvas.toDataURL("image/png");
-          const link = document.createElement('a');
-          link.href = imgData;
-          link.download = 'translatedText.png';
-          link.click();
-        }
+      // The text is exported on a white background, or on the dark panel colour when the colour guard switched the
+      // output panel to its dark theme (light text on white would be unreadable).
+      const darkPanel = outputPanel && outputPanel.classList.contains('output-dark');
+      const canvas = await html2canvas(translatedTextElement, {
+        backgroundColor: darkPanel ? getComputedStyle(outputPanel).backgroundColor : '#ffffff',
+        scale: Math.max(2, window.devicePixelRatio || 1)
       });
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL("image/png");
+      link.download = 'translatedText.png';
+      link.click();
     } catch (err) {
-      console.error('Failed to load html2canvas:', err);
+      console.error('PNG export failed:', err);
       alert('PNG export is temporarily unavailable (failed to load). Please try again.');
     }
   } else {
@@ -757,12 +797,17 @@ async function exportAsPNG() {
   }
 }
 
+// The narrower chart is used on phone-sized screens
+function isMobileChart() {
+  return window.innerWidth <= 768;
+}
+
 function preloadImage(version) {
   const image = new Image();
   let imageSrc;
 
   // Determine if it's mobile or desktop
-  if (window.innerWidth <= 768) {
+  if (isMobileChart()) {
     // Mobile image version (more narrow)
     imageSrc = hylianVersionImages[version + '-mobile'];
   } else {
@@ -774,11 +819,6 @@ function preloadImage(version) {
   image.src = imageSrc;
   return image;
 }
-
-/** Keeps font-load bookkeeping in sync when language toggle resets the output (script loads after languageSet). */
-window.syncTranslatorCommittedFont = function (cssFontFamily) {
-  lastCommittedFontFamily = cssFontFamily;
-};
 
 // Warm the Japanese reading dictionary in the background on the Japanese translator homepage.
 // The same in-flight promise is reused if the user starts typing before initialization finishes.

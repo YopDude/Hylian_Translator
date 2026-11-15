@@ -35,8 +35,6 @@
   <meta name="twitter:image" content="{{site}}/images/Hylian_Translator_Home.png"/>
 
   <!-- Fonts are loaded on demand by their @font-face declarations. Preloading every game font caused unused-preload warnings. -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 </head>
 <body>
 {{banner}}
@@ -167,13 +165,14 @@
   </div>
 
   <script>window.PAGE_TEXT = {{pageTextJson}};</script>
-  <script defer src="https://cdn.jsdelivr.net/npm/wanakana@4.0.2/umd/wanakana.min.js" crossorigin="anonymous"></script> <!-- Load the UMD version of Wanakana JPN-->
+  <script>{{languageSelectScript}}</script>
+  <script defer src="{{root}}vendor/wanakana.min.js?v={{ver}}"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
   <script defer src="{{root}}jsMapping/transliterationMap.js?v={{ver}}"></script> <!-- Convert non-english characters into their english counterpart -->
   <script defer src="{{root}}jsMapping/WWHylianMap.js?v={{ver}}"></script> <!-- Load the WW glyph map -->
   <script defer src="{{root}}jsMapping/64HylianMap.js?v={{ver}}"></script> <!-- Load the N64 glyph map -->
   <script defer src="{{root}}jsMapping/3dHylianMap.js?v={{ver}}"></script> <!-- Load the 3ds glyph map -->
   <script defer src="{{root}}jsMapping/fontFileMap.js?v={{ver}}"></script> <!-- Load the FontFile map to be able to download -->
-  <!-- html2canvas is loaded on-demand (only when exporting) -->
+  <!-- html2canvas, kuroshiro and pinyin-pro (all self-hosted in vendor/) are loaded on demand -->
   <script defer src="{{root}}script.js?v={{ver}}"></script> <!-- Main script -->
   <script defer src="{{root}}ui-select.js?v={{ver}}"></script> <!-- Icon dropdown for the Hylian version -->
   <script defer src="{{root}}jsMapping/reverseTransliteration.js?v={{ver}}"></script> <!-- Hylian -> real world: transliteration engines -->

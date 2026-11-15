@@ -27,6 +27,7 @@ Live site: https://yopdude.github.io/Hylian_Translator/ (custom domain: https://
 | `state.js`, `banner.js` | session memory, banner logic |
 | `jsMapping/*` | glyph maps and romanisation tables |
 | `site.webmanifest` | web app manifest (icons live in `images/`: `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`) |
+| `vendor/` | self-hosted third-party libraries (wanakana, kuroshiro + kuromoji analyzer, pinyin-pro, html2canvas), all MIT licensed |
 | `fonts/`, `images/`, `dict/` | fonts, charts/icons, Japanese dictionary |
 | `tools/` | font scripts (below) |
 
@@ -35,7 +36,7 @@ No dependencies, Node 16+:
 
     node build.js
 
-Edit the templates / `i18n` files, rebuild, commit the generated pages. The build also lists any font, chart, icon or favicon that the site uses but that is missing from the folder.
+Edit the templates / `i18n` files, rebuild, commit the generated pages. The cache-buster (`?v=…`) is a hash of the scripts and `vendor/` files, so it updates itself. `<lastmod>` in the sitemap is kept in `tools/lastmod.json` and only changes for pages whose content changed (commit that file too). The build also lists any font, chart, icon or favicon that the site uses but that is missing from the folder.
 
 **Add a language:** add its block to `i18n/translations.js`, `i18n/extras.js` and `i18n/ui-strings.js`, add a line to `LANGS` in `build.js`, rebuild.
 
@@ -44,18 +45,22 @@ The eye button shows one chart per script, plus a `-mobile` version for narrow s
 
 | Script | Desktop | Mobile |
 |---|---|---|
-| Ocarina of Time (3D) | `ocarina.png` | `ocarina-mobile.png` |
-| Ocarina of Time (N64) | `ocarina64.png` | `ocarina-mobile64.png` |
-| Wind Waker | `windwaker.png` | `windwaker-mobile.png` |
-| Twilight Princess | `twilight.png` | `twilight-mobile.png` |
-| Skyward Sword | `skyward.png` | `skyward-mobile.png` |
-| Breath of the Wild | `botw.png` | `botw-mobile.png` |
-| Gerudo / Sheikah / Mudoran | `gerudo.png` / `sheikah.png` / `mudoran.png` | `<name>-mobile.png` |
+| Ocarina of Time (3D) | `ocarina.webp` | `ocarina-mobile.webp` |
+| Ocarina of Time (N64) | `ocarina64.webp` | `ocarina-mobile64.webp` |
+| Wind Waker | `windwaker.webp` | `windwaker-mobile.webp` |
+| Twilight Princess | `twilight.webp` | `twilight-mobile.webp` |
+| Skyward Sword | `skyward.webp` | `skyward-mobile.webp` |
+| Breath of the Wild | `botw.webp` | `botw-mobile.webp` |
+| Gerudo / Sheikah / Mudoran | `gerudo.webp` / `sheikah.webp` / `mudoran.webp` | `<name>-mobile.webp` |
 
 ## Version icons
-`images/icons/<version>.<ext>` (`ocarinaOfTime3d`, `ocarinaOfTime64`, `windwaker`, `twilightPrincess`, `skywardSword`, `botw`, `gerudo`, `sheikah`, `mudoran`). Square images, ~128 px. If they aren't SVG, set `ICON_EXT` in `build.js` and rebuild.
+`images/icons/<version>.<ext>` (`ocarinaOfTime3d`, `ocarinaOfTime64`, `windwaker`, `twilightPrincess`, `skywardSword`, `botw`, `gerudo`, `sheikah`, `mudoran`). Square 96 px WebP images (they are shown at ~28 px). To use another format set `ICON_EXT` in `build.js` and rebuild.
+
+## Images
+Keep images small: charts are WebP (≈30–250 KB each, max 1800 px wide, 1200 px for the mobile versions), icons 96 px WebP. Only the social-preview images (`Hylian_Translator_*.png`) stay PNG, because social sites don't reliably read WebP. The chart is only downloaded when someone hovers/taps the eye button.
 
 ## Fonts
+- The Hylian game fonts use `font-display: block` and are fetched in the background once the page is idle (~45 KB in total), and the keyboard hides its glyphs until the selected font is ready, so switching script never flashes the plain mapping characters. `window.HylianFonts` (in `script.js`) is the helper for this.
 - `tools/normalize-font-metrics.py` gives every Hylian font the same vertical metrics (outlines untouched) so switching scripts doesn't resize the output box.
 - `tools/subset-fonts.py` rebuilds the Chinese/Korean UI fonts (Noto Sans) and the Japanese/Chinese/Korean/Cyrillic title fonts (Noto Serif, Forum) from the text of the built pages. Run `node build.js` first; re-run it after adding characters to those languages. Licences: `fonts/NotoSansSC-OFL.txt` (all Noto CJK fonts) and `fonts/OFL-Forum.txt`.
 - `styles.css` also carries `ascent-override` / `descent-override` per Hylian font (written by the same tool), so the key and output spacing stays correct even if a browser or a copied folder still has an old font file.

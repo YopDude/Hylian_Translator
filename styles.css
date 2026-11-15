@@ -372,17 +372,6 @@ header a:hover, footer a:hover {
   transform: translateY(-4%);  /* Move the icon up*/
 }
 
-/* Overlay Content - Centering and styling */
-.overlay-content {
-  position: relative;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;
-}
 
 .loadingIndicator {
   position: fixed;
@@ -445,7 +434,8 @@ header a:hover, footer a:hover {
 }
 
 /* Tooltip appearance on hover */
-.tooltip-element:hover::after {
+.tooltip-element:hover::after,
+.tooltip-element:focus-visible::after {
   font-family: 'RocknRollOne', sans-serif;
   content: attr(data-tooltip); /* Get tooltip content from data-tooltip attribute */
   position: absolute;
@@ -470,7 +460,8 @@ header a:hover, footer a:hover {
 }
 
 /* the chart button sits near the card's right edge: anchor its tooltip to the right */
-.eye-btn:hover::after {
+.eye-btn:hover::after,
+.eye-btn:focus-visible::after {
   left: auto;
   right: 0;
   transform: none;
@@ -616,7 +607,7 @@ p.symbol{
        url('fonts/AlbwBotwHylian-Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 90%;
   ascent-override: 92.40%;
   descent-override: 32.60%;
@@ -630,7 +621,7 @@ p.symbol{
        url('fonts/TPHylian-GCNRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 150%;
   ascent-override: 92.14%;
   descent-override: 32.86%;
@@ -644,7 +635,7 @@ p.symbol{
        url('fonts/HeroHylianRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 190%;
   ascent-override: 87.01%;
   descent-override: 37.99%;
@@ -658,7 +649,7 @@ p.symbol{
        url('fonts/Hylian64Regular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 140%;
   ascent-override: 97.51%;
   descent-override: 27.49%;
@@ -672,7 +663,7 @@ p.symbol{
        url('fonts/AncientHylian-English.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 140%;
   ascent-override: 95.02%;
   descent-override: 29.98%;
@@ -686,7 +677,7 @@ p.symbol{
        url('fonts/SSAncientHylian.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 110%;
   ascent-override: 118.95%;
   descent-override: 6.05%;
@@ -700,7 +691,7 @@ p.symbol{
        url('fonts/GerudoTypographyRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 130%;
   ascent-override: 108.11%;
   descent-override: 16.89%;
@@ -714,7 +705,7 @@ p.symbol{
        url('fonts/BotWSheikahRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 125%;
   ascent-override: 97.51%;
   descent-override: 27.49%;
@@ -728,7 +719,7 @@ p.symbol{
        url('fonts/MudoranRegular.ttf?v=3') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
   size-adjust: 140%;
   ascent-override: 96.68%;
   descent-override: 28.32%;
@@ -953,7 +944,8 @@ html[lang="sr"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageS
 
 html[lang^="zh"] *:not(.eye-btn):not(.symbol):not(.event-banner__icon):not(.hylian-font):not(h1):not(#languageSelect):not(#translatedText),
 html[lang^="zh"] #translatedText,
-html[lang^="zh"] .tooltip-element:hover::after {
+html[lang^="zh"] .tooltip-element:hover::after,
+html[lang^="zh"] .tooltip-element:focus-visible::after {
   font-family: 'NotoSansSC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
 }
 
@@ -976,7 +968,8 @@ html[lang^="zh"] .tooltip-element:hover::after {
 
 html[lang^="ko"] *:not(.eye-btn):not(.symbol):not(.event-banner__icon):not(.hylian-font):not(h1):not(#languageSelect):not(#translatedText),
 html[lang^="ko"] #translatedText,
-html[lang^="ko"] .tooltip-element:hover::after {
+html[lang^="ko"] .tooltip-element:hover::after,
+html[lang^="ko"] .tooltip-element:focus-visible::after {
   font-family: 'NotoSansKR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
 }
 
@@ -1070,11 +1063,10 @@ html[lang="sr"] header h1 {
   font-size: 0.95rem;
 }
 
-.reverse-mode .dir-real select { display: block; width: 100%; }
 .reverse-mode .dir-real .dir-label { display: none; }
 /* in reverse mode the language dropdown is the pill itself (no pill-in-a-pill, so long names fit on phones) */
 .reverse-mode .dir-real { padding: 0; border: none; background: none; }
-.reverse-mode .dir-real select { min-height: 42px; padding: 6px 12px; border-radius: 999px; font-size: 0.95rem; }
+.reverse-mode .dir-real select { display: block; width: 100%; min-height: 42px; padding: 6px 12px; border-radius: 999px; font-size: 0.95rem; }
 
 .swap-btn {
   flex: none;
@@ -1114,11 +1106,6 @@ html[lang="sr"] header h1 {
   text-align: center;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-}
-
-.hylian-input {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
   cursor: text;
   user-select: text;
   caret-color: transparent;
@@ -1142,7 +1129,7 @@ html[lang="sr"] header h1 {
   text-overflow: ellipsis;
   font-family: 'RocknRollOne', sans-serif;
   font-size: 1rem;
-  color: #777;
+  color: #6b6b6b;
   direction: ltr;
 }
 
@@ -1271,7 +1258,7 @@ html[lang="sr"] header h1 {
 .reverse-output:empty::before {
   content: attr(data-placeholder);
   font-size: 1rem;
-  color: #777;
+  color: #6b6b6b;
 }
 
 .reverse-output:lang(ko) { font-family: 'NotoSansKR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; }
@@ -1408,7 +1395,7 @@ html[lang="sr"] header h1 {
 
 
 /* Share actions and temporary shared-configuration notice */
-#shareLinkBtn, #shareImageBtn { margin: 0.35rem 0.35rem 0.35rem 0; }
+#shareLinkBtn { margin: 0.35rem 0.35rem 0.35rem 0; }
 .shared-config-notice { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.8rem 1rem; background: #edf3f8; color: #18334d; border-bottom: 1px solid #cbd8e4; text-align: center; }
 .shared-config-notice button { border: 1px solid currentColor; border-radius: 6px; padding: 0.4rem 0.75rem; background: transparent; color: inherit; cursor: pointer; font: inherit; }
 .shared-config-notice button:hover { background: rgba(24, 51, 77, 0.08); }
@@ -1417,3 +1404,7 @@ html[lang="sr"] header h1 {
 /* Buttons with a leading icon (Export, Share) */
 .btn-with-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; }
 .btn-icon { width: 1.15em; height: 1.15em; flex: none; }
+
+/* Hylian glyphs stay hidden (instead of showing as plain mapping characters) until their game font has loaded */
+.fonts-pending .hk-glyph { visibility: hidden; }
+.hylian-input.fonts-pending { color: transparent; }
