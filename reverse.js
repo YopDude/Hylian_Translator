@@ -14,14 +14,15 @@
   const card = $('translatorCard'), bar = $('directionBar'), swapBtn = $('swapBtn');
   const versionSel = $('hylianVersion'), outLang = $('outputLanguage');
   const input = $('hylianInput'), kb = $('hylianKeyboard'), out = $('reverseOutput'), copyBtn = $('copyBtn');
-  const shiftBtn = $('kbShift'), spaceBtn = $('kbSpace'), backBtn = $('kbBackspace'), clearBtn = $('kbClear'), mirrorBtn = $('kbMirror');
+  const spaceBtn = $('kbSpace'), backBtn = $('kbBackspace'), clearBtn = $('kbClear'), mirrorBtn = $('kbMirror');
   if (!card || !swapBtn || !input || !kb || !window.HylianReverse) return;
   const TEXT = window.PAGE_TEXT || {};
 
   // ---- keyboard definitions --------------------------------------------------------------------------------------
-  // Scripts that are just the English alphabet drawn in a Hylian font. `cased`: upper and lower case look different.
+  // Scripts that are just the English alphabet drawn in a Hylian font. `cased` (currently unused by every script) would
+  // mean upper and lower case are different glyphs.
   const LATIN = {
-    twilightPrincess: { cased: true,  digits: '',           punct: '.,!:;' },
+    twilightPrincess: { cased: false, digits: '',           punct: '.,!:;' }, // no Shift: capitals only changed the font weight
     skywardSword:     { cased: false, digits: '',           punct: '' },
     botw:             { cased: false, digits: '',           punct: '' }, // upper/lower case look (almost) the same
     gerudo:           { cased: false, digits: '15',        punct: ".,!?':;" },
@@ -47,7 +48,6 @@
 
   // ---- state ------------------------------------------------------------------------------------------------------
   let reverse = false;
-  let shiftOn = false;
   let mirrorEnabled = false; // retained while switching scripts, but only applied to Twilight Princess
 
   // Use a small, predictable caret instead of the oversized native caret produced by some Hylian fonts.
@@ -87,6 +87,16 @@
   input.addEventListener('blur', () => { customCaret.hidden = true; });
   window.addEventListener('resize', updateCustomCaret);
   window.addEventListener('scroll', updateCustomCaret, true);
+  // The mirror transform AND the text direction come from one place, so the caret can only sit on the left when
+  // "Mirror text" is really on (a stale class or direction would otherwise flip it).
+  function applyMirror() {
+    const on = current.version === 'twilightPrincess' && mirrorEnabled;
+    input.classList.toggle('mirror-text', on);
+    input.style.direction = on ? 'rtl' : 'ltr';
+    input.style.textAlign = 'left';
+    return on;
+  }
+
   let tokens = [];            // [{ rom }]  what the user has typed, as romanisation
   let pendingRomaji = '';
   let compositionRange = null;
@@ -160,7 +170,7 @@
       b.type = 'button'; b.className = 'hk'; b.dataset.rom = k.rom; b.title = k.title; b.setAttribute('aria-label', k.title);
       const g = document.createElement('span');
       g.className = 'hk-glyph hylian-font'; g.style.fontFamily = font;
-      g.textContent = current.cased && shiftOn && /[a-z]/.test(k.glyph) ? k.glyph.toUpperCase() : k.glyph;
+      g.textContent = k.glyph;
       const l = document.createElement('span');
       l.className = 'hk-label'; l.textContent = labelText(k);
       b.append(g, l);
@@ -181,8 +191,6 @@
         kb.appendChild(row);
       });
     }
-    shiftBtn.hidden = !current.cased;
-    if (!current.cased) { shiftOn = false; shiftBtn.setAttribute('aria-pressed', 'false'); }
   }
 
   function romanization(forJapaneseOrLatin) {
@@ -200,6 +208,7 @@
     // Hylian side
     input.style.fontFamily = fontFor(current.version);
     input.textContent = tokens.map(glyphOf).join('');
+    applyMirror();
     // real-world side
     const lang = outLang.value;
     const keepApostrophe = lang === 'ja' || HylianReverse.LATIN.includes(lang);
@@ -254,12 +263,9 @@
       return;
     }
     pendingRomaji = '';
-    if (current.cased && !shiftOn) rom = rom.toLowerCase();
-    if (!current.cased) rom = rom.toLowerCase();
-    if (current.cased && shiftOn) rom = rom.toUpperCase();
+    rom = rom.toLowerCase();
     const [start, end] = caretTokenRange();
     tokens.splice(start, end - start, { rom });
-    if (current.cased && shiftOn) { shiftOn = false; shiftBtn.setAttribute('aria-pressed', 'false'); renderKeyboard(); }
     renderAt(start + 1);
   }
 
@@ -363,7 +369,7 @@
   }
 
   // pressing a key with the mouse must not move focus away from the Hylian input and back again
-  [kb, shiftBtn.parentElement].forEach((el) => el.addEventListener('mousedown', (e) => e.preventDefault()));
+  [kb, spaceBtn.parentElement].forEach((el) => el.addEventListener('mousedown', (e) => e.preventDefault()));
 
   kb.addEventListener('click', (e) => {
     const b = e.target.closest('.hk');
@@ -372,11 +378,6 @@
   spaceBtn.addEventListener('click', () => { const [a, b] = caretTokenRange(); tokens.splice(a, b-a, { rom: ' ' }); pendingRomaji = ''; renderAt(a + 1); });
   backBtn.addEventListener('click', back);
   clearBtn.addEventListener('click', clear);
-  shiftBtn.addEventListener('click', () => {
-    shiftOn = !shiftOn;
-    shiftBtn.setAttribute('aria-pressed', String(shiftOn));
-    renderKeyboard();
-  });
 
   // Native editing is handled before the browser mutates the editable surface, keeping the token model
   // (and therefore transliteration) in sync while retaining normal cursor/selection editing.
@@ -424,8 +425,8 @@
     mirrorBtn.addEventListener('click', () => {
       if (versionSel.value !== 'twilightPrincess') return;
       mirrorEnabled = !mirrorEnabled;
-      input.classList.toggle('mirror-text', mirrorEnabled);
-      mirrorBtn.setAttribute('aria-pressed', String(mirrorEnabled));
+      mirrorBtn.setAttribute('aria-pressed', String(applyMirror()));
+      updateCustomCaret();
       notify();
     });
   }
@@ -467,14 +468,14 @@
     const converted = tokenizeRomaji(message, false, tokensKana !== current.kana);
     tokens = converted.result.map((rom) => ({ rom }));
     pendingRomaji = '';
-    if (!current.kana && !current.cased) tokens = tokens.map((t) => ({ rom: t.rom.toLowerCase() })); // e.g. state saved while Shift existed
+    if (!current.kana) tokens = tokens.map((t) => ({ rom: t.rom.toLowerCase() })); // e.g. state saved while Twilight Princess still had a Shift key
     tokensKana = current.kana;
     renderKeyboard();
     const isTwilight = current.version === 'twilightPrincess';
-    input.classList.toggle('mirror-text', isTwilight && mirrorEnabled);
+    const mirrored = applyMirror();
     if (mirrorBtn) {
       mirrorBtn.hidden = !isTwilight;
-      mirrorBtn.setAttribute('aria-pressed', String(isTwilight && mirrorEnabled));
+      mirrorBtn.setAttribute('aria-pressed', String(mirrored));
     }
     render();
   }

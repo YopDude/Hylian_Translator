@@ -9,20 +9,17 @@ const DICTIONARY_FILES = [
     'tid_pos.dat.gz', 'unk.dat.gz', 'unk_char.dat.gz', 'unk_compat.dat.gz',
     'unk_invoke.dat.gz', 'unk_map.dat.gz', 'unk_pos.dat.gz'
 ];
-// Prime the browser's own persistent HTTP cache. Kuromoji loads these same
-// same-origin URLs via XHR, which then reuses the cached responses. No service
-// worker or user setup is required.
-async function areDictionaryFilesCached() {
-    try {
-        const results = await Promise.all(DICTIONARY_FILES.map(async (file) => {
-            const url = new URL(KUROMOJI_DICT_BASE + file, location.href);
-            const response = await fetch(url.href, { cache: 'only-if-cached', mode: 'same-origin' });
-            return response.ok;
-        }));
-        return results.every(Boolean);
-    } catch (_) {
-        return false;
-    }
+// Prime the browser's own persistent HTTP cache. Kuromoji loads these same same-origin URLs via XHR, which then
+// reuses the cached responses. No service worker or user setup is required.
+// Whether the dictionary was already downloaded is remembered with a flag, instead of probing the cache with
+// `cache: 'only-if-cached'` fetches: every probe that misses (always the case in a private window, which starts
+// with an empty cache) is logged by Chrome as net::ERR_CACHE_MISS even though the error is caught.
+const DICTIONARY_FLAG_KEY = 'hylian-kuromoji-dictionary-v1';
+function areDictionaryFilesCached() {
+    try { return localStorage.getItem(DICTIONARY_FLAG_KEY) === '1'; } catch (_) { return false; }
+}
+function rememberDictionaryCached() {
+    try { localStorage.setItem(DICTIONARY_FLAG_KEY, '1'); } catch (_) { /* storage unavailable (private mode) */ }
 }
 
 async function primeDictionaryHttpCache() {
@@ -31,6 +28,7 @@ async function primeDictionaryHttpCache() {
         const response = await fetch(url.href, { cache: 'force-cache' });
         if (!response.ok) throw new Error('Failed to load Japanese dictionary file: ' + file);
     }));
+    rememberDictionaryCached();
 }
 
 // Declare DOM elements and other frequently accessed variables at the top
@@ -411,7 +409,7 @@ async function ensureKuroshiroInstance(options = {}) {
     kuroshiroInitPromise = (async function () {
       // Check the browser HTTP cache before deciding whether the first-download
       // indicator is needed. The fetches below prime that same cache for Kuromoji.
-      const dictionaryCached = await areDictionaryFilesCached();
+      const dictionaryCached = areDictionaryFilesCached();
       const showLoading = options.showLoading !== false && !dictionaryCached;
       const spinnerOverlay = showLoading ? document.querySelector('.loadingIndicator') : null;
 
@@ -486,7 +484,15 @@ async function translateText() {
     const containsKanji = /[\u4E00-\u9FFF]/.test(originalInput + workingText);
     if (!chineseUi && containsKanji) {
         const kuro = await ensureKuroshiroInstance();
-        romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+        if (isKanaScript(version)) {
+            // Kana-based scripts need one glyph per kana, so read the text as hiragana and romanize that with
+            // wanakana, exactly like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes
+            // long vowels with macrons (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the
+            // particles \u3078 / \u306f / \u3092 into "e" / "wa" / "o".
+            romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }));
+        } else {
+            romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+        }
     } else {
         // Otherwise, use standard wanakana/romaji conversion
         romajiOutput = convertToRomaji(workingText);
@@ -555,6 +561,10 @@ function getGlyphIndexMap(version) {
   }
 }
 
+function isKanaScript(version) {
+  return version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
+}
+
 // Function to convert input to Romaji using wanakana
 function convertToRomaji(input) {
   return wanakana.toRomaji(input);
@@ -580,6 +590,9 @@ const HYLIAN_YOON_MAP = {
 function convertToHylian(input, glyphIndexMap) {
   let hylianText = "";
   let modifiedText = input.toLowerCase();
+
+  // Macron vowels (long vowels in Hepburn romaji) would be skipped as unknown characters: spell them out as kana do.
+  modifiedText = modifiedText.replace(/[\u0101\u012b\u016b\u0113\u014d]/g, (c) => ({ '\u0101': 'aa', '\u012b': 'ii', '\u016b': 'uu', '\u0113': 'ei', '\u014d': 'ou' }[c]));
 
 
 
