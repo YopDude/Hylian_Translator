@@ -515,6 +515,8 @@ async function translateTextCore() {
     // Chinese UI pages normalize Hanzi to Pinyin before this point. Do not initialize the
     // Japanese dictionary there; on other pages, Kanji/Kana use Kuroshiro readings.
     const chineseUi = (document.documentElement.lang || '').toLowerCase().startsWith('zh');
+    // Wind Waker draws a glyph for the long vowel mark; every other script writes it as a vowel
+    const keepLongMark = version === 'windwaker';
     // Only Han characters trigger the Japanese dictionary on non-Japanese,
     // non-Chinese pages. Kana alone can be handled by the lightweight romaji path.
     const containsKanji = /[\u4E00-\u9FFF]/.test(originalInput + workingText);
@@ -526,18 +528,21 @@ async function translateTextCore() {
                 // wanakana, exactly like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes
                 // long vowels with macrons (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the
                 // particles \u3078 / \u306f / \u3092 into "e" / "wa" / "o".
-                romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }));
+                romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }), keepLongMark);
             } else {
-                romajiOutput = await kuro.convert(workingText, { to: "romaji" });
+                // Kuroshiro reads the particles は / へ / を as "wa" / "e" / "o". Spell them "ha" / "he" / "wo" first, exactly
+                // as kana-only text is written, so the same sentence reads the same with or without kanji in it.
+                const spelled = workingText.replace(/\u306F/g, 'ha').replace(/\u3078/g, 'he').replace(/\u3092/g, 'wo');
+                romajiOutput = await kuro.convert(spelled, { to: "romaji" });
             }
         } catch (err) {
             // The Japanese dictionary could not be loaded: kana and Latin text still work, kanji are skipped.
             console.warn('Kanji readings unavailable; converting the kana only.', err);
-            romajiOutput = convertToRomaji(workingText);
+            romajiOutput = convertToRomaji(workingText, keepLongMark);
         }
     } else {
         // Otherwise, use standard wanakana/romaji conversion
-        romajiOutput = convertToRomaji(workingText);
+        romajiOutput = convertToRomaji(workingText, keepLongMark);
     }
 
     // 3. Now route to the specific Zelda game font logic
@@ -608,8 +613,12 @@ function isKanaScript(version) {
 }
 
 // Function to convert input to Romaji using wanakana
-function convertToRomaji(input) {
-  return (typeof wanakana !== 'undefined') ? wanakana.toRomaji(input) : input;
+// keepLongVowelMark: leave the katakana prolonged sound mark (ー) in the text instead of turning it into a repeated
+// vowel (teriー rather than terii). Only Wind Waker has a glyph for it; Ocarina of Time and the roman scripts never keep it.
+function convertToRomaji(input, keepLongVowelMark = false) {
+  if (typeof wanakana === 'undefined') return input;
+  if (!keepLongVowelMark) return wanakana.toRomaji(input);
+  return input.split('\u30FC').map((part) => wanakana.toRomaji(part)).join('\u30FC');
 }
 
 const HYLIAN_YOON_MAP = {
