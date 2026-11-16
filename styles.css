@@ -477,6 +477,16 @@ header a:hover, footer a:hover {
 .linebeck {
     width: 64px;
     height: auto;
+    display: block;
+}
+
+/* spacer image, Ko-fi button and Linebeck on one row, all vertically centred on the same line */
+.support-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 /* Ko-fi button: real, translatable text (the old kofi.png had English baked into the image) */
@@ -490,8 +500,10 @@ header a:hover, footer a:hover {
   border-radius: 999px;
   background: #28a745;
   color: #fff;
-  font-family: 'ReggaeOne', sans-serif;
-  font-size: 1.05rem;
+  /* a plain system font: the display font used elsewhere is very wide for a button label */
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
   line-height: 1.1;
   text-decoration: none;
   white-space: nowrap;
