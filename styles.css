@@ -11,8 +11,9 @@ body {
   margin: 0;
   text-align: center;
   background-image: linear-gradient(rgba(2, 38, 32, 0.90), rgba(10, 126, 163, 0.75)), url('images/pattern-triforce.png');
-  overflow-x: hidden; /* Disable horizontal scroll */
-  overflow-y: auto; /* Allow vertical scroll */
+  /* html already stops horizontal scrolling. A body with overflow: hidden/auto would become a scroll container of its
+     own and break position: sticky inside it, so it only clips (clip does not create a scroll container). */
+  overflow-x: clip;
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* keeps the footer at the bottom on tall screens */
@@ -1408,3 +1409,51 @@ html[lang="sr"] header h1 {
 /* Hylian glyphs stay hidden (instead of showing as plain mapping characters) until their game font has loaded */
 .fonts-pending .hk-glyph { visibility: hidden; }
 .hylian-input.fonts-pending { color: transparent; }
+
+/* ===== Short intro text under the translator ===== */
+.intro-text {
+  max-width: 760px;
+  margin: 18px auto 30px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.intro-text p {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  color: #eef6f6;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ===== Phones ===== */
+@media (max-width: 768px) {
+  /* a shorter text box (about 3 lines instead of 5) leaves room for the output above the keyboard */
+  #inputText { height: 4.8em; min-height: 0; scroll-margin-top: 10px; }
+
+  /* Hylian -> real world: the Hylian text stays on screen while the keys below it are scrolled through */
+  .reverse-mode .hylian-input { position: sticky; top: 6px; z-index: 20; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18); }
+}
+
+@media (max-width: 480px) {
+  .kb-grid { gap: 5px; }
+  .hk { min-height: 44px; }
+  .hk-glyph { font-size: 1.55rem; }
+}
+
+/* the output panel lifted above the on-screen keyboard while typing (see pinOutputAboveKeyboard in script.js) */
+.output-panel.is-pinned {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--kb-offset, 0px) + 8px);
+  z-index: 60;
+  margin: 0;
+  overflow-y: auto;
+  background-color: #f7f0de;
+  border: 1px solid #c5a200;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+}
+.output-panel.is-pinned.output-dark { background-color: #1e2b2f; }

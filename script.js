@@ -839,3 +839,49 @@ if (document.documentElement.lang === 'ja' && inputTextElement && translatedText
   if ('requestIdleCallback' in window) window.requestIdleCallback(warmKanjiLibrary, { timeout: 2500 });
   else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
 }
+
+// ---- Phones: keep the translation visible above the on-screen keyboard ----------------------------------------------
+// While the text box is being typed in and the system keyboard is open, the output panel is pinned just above the
+// keyboard (position: fixed, lifted by the part of the screen the keyboard covers, which visualViewport reports).
+// Otherwise the translation sits below the fold, behind the keyboard, and cannot be seen while typing.
+(function pinOutputAboveKeyboard() {
+    if (!window.visualViewport || !inputTextElement || !outputPanel) return;
+    const holder = outputPanel.parentElement; // keeps its height while the panel is lifted out, so nothing jumps
+    let baseline = Math.max(window.innerHeight, window.visualViewport.height);
+    let pinned = false;
+
+    function keyboardIsOpen() {
+        const vv = window.visualViewport;
+        return document.activeElement === inputTextElement
+            && inputTextElement.value.length > 0
+            && vv.scale <= 1.01                  // pinch-zooming also shrinks the visual viewport: not a keyboard
+            && baseline - vv.height > 120;
+    }
+
+    function update() {
+        const vv = window.visualViewport;
+        if (document.activeElement !== inputTextElement) baseline = Math.max(window.innerHeight, vv.height);
+        if (keyboardIsOpen()) {
+            if (!pinned) {
+                holder.style.minHeight = outputPanel.offsetHeight + 'px';
+                outputPanel.classList.add('is-pinned');
+                pinned = true;
+                inputTextElement.scrollIntoView({ block: 'start' }); // the box must not end up under the pinned panel
+            }
+            outputPanel.style.setProperty('--kb-offset', Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px');
+            outputPanel.style.maxHeight = Math.round(vv.height * 0.4) + 'px';
+        } else if (pinned) {
+            pinned = false;
+            outputPanel.classList.remove('is-pinned');
+            outputPanel.style.removeProperty('--kb-offset');
+            outputPanel.style.maxHeight = '';
+            holder.style.minHeight = '';
+        }
+    }
+
+    window.visualViewport.addEventListener('resize', update);
+    window.visualViewport.addEventListener('scroll', update);
+    window.addEventListener('orientationchange', () => { baseline = 0; setTimeout(update, 300); });
+    ['focus', 'blur', 'input'].forEach((type) => inputTextElement.addEventListener(type, () => setTimeout(update, 0)));
+    window.__updatePinnedOutput = update; // used by the automated layout checks
+})();

@@ -56,6 +56,9 @@ The eye button shows one chart per script, plus a `-mobile` version for narrow s
 ## Version icons
 `images/icons/<version>.<ext>` (`ocarinaOfTime3d`, `ocarinaOfTime64`, `windwaker`, `twilightPrincess`, `skywardSword`, `botw`, `gerudo`, `sheikah`, `mudoran`). Square 96 px WebP images (they are shown at ~28 px). To use another format set `ICON_EXT` in `build.js` and rebuild.
 
+## Phones
+While the text box is focused and the system keyboard is open, the output panel is pinned just above the keyboard (`pinOutputAboveKeyboard` at the end of `script.js`, using `visualViewport`). In Hylian → real world mode the Hylian input is sticky at the top of the screen while the keys are scrolled. `body` must not get `overflow: hidden/auto`, because that stops `position: sticky` from working. The short intro paragraph under the translator is `introText` in `i18n/extras.js` (one per language).
+
 ## Images
 Keep images small: charts are WebP (≈30–250 KB each, max 1800 px wide, 1200 px for the mobile versions), icons 96 px WebP. Only the social-preview images (`Hylian_Translator_*.png`) stay PNG, because social sites don't reliably read WebP. The chart is only downloaded when someone hovers/taps the eye button.
 

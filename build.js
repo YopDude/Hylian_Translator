@@ -102,7 +102,7 @@ function strings(lang) {
     out[k] = own[k] ?? ex[k] ?? en[k];
     if (own[k] === undefined && ex[k] === undefined && lang.key !== 'en') console.warn(`  [${lang.code}] missing "${k}", using English`);
   }
-  for (const k of ['langLabel', 'bannerClose', 'bannerText', 'metaIndex', 'metaAbout']) out[k] = ex[k] ?? exEn[k];
+  for (const k of ['langLabel', 'bannerClose', 'bannerText', 'metaIndex', 'metaAbout', 'introText']) out[k] = ex[k] ?? exEn[k];
   for (const k of Object.keys(en.tooltips)) out['tip_' + k] = (own.tooltips && own.tooltips[k]) || en.tooltips[k];
   const ui = UI[lang.key] || {};
   for (const k of Object.keys(UI.en)) out[k] = ui[k] ?? UI.en[k];
