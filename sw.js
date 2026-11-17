@@ -9,7 +9,7 @@
  *    evicted when the browser tidies up, so kanji conversion stays fast and also works offline.
  * The cache name contains the build hash; a new build installs a new cache and deletes the old one.
  */
-const CACHE = 'hylian-351166db';
+const CACHE = 'hylian-45bf22f3';
 const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
 const PAGES = ["./","ja/","zh/","ko/","es/","pt/","fr/","de/","it/","fi/","nl/","ru/","uk/","sr/","about.html","ja/about.html","zh/about.html","ko/about.html","es/about.html","pt/about.html","fr/about.html","de/about.html","it/about.html","fi/about.html","nl/about.html","ru/about.html","uk/about.html","sr/about.html"];     // every page, saved when the worker installs
 const ASSETS = [
@@ -35,10 +35,10 @@ const ASSETS = [
  "fonts/RocknRollOne-Latin.subset.woff2?v=4",
  "fonts/SSAncientHylian.woff2?v=4",
  "fonts/TPHylian-GCNRegular.woff2?v=4",
- "images/apple-touch-icon.png?v=351166db",
- "images/favicon.ico?v=351166db",
+ "images/apple-touch-icon.png?v=45bf22f3",
+ "images/favicon.ico?v=45bf22f3",
  "images/hyrule_rule.png",
- "images/icon-192.png?v=351166db",
+ "images/icon-192.png?v=45bf22f3",
  "images/icons/botw.webp",
  "images/icons/gerudo.webp",
  "images/icons/mudoran.webp",
@@ -50,19 +50,19 @@ const ASSETS = [
  "images/icons/windwaker.webp",
  "images/pattern-triforce.png",
  "images/phantom-hourglass.gif",
- "jsMapping/3dHylianMap.js?v=351166db",
- "jsMapping/64HylianMap.js?v=351166db",
- "jsMapping/WWHylianMap.js?v=351166db",
- "jsMapping/fontFileMap.js?v=351166db",
- "jsMapping/reverseTransliteration.js?v=351166db",
- "jsMapping/transliterationMap.js?v=351166db",
- "reverse.js?v=351166db",
- "script.js?v=351166db",
- "share.js?v=351166db",
- "state.js?v=351166db",
- "styles.css?v=351166db",
- "ui-select.js?v=351166db",
- "vendor/wanakana.min.js?v=351166db"
+ "jsMapping/3dHylianMap.js?v=45bf22f3",
+ "jsMapping/64HylianMap.js?v=45bf22f3",
+ "jsMapping/WWHylianMap.js?v=45bf22f3",
+ "jsMapping/fontFileMap.js?v=45bf22f3",
+ "jsMapping/reverseTransliteration.js?v=45bf22f3",
+ "jsMapping/transliterationMap.js?v=45bf22f3",
+ "reverse.js?v=45bf22f3",
+ "script.js?v=45bf22f3",
+ "share.js?v=45bf22f3",
+ "state.js?v=45bf22f3",
+ "styles.css?v=45bf22f3",
+ "ui-select.js?v=45bf22f3",
+ "vendor/wanakana.min.js?v=45bf22f3"
 ];   // css, scripts, fonts, icons: what the translator needs to run offline
 
 const scope = new URL(self.registration.scope);

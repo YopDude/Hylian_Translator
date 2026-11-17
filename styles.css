@@ -770,6 +770,22 @@ p.symbol{
   font-display: swap;
 }
 
+/* The text box is where people type their own text, so it must not depend on the subset Japanese fonts above (they only hold the
+   characters used on the ja pages, so most kanji fell through to a system font and one sentence showed two typefaces).
+   'RocknRollOneInput' is the Latin part only: it keeps the site look for letters and numbers; every Japanese character (kana,
+   kanji, punctuation) comes from one normal system font. Not defined for zh/ko pages, which use their own complete fonts. */
+@font-face {
+  font-family: 'RocknRollOneInput';
+  src: url('fonts/RocknRollOne-Latin.subset.woff2?v=4') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2122, U+2190-21FF, U+2212, U+25A0-25FF;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+#inputText {
+  font-family: 'RocknRollOneInput', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', 'Noto Sans CJK JP', system-ui, sans-serif;
+}
+
 @font-face {
   font-family: 'ReggaeOne';
   src: url('fonts/ReggaeOne-Latin.subset.woff2?v=4') format('woff2');
