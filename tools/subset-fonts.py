@@ -14,6 +14,16 @@ Output (in fonts/):
   NotoSansKR-{Regular,Bold}.subset.woff2   UI text, ko   (Regular = KS X 1001 hangul + page text, Bold = page text)
   NotoSerif{JP,SC,KR}-Title.subset.woff2   <h1> title of the ja / zh / ko pages
   Forum-Title.subset.woff2                 <h1> title of the ru / uk / sr pages (Latin + Cyrillic)
+  {RocknRollOne,ReggaeOne}-Latin.subset.woff2   Latin letters, digits, punctuation (every page except zh / ko)  ~40 KB each
+  {RocknRollOne,ReggaeOne}-JP.subset.woff2      kana + the kanji used on the ja pages (only the ja page loads it)  ~90 KB each
+  {RocknRollOne,ReggaeOne}-JPLabels.subset.woff2  just 日本語中文ひらがな, language names shown on every page (~2 KB each), so that
+                                                the big JP file above is not downloaded for them. If a language is added whose
+                                                name uses other CJK characters, add them to LABELS and to the unicode-range
+                                                lines in styles.css (build.js warns when a non-ja page needs more).
+
+Run only some of them by passing part of an output name:   python3 tools/subset-fonts.py RocknRollOne ReggaeOne
+The ja subset is built from the characters of the generated ja pages: after adding a kanji to the Japanese text, run
+node build.js and this script again (a kanji that is missing just falls back to the system font).
 """
 import re, sys, urllib.request
 from pathlib import Path
@@ -32,7 +42,14 @@ SRC = {
     "NotoSerifSC-Bold.otf":   "notofonts/noto-cjk/main/Serif/SubsetOTF/SC/NotoSerifSC-Bold.otf",
     "NotoSerifKR-Bold.otf":   "notofonts/noto-cjk/main/Serif/SubsetOTF/KR/NotoSerifKR-Bold.otf",
     "Forum-Regular.ttf":      "google/fonts/main/ofl/forum/Forum-Regular.ttf",
+    "RocknRollOne-Regular.ttf": "google/fonts/main/ofl/rocknrollone/RocknRollOne-Regular.ttf",
+    "ReggaeOne-Regular.ttf":    "google/fonts/main/ofl/reggaeone/ReggaeOne-Regular.ttf",
 }
+# Latin face of the two Japanese UI fonts. The page loads it only when text falls in these ranges (unicode-range in
+# styles.css), so the ~1 MB Japanese glyph set is no longer downloaded for English text.
+LATIN = "U+0020-007E,U+00A0-024F,U+02C6,U+02DA,U+02DC,U+2010-2027,U+2030-203A,U+20AC,U+2122,U+2190-21FF,U+2212,U+25A0-25FF"
+JP = "U+3000-303F,U+3040-30FF,U+FF01-FF5E"   # CJK punctuation, hiragana, katakana, full-width ASCII
+LABELS = "日本語中文ひらがな"                      # language names in every page (footer, output-language option)
 TITLE_BASIC = "U+0020-007E"
 BASIC = "U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-203A,U+2190-21FF,U+25A0-25FF,U+3000-303F,U+FF00-FFEF"
 
@@ -71,7 +88,10 @@ def ksx1001_hangul():
             except UnicodeDecodeError: pass
     return s
 
+ONLY = [a.lower() for a in sys.argv[1:]]
+
 def make(source, out_name, text="", unicodes=BASIC, features=("*",)):
+    if ONLY and not any(a in out_name.lower() for a in ONLY): return
     opts = subset.Options(); opts.flavor = "woff2"; opts.layout_features = list(features); opts.hinting = False
     font = subset.load_font(str(src(source)), opts)
     s = subset.Subsetter(opts)
@@ -90,3 +110,7 @@ if __name__ == "__main__":
     make("NotoSerifSC-Bold.otf", "NotoSerifSC-Title.subset.woff2", page_text("zh", True), TITLE_BASIC, ("kern",))
     make("NotoSerifKR-Bold.otf", "NotoSerifKR-Title.subset.woff2", page_text("ko", True), TITLE_BASIC, ("kern",))
     make("Forum-Regular.ttf", "Forum-Title.subset.woff2", "", "U+0020-007E,U+00A0-00FF,U+0400-04FF,U+2010-2027", ("kern",))
+    for family in ("RocknRollOne", "ReggaeOne"):
+        make(f"{family}-Regular.ttf", f"{family}-Latin.subset.woff2", "", LATIN)
+        make(f"{family}-Regular.ttf", f"{family}-JP.subset.woff2", ui("ja"), JP)
+        make(f"{family}-Regular.ttf", f"{family}-JPLabels.subset.woff2", LABELS, "")

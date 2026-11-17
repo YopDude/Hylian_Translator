@@ -38,7 +38,7 @@ const VER = (() => {
   });
   return hash.digest('hex').slice(0, 8);
 })();
-const FONT_VER = '3'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
+const FONT_VER = '4'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
 const ICON_EXT = 'webp'; // images/icons/<version>.<ext> (96x96 WebP; drop real game logos in with the same names)
 
 // Temporary banner. It hides itself after `end` (UTC), so forgetting it is safe.
@@ -210,6 +210,51 @@ for (const lang of LANGS) {
   }
 }
 
+// ---------- web app manifest (one per language, so an app installed from /ja/ opens the Japanese page) ----------
+for (const lang of LANGS) {
+  const up = lang.code === 'en' ? '' : '../';
+  const manifest = {
+    name: 'Zelda Hylian Translator',
+    short_name: 'Hylian Translator',
+    description: 'Translate text to Hylian and Hylian back to English, Japanese and more.',
+    lang: lang.html,
+    id: '/',
+    start_url: './',
+    scope: up || './',
+    display: 'standalone',
+    theme_color: '#0d2238',
+    background_color: '#0d2238',
+    icons: [
+      { src: up + 'images/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: up + 'images/icon-512.png', sizes: '512x512', type: 'image/png' }
+    ]
+  };
+  fs.writeFileSync(path.join(ROOT, lang.code === 'en' ? '' : lang.code, 'site.webmanifest'), JSON.stringify(manifest, null, 2) + '\n');
+}
+
+// ---------- service worker (offline support, see templates/sw.template.js) ----------
+{
+  const html = fs.readFileSync(filePath(LANGS[0], 'index'), 'utf8');
+  const isLocal = (u) => u && !/^(?:[a-z]+:|\/\/|#)/i.test(u);
+  const assets = new Set();
+  for (const m of html.matchAll(/<(?:script|link)\b[^>]*?\b(?:src|href)="([^"]+)"[^>]*>/g)) {
+    if (/rel="(?:alternate|canonical|manifest)"/.test(m[0]) || !isLocal(m[1])) continue;
+    if (/\.(?:js|css|woff2?|png|webp|svg|ico)(?:\?|$)/.test(m[1])) assets.add(m[1]);
+  }
+  for (const m of html.matchAll(/data-icon="([^"]+)"/g)) assets.add(m[1]);
+  for (const m of read('styles.css').matchAll(/url\('([^']+)'\)/g)) if (isLocal(m[1]) && !/\.ttf(?:\?|$)/.test(m[1])) assets.add(m[1]);
+  // Every browser that can run a service worker reads woff2, so the .woff fallbacks are not saved. The Chinese and Korean
+  // UI fonts (about 1 MB) are not saved up front either: they are cached the first time one of those pages is opened.
+  for (const a of [...assets]) if (/\.woff(?:\?|$)/.test(a) || /NotoSans(?:SC|KR)/.test(a)) assets.delete(a);
+  const pages = [];
+  for (const page of PAGES) for (const lang of LANGS) pages.push(urlPath(lang, page).replace(/^\//, '') || './');
+  const sw = fs.readFileSync(path.join(ROOT, 'templates', 'sw.template.js'), 'utf8')
+    .replace('__VERSION__', VER).replace('__PAGES__', JSON.stringify(pages)).replace('__ASSETS__', JSON.stringify([...assets].sort(), null, 1));
+  fs.writeFileSync(path.join(ROOT, 'sw.js'), sw);
+  const bytes = [...assets].reduce((n, a) => { try { return n + fs.statSync(path.join(ROOT, a.split('?')[0])).size; } catch (_) { return n; } }, 0);
+  console.log(`Service worker: ${pages.length} pages + ${assets.size} files (${Math.round(bytes / 1024)} KB) saved for offline use.`);
+}
+
 // sitemap with hreflang alternates
 fs.mkdirSync(path.dirname(LASTMOD_FILE), { recursive: true });
 fs.writeFileSync(LASTMOD_FILE, JSON.stringify(nextLastmod, null, 1) + '\n');
@@ -229,6 +274,14 @@ console.log(`Built ${count} pages + sitemap.xml (${LANGS.length} languages).`);
 
 // ---------- warn about referenced files that are missing from the project ----------
 {
+  // Japanese kana/kanji are in a separate ~90 KB font file that only the ja pages should download (see tools/subset-fonts.py).
+  // The footer language names (日本語 中文) have their own tiny file; warn if another page needs more CJK characters than that.
+  const LABEL_CHARS = '日本語中文ひらがな';
+  for (const lang of LANGS.filter((l) => !['ja', 'zh', 'ko'].includes(l.code))) for (const page of PAGES) {
+    const extra = [...new Set([...fs.readFileSync(filePath(lang, page), 'utf8').replace(/<[^>]+>/g, '')].filter((c) => /[\u3000-\u30FF\u3400-\u9FFF\uFF00-\uFFEF]/.test(c) && !LABEL_CHARS.includes(c)))];
+    if (extra.length) console.warn(`⚠ ${urlPath(lang, page)} contains Japanese/CJK characters (${extra.join('')}) that make it download the large Japanese font file`);
+  }
+
   const missing = new Set();
   const need = (rel) => { const f = rel.split('?')[0]; if (f && !fs.existsSync(path.join(ROOT, f))) missing.add(f); };
   for (const m of read('styles.css').matchAll(/url\('([^']+)'\)/g)) if (!/^(data:|https?:)/.test(m[1])) need(m[1]);       // fonts, background images

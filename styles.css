@@ -615,9 +615,9 @@ p.symbol{
 /* Font Faces */
 @font-face {
   font-family: 'Albw Botw Hylian';
-  src: url('fonts/AlbwBotwHylian-Regular.woff2?v=3') format('woff2'),
-       url('fonts/AlbwBotwHylian-Regular.woff?v=3') format('woff'),
-       url('fonts/AlbwBotwHylian-Regular.ttf?v=3') format('truetype');
+  src: url('fonts/AlbwBotwHylian-Regular.woff2?v=4') format('woff2'),
+       url('fonts/AlbwBotwHylian-Regular.woff?v=4') format('woff'),
+       url('fonts/AlbwBotwHylian-Regular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -629,9 +629,9 @@ p.symbol{
 
 @font-face {
   font-family: 'TP Hylian - GCN';
-  src: url('fonts/TPHylian-GCNRegular.woff2?v=3') format('woff2'),
-       url('fonts/TPHylian-GCNRegular.woff?v=3') format('woff'),
-       url('fonts/TPHylian-GCNRegular.ttf?v=3') format('truetype');
+  src: url('fonts/TPHylian-GCNRegular.woff2?v=4') format('woff2'),
+       url('fonts/TPHylian-GCNRegular.woff?v=4') format('woff'),
+       url('fonts/TPHylian-GCNRegular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -643,9 +643,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Hero Hylian';
-  src: url('fonts/HeroHylianRegular.woff2?v=3') format('woff2'),
-       url('fonts/HeroHylianRegular.woff?v=3') format('woff'),
-       url('fonts/HeroHylianRegular.ttf?v=3') format('truetype');
+  src: url('fonts/HeroHylianRegular.woff2?v=4') format('woff2'),
+       url('fonts/HeroHylianRegular.woff?v=4') format('woff'),
+       url('fonts/HeroHylianRegular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -657,9 +657,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Hylian64';
-  src: url('fonts/Hylian64Regular.woff2?v=3') format('woff2'),
-       url('fonts/Hylian64Regular.woff?v=3') format('woff'),
-       url('fonts/Hylian64Regular.ttf?v=3') format('truetype');
+  src: url('fonts/Hylian64Regular.woff2?v=4') format('woff2'),
+       url('fonts/Hylian64Regular.woff?v=4') format('woff'),
+       url('fonts/Hylian64Regular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -671,9 +671,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Ancient Hylian';
-  src: url('fonts/AncientHylian-English.woff2?v=3') format('woff2'),
-       url('fonts/AncientHylian-English.woff?v=3') format('woff'),
-       url('fonts/AncientHylian-English.ttf?v=3') format('truetype');
+  src: url('fonts/AncientHylian-English.woff2?v=4') format('woff2'),
+       url('fonts/AncientHylian-English.woff?v=4') format('woff'),
+       url('fonts/AncientHylian-English.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -685,9 +685,9 @@ p.symbol{
 
 @font-face {
   font-family: 'SS Ancient Hylian';
-  src: url('fonts/SSAncientHylian.woff2?v=3') format('woff2'),
-       url('fonts/SSAncientHylian.woff?v=3') format('woff'),
-       url('fonts/SSAncientHylian.ttf?v=3') format('truetype');
+  src: url('fonts/SSAncientHylian.woff2?v=4') format('woff2'),
+       url('fonts/SSAncientHylian.woff?v=4') format('woff'),
+       url('fonts/SSAncientHylian.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -699,9 +699,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Gerudo';
-  src: url('fonts/GerudoTypographyRegular.woff2?v=3') format('woff2'),
-       url('fonts/GerudoTypographyRegular.woff?v=3') format('woff'),
-       url('fonts/GerudoTypographyRegular.ttf?v=3') format('truetype');
+  src: url('fonts/GerudoTypographyRegular.woff2?v=4') format('woff2'),
+       url('fonts/GerudoTypographyRegular.woff?v=4') format('woff'),
+       url('fonts/GerudoTypographyRegular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -713,9 +713,9 @@ p.symbol{
 
 @font-face {
   font-family: 'BotW Sheikah';
-  src: url('fonts/BotWSheikahRegular.woff2?v=3') format('woff2'),
-       url('fonts/BotWSheikahRegular.woff?v=3') format('woff'),
-       url('fonts/BotWSheikahRegular.ttf?v=3') format('truetype');
+  src: url('fonts/BotWSheikahRegular.woff2?v=4') format('woff2'),
+       url('fonts/BotWSheikahRegular.woff?v=4') format('woff'),
+       url('fonts/BotWSheikahRegular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -727,9 +727,9 @@ p.symbol{
 
 @font-face {
   font-family: 'Mudoran';
-  src: url('fonts/MudoranRegular.woff2?v=3') format('woff2'),
-       url('fonts/MudoranRegular.woff?v=3') format('woff'),
-       url('fonts/MudoranRegular.ttf?v=3') format('truetype');
+  src: url('fonts/MudoranRegular.woff2?v=4') format('woff2'),
+       url('fonts/MudoranRegular.woff?v=4') format('woff'),
+       url('fonts/MudoranRegular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -740,11 +740,30 @@ p.symbol{
 }
 
 /*Styling fonts*/
+/* RocknRollOne / ReggaeOne are Japanese fonts of about 1 MB each. They are split by character range (unicode-range), so a page
+   only downloads the parts its text uses: the Latin part (~40 KB) for most pages, and the kana/kanji part (~85 KB, built from
+   the characters of the ja pages) only where Japanese text appears. See tools/subset-fonts.py. */
 @font-face {
   font-family: 'RocknRollOne';
-  src: url('fonts/RocknRollOne-Regular.woff2?v=3') format('woff2'),
-       url('fonts/RocknRollOne-Regular.woff?v=3') format('woff'),
-       url('fonts/RocknRollOne-Regular.ttf?v=3') format('truetype');
+  src: url('fonts/RocknRollOne-Latin.subset.woff2?v=4') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2122, U+2190-21FF, U+2212, U+25A0-25FF;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* the characters of the footer language names and the output-language option (日本語 中文 ひらがな): their own tiny file, so every page does not load the JP one */
+@font-face {
+  font-family: 'RocknRollOne';
+  src: url('fonts/RocknRollOne-JPLabels.subset.woff2?v=4') format('woff2');
+  unicode-range: U+304C, U+306A, U+3072, U+3089, U+4E2D, U+6587, U+65E5, U+672C, U+8A9E;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RocknRollOne';
+  src: url('fonts/RocknRollOne-JP.subset.woff2?v=4') format('woff2');
+  unicode-range: U+3000-303F, U+3040-304B, U+304D-3069, U+306B-3071, U+3073-3088, U+308A-30FF, U+3400-4DBF, U+4E00-4E2C, U+4E2E-6586, U+6588-65E4, U+65E6-672B, U+672D-8A9D, U+8A9F-9FFF, U+F900-FAFF, U+FF00-FFEF;
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -752,9 +771,25 @@ p.symbol{
 
 @font-face {
   font-family: 'ReggaeOne';
-  src: url('fonts/ReggaeOne-Regular.woff2?v=3') format('woff2'),
-       url('fonts/ReggaeOne-Regular.woff?v=3') format('woff'),
-       url('fonts/ReggaeOne-Regular.ttf?v=3') format('truetype');
+  src: url('fonts/ReggaeOne-Latin.subset.woff2?v=4') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-203A, U+20AC, U+2122, U+2190-21FF, U+2212, U+25A0-25FF;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* the characters of the footer language names and the output-language option (日本語 中文 ひらがな): their own tiny file, so every page does not load the JP one */
+@font-face {
+  font-family: 'ReggaeOne';
+  src: url('fonts/ReggaeOne-JPLabels.subset.woff2?v=4') format('woff2');
+  unicode-range: U+304C, U+306A, U+3072, U+3089, U+4E2D, U+6587, U+65E5, U+672C, U+8A9E;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ReggaeOne';
+  src: url('fonts/ReggaeOne-JP.subset.woff2?v=4') format('woff2');
+  unicode-range: U+3000-303F, U+3040-304B, U+304D-3069, U+306B-3071, U+3073-3088, U+308A-30FF, U+3400-4DBF, U+4E00-4E2C, U+4E2E-6586, U+6588-65E4, U+65E6-672B, U+672D-8A9D, U+8A9F-9FFF, U+F900-FAFF, U+FF00-FFEF;
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -762,9 +797,9 @@ p.symbol{
 
 @font-face {
   font-family: 'MinishCap';
-  src: url('fonts/MinishCap--v10.woff2?v=3') format('woff2'),
-       url('fonts/MinishCap--v10.woff?v=3') format('woff'),
-       url('fonts/MinishCap--v10.ttf?v=3') format('truetype');
+  src: url('fonts/MinishCap--v10.woff2?v=4') format('woff2'),
+       url('fonts/MinishCap--v10.woff?v=4') format('woff'),
+       url('fonts/MinishCap--v10.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -772,9 +807,9 @@ p.symbol{
 
 @font-face {
   font-family: 'HyliaSerif';
-  src: url('fonts/HyliaSerifBeta-Regular.woff2?v=3') format('woff2'),
-       url('fonts/HyliaSerifBeta-Regular.woff?v=3') format('woff'),
-       url('fonts/HyliaSerifBeta-Regular.ttf?v=3') format('truetype');
+  src: url('fonts/HyliaSerifBeta-Regular.woff2?v=4') format('woff2'),
+       url('fonts/HyliaSerifBeta-Regular.woff?v=4') format('woff'),
+       url('fonts/HyliaSerifBeta-Regular.ttf?v=4') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -782,9 +817,9 @@ p.symbol{
 
 @font-face {
     font-family: 'HylianSymbols';
-    src: url('fonts/HylianSymbols.woff2?v=3') format('woff2'),
-         url('fonts/HylianSymbols.woff?v=3') format('woff'),
-         url('fonts/HylianSymbols.ttf?v=3') format('truetype');
+    src: url('fonts/HylianSymbols.woff2?v=4') format('woff2'),
+         url('fonts/HylianSymbols.woff?v=4') format('woff'),
+         url('fonts/HylianSymbols.ttf?v=4') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -941,7 +976,7 @@ html[lang="sr"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageS
    subset to common simplified characters) for all UI text instead. */
 @font-face {
   font-family: 'NotoSansSC';
-  src: url('fonts/NotoSansSC-Regular.subset.woff2?v=3') format('woff2');
+  src: url('fonts/NotoSansSC-Regular.subset.woff2?v=4') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -949,7 +984,7 @@ html[lang="sr"] *:not(#translatedText):not(.eye-btn):not(.symbol):not(#languageS
 
 @font-face {
   font-family: 'NotoSansSC';
-  src: url('fonts/NotoSansSC-Bold.subset.woff2?v=3') format('woff2');
+  src: url('fonts/NotoSansSC-Bold.subset.woff2?v=4') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -965,7 +1000,7 @@ html[lang^="zh"] .tooltip-element:focus-visible::after {
 /* Korean: the Japanese UI fonts have no hangul, so the browser used a thin system font. Same fix as Chinese. */
 @font-face {
   font-family: 'NotoSansKR';
-  src: url('fonts/NotoSansKR-Regular.subset.woff2?v=3') format('woff2');
+  src: url('fonts/NotoSansKR-Regular.subset.woff2?v=4') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -973,7 +1008,7 @@ html[lang^="zh"] .tooltip-element:focus-visible::after {
 
 @font-face {
   font-family: 'NotoSansKR';
-  src: url('fonts/NotoSansKR-Bold.subset.woff2?v=3') format('woff2');
+  src: url('fonts/NotoSansKR-Bold.subset.woff2?v=4') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -990,10 +1025,10 @@ html[lang^="ko"] .tooltip-element:focus-visible::after {
    There is no official Zelda-style title font for Japanese, Chinese, Korean or Cyrillic, so these pages get a
    classical serif in the same gold: Noto Serif (CJK) and Forum (Cyrillic, Trajan-like capitals). Only the
    characters of the two titles are embedded (a few KB each). */
-@font-face { font-family: 'TitleJP'; src: url('fonts/NotoSerifJP-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'TitleSC'; src: url('fonts/NotoSerifSC-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'TitleKR'; src: url('fonts/NotoSerifKR-Title.subset.woff2?v=3') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'TitleCyr'; src: url('fonts/Forum-Title.subset.woff2?v=3') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'TitleJP'; src: url('fonts/NotoSerifJP-Title.subset.woff2?v=4') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleSC'; src: url('fonts/NotoSerifSC-Title.subset.woff2?v=4') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleKR'; src: url('fonts/NotoSerifKR-Title.subset.woff2?v=4') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'TitleCyr'; src: url('fonts/Forum-Title.subset.woff2?v=4') format('woff2'); font-weight: 400; font-display: swap; }
 
 html[lang="ja"] header h1,
 html[lang^="zh"] header h1,
@@ -1422,20 +1457,18 @@ html[lang="sr"] header h1 {
 .fonts-pending .hk-glyph { visibility: hidden; }
 .hylian-input.fonts-pending { color: transparent; }
 
-/* ===== Short intro text under the translator ===== */
+/* ===== Note + short intro text, under the Download Font / About buttons in the footer ===== */
+#noteText { margin: 14px 16px 0; }
 .intro-text {
   max-width: 760px;
-  margin: 18px auto 30px;
+  margin: 12px auto 0;
   padding: 0 16px;
   box-sizing: border-box;
 }
 .intro-text p {
   margin: 0;
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  color: #eef6f6;
-  font-size: 0.95rem;
+  color: #c9c3b2;
+  font-size: 0.9rem;
   line-height: 1.6;
   text-align: center;
 }
@@ -1455,17 +1488,23 @@ html[lang="sr"] header h1 {
   .hk-glyph { font-size: 1.55rem; }
 }
 
-/* the output panel lifted above the on-screen keyboard while typing (see pinOutputAboveKeyboard in script.js) */
-.output-panel.is-pinned {
-  position: fixed;
-  left: 8px;
-  right: 8px;
-  bottom: calc(var(--kb-offset, 0px) + 8px);
-  z-index: 60;
-  margin: 0;
-  overflow-y: auto;
-  background-color: #f7f0de;
-  border: 1px solid #c5a200;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+/* the loading spinner shown while the alphabet chart downloads has no text (the text is about the kanji dictionary) */
+.loadingIndicator.image-loading .loading-bubble { display: none; }
+
+/* Hylian keyboard: show / hide the small phonetic letters under the keys */
+.hylian-keyboard.phonetics-hidden .hk-label { display: none; }
+.hylian-keyboard.phonetics-hidden .hk { min-height: 40px; }
+
+/* keyboard buttons: their tooltips open to the right of the button's left edge, so they stay on screen */
+.kb-actions .tooltip-element:hover::after,
+.kb-actions .tooltip-element:focus-visible::after {
+  left: 0;
+  transform: none;
+  max-width: min(260px, 72vw);
 }
-.output-panel.is-pinned.output-dark { background-color: #1e2b2f; }
+
+/* phones: the Sheikah number/punctuation row has 14 keys, so its glyphs must be smaller than the keys */
+@media (max-width: 480px) {
+  .kb-row-dense .hk-glyph { font-size: 1.05rem; }
+  .hylian-keyboard.phonetics-hidden .hk { min-height: 38px; }
+}

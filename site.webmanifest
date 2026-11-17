@@ -2,6 +2,13 @@
   "name": "Zelda Hylian Translator",
   "short_name": "Hylian Translator",
   "description": "Translate text to Hylian and Hylian back to English, Japanese and more.",
+  "lang": "en",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#0d2238",
+  "background_color": "#0d2238",
   "icons": [
     {
       "src": "images/icon-192.png",
@@ -13,10 +20,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": "./",
-  "scope": "./",
-  "theme_color": "#0d2238",
-  "background_color": "#0d2238",
-  "display": "browser"
+  ]
 }

@@ -206,7 +206,7 @@
         const keys = current.keys.filter((k) => k.row === r);
         if (!keys.length) return;
         const row = document.createElement('div');
-        row.className = 'kb-row';
+        row.className = keys.length > 10 ? 'kb-row kb-row-dense' : 'kb-row'; // 14 keys on a phone: smaller glyphs
         keys.forEach((k) => row.appendChild(makeKey(k)));
         kb.appendChild(row);
       });
@@ -252,7 +252,15 @@
     return tokens.length;
   }
 
+  // On a phone, tapping a Hylian key or a button must not focus the input, because that opens the phone's own keyboard.
+  // Tapping the input itself does, and while it has focus the keys behave as on a computer. Without focus new keys are
+  // simply added at the end.
+  const touchPrimary = () => !!(window.HylianTouch && window.HylianTouch.isPrimary());
+  const phoneKeyboardWanted = () => !touchPrimary() || document.activeElement === input;
+  function focusInputUnlessTouch() { if (phoneKeyboardWanted()) input.focus({ preventScroll: true }); }
+
   function caretTokenRange() {
+    if (!phoneKeyboardWanted()) return [tokens.length, tokens.length];
     const selection = window.getSelection();
     if (!selection || !selection.rangeCount || !input.contains(selection.anchorNode)) return [tokens.length, tokens.length];
     const range = selection.getRangeAt(0);
@@ -266,6 +274,7 @@
 
   function renderAt(index) {
     render();
+    if (!phoneKeyboardWanted()) return; // placing the selection inside the editable input would also open the phone keyboard
     const selection = window.getSelection();
     if (!selection) return;
     const range = document.createRange();
@@ -394,7 +403,7 @@
 
   kb.addEventListener('click', (e) => {
     const b = e.target.closest('.hk');
-    if (b) { add(b.dataset.rom); input.focus({ preventScroll: true }); b.classList.add('is-pressed'); setTimeout(() => b.classList.remove('is-pressed'), 120); }
+    if (b) { add(b.dataset.rom); focusInputUnlessTouch(); b.classList.add('is-pressed'); setTimeout(() => b.classList.remove('is-pressed'), 120); }
   });
   spaceBtn.addEventListener('click', () => { const [a, b] = caretTokenRange(); tokens.splice(a, b-a, { rom: ' ' }); pendingRomaji = ''; renderAt(a + 1); });
   backBtn.addEventListener('click', back);
@@ -507,7 +516,7 @@
     bar.classList.toggle('reversed', reverse);
     swapBtn.setAttribute('aria-pressed', String(reverse));
     setVersionOptions();
-    if (reverse) { rebuild(); if (focus) input.focus({ preventScroll: true }); }
+    if (reverse) { rebuild(); if (focus && !touchPrimary()) input.focus({ preventScroll: true }); }
     notify();
   }
 
@@ -515,6 +524,24 @@
   swapBtn.addEventListener('click', () => setReverse(!reverse, true));
   versionSel.addEventListener('change', () => { if (reverse) rebuild(); });
   outLang.addEventListener('change', () => { outLangChosen = true; if (reverse) { updateLabels(); render(); } else notify(); });
+
+  // ---- show / hide the small phonetic letters under each key (more room on a small screen) ----------------------
+  const phoneticsBtn = $('kbPhonetics');
+  const PHONETICS_KEY = 'hylian-keyboard-phonetics';
+  function setPhoneticsHidden(hidden, remember) {
+    kb.classList.toggle('phonetics-hidden', hidden);
+    if (phoneticsBtn) {
+      phoneticsBtn.setAttribute('aria-pressed', String(hidden));
+      phoneticsBtn.textContent = hidden ? phoneticsBtn.dataset.labelShow : phoneticsBtn.dataset.labelHide;
+    }
+    if (remember) { try { localStorage.setItem(PHONETICS_KEY, hidden ? 'hidden' : 'shown'); } catch (_) { /* private mode */ } }
+  }
+  if (phoneticsBtn) {
+    let saved = null;
+    try { saved = localStorage.getItem(PHONETICS_KEY); } catch (_) { /* private mode */ }
+    setPhoneticsHidden(saved === 'hidden', false);
+    phoneticsBtn.addEventListener('click', () => setPhoneticsHidden(!kb.classList.contains('phonetics-hidden'), true));
+  }
 
   // ---- state hooks (used by state.js to remember the session) ----------------------------------------------------
   const listeners = [];

@@ -1,6 +1,10 @@
 // Pages live at / (English) and /<lang>/ (everything else); each page sets its path back to the site root.
 const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
 // Cache-buster for the self-hosted libraries in vendor/ (build.js derives it from the file contents).
+// Phones and tablets (the primary input is a finger, there is no hover). Programmatic focus must be avoided there,
+// because focusing a text field opens the on-screen keyboard.
+window.HylianTouch = { isPrimary: () => window.matchMedia('(hover: none) and (pointer: coarse)').matches };
+
 const SITE_VER = (window.PAGE_TEXT && window.PAGE_TEXT.ver) ? '?v=' + window.PAGE_TEXT.ver : '';
 
 // The dictionary cache is installed automatically only when Japanese readings are needed.
@@ -238,17 +242,20 @@ showHylianMapBtn.addEventListener('click', () => {
 
   const show = () => {
     loadingIndicator.style.display = 'none';
+    loadingIndicator.classList.remove('image-loading');
     hylianMapImage.src = imageToDisplay.src;
     overlay.classList.add('open');
   };
 
   if (imageToDisplay.complete && imageToDisplay.naturalWidth > 0) { show(); return; }
 
-  // Show loading indicator while the image is fetched
+  // Show loading indicator while the image is fetched (the spinner only: its text is about the kanji dictionary)
+  loadingIndicator.classList.add('image-loading');
   loadingIndicator.style.display = 'block';
   imageToDisplay.onload = show;
   imageToDisplay.onerror = function () {
     loadingIndicator.style.display = 'none'; // Hide loading indicator on error
+    loadingIndicator.classList.remove('image-loading');
     console.error('Failed to load the image.');
   };
 });
@@ -284,6 +291,7 @@ hylianVersionElement.addEventListener('change', function () {
   // reverse.js rebuilds its keyboard synchronously from the same change event, so defer
   // focus until the next frame to ensure the selected editor is ready.
   requestAnimationFrame(() => {
+    if (window.HylianTouch.isPrimary()) return; // on a phone focusing would open the keyboard just for choosing a script
     const reverseInput = document.getElementById('hylianInput');
     const translatorCard = document.getElementById('translatorCard');
     const activeInput = translatorCard && translatorCard.classList.contains('reverse-mode')
@@ -442,7 +450,7 @@ async function ensureKuroshiroInstance(options = {}) {
 
       // Japanese-page warmup is always silent. Elsewhere, show the loader only for the
       // first uncached dictionary download; cached dictionary initialization stays quiet.
-      if (spinnerOverlay) spinnerOverlay.style.display = 'block';
+      if (spinnerOverlay) { spinnerOverlay.classList.remove('image-loading'); spinnerOverlay.style.display = 'block'; }
       if (showLoading) document.body.style.cursor = 'wait';
 
       try {
@@ -840,48 +848,27 @@ if (document.documentElement.lang === 'ja' && inputTextElement && translatedText
   else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
 }
 
-// ---- Phones: keep the translation visible above the on-screen keyboard ----------------------------------------------
-// While the text box is being typed in and the system keyboard is open, the output panel is pinned just above the
-// keyboard (position: fixed, lifted by the part of the screen the keyboard covers, which visualViewport reports).
-// Otherwise the translation sits below the fold, behind the keyboard, and cannot be seen while typing.
-(function pinOutputAboveKeyboard() {
-    if (!window.visualViewport || !inputTextElement || !outputPanel) return;
-    const holder = outputPanel.parentElement; // keeps its height while the panel is lifted out, so nothing jumps
-    let baseline = Math.max(window.innerHeight, window.visualViewport.height);
-    let pinned = false;
-
-    function keyboardIsOpen() {
-        const vv = window.visualViewport;
-        return document.activeElement === inputTextElement
-            && inputTextElement.value.length > 0
-            && vv.scale <= 1.01                  // pinch-zooming also shrinks the visual viewport: not a keyboard
-            && baseline - vv.height > 120;
-    }
-
-    function update() {
-        const vv = window.visualViewport;
-        if (document.activeElement !== inputTextElement) baseline = Math.max(window.innerHeight, vv.height);
-        if (keyboardIsOpen()) {
-            if (!pinned) {
-                holder.style.minHeight = outputPanel.offsetHeight + 'px';
-                outputPanel.classList.add('is-pinned');
-                pinned = true;
-                inputTextElement.scrollIntoView({ block: 'start' }); // the box must not end up under the pinned panel
-            }
-            outputPanel.style.setProperty('--kb-offset', Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px');
-            outputPanel.style.maxHeight = Math.round(vv.height * 0.4) + 'px';
-        } else if (pinned) {
-            pinned = false;
-            outputPanel.classList.remove('is-pinned');
-            outputPanel.style.removeProperty('--kb-offset');
-            outputPanel.style.maxHeight = '';
-            holder.style.minHeight = '';
+// ---- Phones: bring the text box to the top of the screen when it is tapped -------------------------------------------
+// The on-screen keyboard covers the lower half of the screen. With the text box at the top, the translation just below it
+// stays visible above the keyboard. (Done on focus and again once the keyboard has finished opening.)
+(function bringInputToTop() {
+    const toTop = () => {
+        if (window.HylianTouch.isPrimary() && document.activeElement === inputTextElement) {
+            inputTextElement.scrollIntoView({ block: 'start', behavior: 'smooth' });
         }
+    };
+    inputTextElement.addEventListener('focus', () => setTimeout(toTop, 350));
+    if (window.visualViewport) {
+        let timer;
+        window.visualViewport.addEventListener('resize', () => { clearTimeout(timer); timer = setTimeout(toTop, 120); });
     }
-
-    window.visualViewport.addEventListener('resize', update);
-    window.visualViewport.addEventListener('scroll', update);
-    window.addEventListener('orientationchange', () => { baseline = 0; setTimeout(update, 300); });
-    ['focus', 'blur', 'input'].forEach((type) => inputTextElement.addEventListener(type, () => setTimeout(update, 0)));
-    window.__updatePinnedOutput = update; // used by the automated layout checks
 })();
+
+// ---- Offline support ------------------------------------------------------------------------------------------------
+// sw.js (generated by build.js) saves the pages and the translator's files, so the translator also works without a
+// connection and can be installed as an app. Online nothing changes: pages are always fetched from the network first.
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register(SITE_ROOT + 'sw.js').catch((err) => console.warn('Offline support unavailable:', err));
+    });
+}

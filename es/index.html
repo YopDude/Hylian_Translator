@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Traductor Hyliano de Zelda – Convierte idiomas reales a los idiomas hylianos de Zelda (Breath of the Wild, Ocarina of Time, Wind Waker)</title>
-  <link rel="stylesheet" href="../styles.css?v=d9a7e230">
-  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=d9a7e230">
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=d9a7e230">
-  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=d9a7e230">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="stylesheet" href="../styles.css?v=703a1405">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=703a1405">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=703a1405">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=703a1405">
+  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#0d2238">
   <link rel="canonical" href="https://zeldatranslator.com/es/">
   <link rel="alternate" hreflang="en" href="https://zeldatranslator.com/">
@@ -178,7 +178,8 @@
           <div id="hylianInput" class="hylian-input hylian-font" contenteditable="true" spellcheck="false" tabindex="0" role="textbox" aria-multiline="true" aria-label="Teclado hyliano" data-placeholder="Pulsa las teclas hylianas para escribir."></div>
           <div id="hylianKeyboard" class="hylian-keyboard" role="group" aria-label="Teclado hyliano"></div>
           <div class="kb-actions">
-            <button type="button" class="kb-action" id="kbMirror" aria-pressed="false" hidden>Reflejar texto</button>
+            <button type="button" class="kb-action tooltip-element" id="kbMirror" aria-pressed="false" data-tooltip="Voltea el texto de izquierda a derecha, como en la versión de Wii de Twilight Princess." hidden>Reflejar texto</button>
+            <button type="button" class="kb-action tooltip-element" id="kbPhonetics" aria-pressed="false" data-tooltip="Muestra u oculta las letras pequeñas bajo cada tecla. Ocultarlas ahorra espacio en pantalla." data-label-hide="Ocultar fonética" data-label-show="Mostrar fonética">Ocultar fonética</button>
             <button type="button" class="kb-action kb-space" id="kbSpace">Espacio</button>
             <button type="button" class="kb-action" id="kbBackspace">Borrar</button>
             <button type="button" class="kb-action" id="kbClear">Limpiar</button>
@@ -190,16 +191,16 @@
         </div>
       </div>
     </section>
-    <section class="intro-text"><p>Traduce texto a la escritura hyliana de Ocarina of Time, The Wind Waker, Twilight Princess, Skyward Sword y Breath of the Wild, o a las escrituras Gerudo, Sheikah y Mudora. Escribe en tu propio idioma, exporta el resultado como imagen o comparte un enlace, o usa el teclado en pantalla para traducir del hyliano a texto normal.</p></section>
   </main>
 
   <footer>
     <div>
-      <p id="noteText">Nota: Todos los idiomas se muestran mediante fuentes personalizadas y no se conservarán al copiar y pegar.</p>
       <div>
         <button id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="Descarga la fuente del alfabeto hyliano seleccionado."><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Descargar fuente</span></button>
         <a id="aboutPageBtn" class="button-link tooltip-element btn-with-icon" data-tooltip-key="aboutPageBtn" data-tooltip="Más información sobre el Traductor Hyliano de Zelda, las fuentes, las contribuciones y los recursos" href="about.html"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></g><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/></svg><span class="btn-label">Página Acerca de</span></a>
       </div>
+      <p id="noteText">Nota: Todos los idiomas se muestran mediante fuentes personalizadas y no se conservarán al copiar y pegar.</p>
+      <section class="intro-text"><p>Traduce texto a la escritura hyliana de Ocarina of Time, The Wind Waker, Twilight Princess, Skyward Sword y Breath of the Wild, o a las escrituras Gerudo, Sheikah y Mudora. Escribe en tu propio idioma, exporta el resultado como imagen o comparte un enlace, o usa el teclado en pantalla para traducir del hyliano a texto normal.</p></section>
     </div>
     <nav class="lang-links" aria-label="Idioma">
       <a href="../index.html" hreflang="en" lang="en">English</a>
@@ -243,21 +244,21 @@
     </div>
   </div>
 
-  <script>window.PAGE_TEXT = {"root":"../","ver":"d9a7e230","translatedText":"Tu texto traducido aparecerá aquí.","copyLabel":"Copiar","copiedMsg":"¡Copiado!","shareLinkCopied":"¡Enlace copiado!","sharedLinkNotice":"Estás viendo una configuración compartida. Tus ajustes guardados no se han modificado.","returnToMySettings":"Volver a mis ajustes"};</script>
+  <script>window.PAGE_TEXT = {"root":"../","ver":"703a1405","translatedText":"Tu texto traducido aparecerá aquí.","copyLabel":"Copiar","copiedMsg":"¡Copiado!","shareLinkCopied":"¡Enlace copiado!","sharedLinkNotice":"Estás viendo una configuración compartida. Tus ajustes guardados no se han modificado.","returnToMySettings":"Volver a mis ajustes"};</script>
   <script>(function(){var s=document.getElementById('languageSelect');if(s)s.addEventListener('change',function(){if(s.value)location.href=s.value;});})();</script>
-  <script defer src="../vendor/wanakana.min.js?v=d9a7e230"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
-  <script defer src="../jsMapping/transliterationMap.js?v=d9a7e230"></script> <!-- Convert non-english characters into their english counterpart -->
-  <script defer src="../jsMapping/WWHylianMap.js?v=d9a7e230"></script> <!-- Load the WW glyph map -->
-  <script defer src="../jsMapping/64HylianMap.js?v=d9a7e230"></script> <!-- Load the N64 glyph map -->
-  <script defer src="../jsMapping/3dHylianMap.js?v=d9a7e230"></script> <!-- Load the 3ds glyph map -->
-  <script defer src="../jsMapping/fontFileMap.js?v=d9a7e230"></script> <!-- Load the FontFile map to be able to download -->
+  <script defer src="../vendor/wanakana.min.js?v=703a1405"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
+  <script defer src="../jsMapping/transliterationMap.js?v=703a1405"></script> <!-- Convert non-english characters into their english counterpart -->
+  <script defer src="../jsMapping/WWHylianMap.js?v=703a1405"></script> <!-- Load the WW glyph map -->
+  <script defer src="../jsMapping/64HylianMap.js?v=703a1405"></script> <!-- Load the N64 glyph map -->
+  <script defer src="../jsMapping/3dHylianMap.js?v=703a1405"></script> <!-- Load the 3ds glyph map -->
+  <script defer src="../jsMapping/fontFileMap.js?v=703a1405"></script> <!-- Load the FontFile map to be able to download -->
   <!-- html2canvas, kuroshiro and pinyin-pro (all self-hosted in vendor/) are loaded on demand -->
-  <script defer src="../script.js?v=d9a7e230"></script> <!-- Main script -->
-  <script defer src="../ui-select.js?v=d9a7e230"></script> <!-- Icon dropdown for the Hylian version -->
-  <script defer src="../jsMapping/reverseTransliteration.js?v=d9a7e230"></script> <!-- Hylian -> real world: transliteration engines -->
-  <script defer src="../reverse.js?v=d9a7e230"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
-  <script defer src="../state.js?v=d9a7e230"></script> <!-- Remembers the session (localStorage) -->
-  <script defer src="../share.js?v=d9a7e230"></script> <!-- Shareable configurations and branded image sharing -->
+  <script defer src="../script.js?v=703a1405"></script> <!-- Main script -->
+  <script defer src="../ui-select.js?v=703a1405"></script> <!-- Icon dropdown for the Hylian version -->
+  <script defer src="../jsMapping/reverseTransliteration.js?v=703a1405"></script> <!-- Hylian -> real world: transliteration engines -->
+  <script defer src="../reverse.js?v=703a1405"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
+  <script defer src="../state.js?v=703a1405"></script> <!-- Remembers the session (localStorage) -->
+  <script defer src="../share.js?v=703a1405"></script> <!-- Shareable configurations and branded image sharing -->
 
 </body>
 </html>
