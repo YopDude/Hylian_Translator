@@ -273,6 +273,7 @@
   }
 
   function renderAt(index) {
+    editsSinceRebuild++; // every edit of the message ends in renderAt()
     render();
     if (!phoneKeyboardWanted()) return; // placing the selection inside the editable input would also open the phone keyboard
     const selection = window.getSelection();
@@ -488,18 +489,31 @@
   current = buildLayout(versionSel.value === 'mudoran' ? 'ocarinaOfTime3d' : versionSel.value);
   let tokensKana = current.kana; // were the typed tokens kana syllables (true) or letters (false)?
 
+  // Switching to a kana script drops the letters it cannot write ("bmsa" becomes "sa"). The full message is remembered in
+  // `masterMessage`, so flipping through scripts and back to an alphabet restores "bmsa". It is forgotten as soon as the
+  // user edits the message (types, deletes, clears, pastes): from then on what is shown is the message.
+  let masterMessage = null;      // the full message before characters were dropped, or null
+  let displayedAtRebuild = '';   // the message shown right after the last rebuild (to notice edits made since)
+  let editsSinceRebuild = 0;     // incremented by every edit, see renderAt()
+
   function rebuild() {
     // Tokens are stored as romanisation, but their granularity depends on the script:
     // kana layouts use syllables ("ka"), while Latin layouts use individual letters.
     // On a script-family switch, re-tokenize and discard anything the new layout
     // cannot represent rather than carrying unsupported characters across.
-    const message = tokens.map((t) => t.rom).join('');
+    const shown = tokens.map((t) => t.rom).join('');
+    if (shown !== displayedAtRebuild || editsSinceRebuild > 0) masterMessage = null; // edited since: the shown text is the message
+    const message = masterMessage !== null ? masterMessage : shown;
     current = buildLayout(versionSel.value);
     const converted = tokenizeRomaji(message, false, tokensKana !== current.kana);
     tokens = converted.result.map((rom) => ({ rom }));
     pendingRomaji = '';
     if (!current.kana) tokens = tokens.map((t) => ({ rom: t.rom.toLowerCase() })); // e.g. state saved while Twilight Princess still had a Shift key
     tokensKana = current.kana;
+    const nowShown = tokens.map((t) => t.rom).join('');
+    if (masterMessage === null && message !== nowShown) masterMessage = message; // something was dropped: remember the original
+    displayedAtRebuild = nowShown;
+    editsSinceRebuild = 0;
     renderKeyboard();
     const isTwilight = current.version === 'twilightPrincess';
     const mirrored = applyMirror();
@@ -556,7 +570,7 @@
       if (selection) { selection.removeAllRanges(); selection.addRange(range); }
       updateCustomCaret();
     },
-    get: () => ({ reverse, tokens: tokens.map((t) => t.rom), outLang: outLangChosen ? outLang.value : null, mirrorEnabled }),
+    get: () => ({ reverse, tokens: tokens.map((t) => t.rom), master: masterMessage, outLang: outLangChosen ? outLang.value : null, mirrorEnabled }),
     set: (s) => {
       if (!s) return;
       if (s.outLang && [...outLang.options].some((o) => o.value === s.outLang)) { outLang.value = s.outLang; outLangChosen = true; }
@@ -564,6 +578,9 @@
       tokensKana = !!KANA[versionSel.value];
       // Normalize older saved kana tokens too (notably a previously committed n + vowel sequence).
       if (tokensKana) tokens = tokenizeRomaji(tokens.map((token) => token.rom).join(''), false).result.map((rom) => ({ rom }));
+      masterMessage = typeof s.master === 'string' ? s.master : null;
+      displayedAtRebuild = tokens.map((t) => t.rom).join('');
+      editsSinceRebuild = 0;
       mirrorEnabled = !!s.mirrorEnabled;
       if (s.reverse) setReverse(true, false);
       else if (reverse) setReverse(false, false);

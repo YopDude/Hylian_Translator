@@ -5,6 +5,8 @@ const SITE_ROOT = (window.PAGE_TEXT && window.PAGE_TEXT.root) || '';
 // because focusing a text field opens the on-screen keyboard.
 window.HylianTouch = { isPrimary: () => window.matchMedia('(hover: none) and (pointer: coarse)').matches };
 
+// Cache-buster for the alphabet chart images (build.js: changes only when a chart image changes)
+const CHART_VER = (window.PAGE_TEXT && window.PAGE_TEXT.imgVer) ? '?v=' + window.PAGE_TEXT.imgVer : '';
 const SITE_VER = (window.PAGE_TEXT && window.PAGE_TEXT.ver) ? '?v=' + window.PAGE_TEXT.ver : '';
 
 // The dictionary cache is installed automatically only when Japanese readings are needed.
@@ -327,7 +329,7 @@ window.addEventListener('load', function () {
 
   // Apply the current font size from the slider (if any) on page load
   const fontSizeValue = fontSizeSlider.value;
-  translatedTextElement.style.fontSize = fontSizeValue + "rem"; // Apply font size in rem
+  translatedTextElement.style.setProperty("--out-size", fontSizeValue + "rem"); // font size in rem (see #translatedText in styles.css)
   fontSizeValueElement.textContent = fontSizeValue + "x"; // Update label to match slider
 
   // Apply the current font color from the color picker (if any) on page load
@@ -345,7 +347,7 @@ fontSizeSlider.addEventListener("input", function () {
   let fontSizeValue = parseFloat(fontSizeSlider.value).toFixed(1);  // Slider value, e.g., 3, 4, etc.
 
   // Apply the font size in rem to the translatedText
-  translatedTextElement.style.fontSize = fontSizeValue + "rem";  // Apply font size in rem
+  translatedTextElement.style.setProperty("--out-size", fontSizeValue + "rem");  // font size in rem (see #translatedText in styles.css)
   fontSizeValueElement.textContent = fontSizeValue + "x"; // Display it as x
 });
 
@@ -509,6 +511,7 @@ async function translateTextCore() {
 
     if (!originalInput) {
         translatedTextElement.textContent = "";
+        delete translatedTextElement.dataset.hylian; // the placeholder text is not Hylian: no per-script size correction
         return;
     }
 
@@ -585,6 +588,7 @@ async function translateTextCore() {
 
     syncMirrorClassForVersion(version);
     translatedTextElement.style.fontFamily = targetFont;
+    translatedTextElement.dataset.hylian = version; // per-script size correction on phones (styles.css)
     translatedTextElement.innerHTML = innerHTML;
     lastCommittedFontFamily = targetFont;
 }
@@ -833,17 +837,38 @@ function preloadImage(version) {
   }
 
   // Set the image source
-  image.src = imageSrc;
+  image.src = imageSrc + CHART_VER;
   return image;
 }
 
 // Warm the Japanese reading dictionary in the background on the Japanese translator homepage.
 // The same in-flight promise is reused if the user starts typing before initialization finishes.
-if (document.documentElement.lang === 'ja' && inputTextElement && translatedTextElement &&
-    /\/(?:ja\/)?(?:index\.html)?$/.test(window.location.pathname)) {
-  const warmKanjiLibrary = () => ensureKuroshiroInstance({ showLoading: false }).catch((err) => {
-    console.warn('Background Kanji library preload failed; it will retry when needed.', err);
-  });
+//
+// Owner switch: open the site once with ?kanji=on (any language) to keep the dictionary ready on every page of this browser,
+// stored in the offline cache and with persistent storage requested so the browser does not delete it. ?kanji=off undoes it.
+const KANJI_PRELOAD_KEY = 'hylian-kanji-preload';
+try {
+  const kanjiSwitch = new URLSearchParams(window.location.search).get('kanji');
+  if (kanjiSwitch === 'on') localStorage.setItem(KANJI_PRELOAD_KEY, '1');
+  else if (kanjiSwitch === 'off') localStorage.removeItem(KANJI_PRELOAD_KEY);
+} catch (_) { /* storage unavailable */ }
+const kanjiPreloadSwitchedOn = () => { try { return localStorage.getItem(KANJI_PRELOAD_KEY) === '1'; } catch (_) { return false; } };
+const pageLang = (document.documentElement.lang || '').toLowerCase();
+const japanHome = pageLang === 'ja' && /\/(?:ja\/)?(?:index\.html)?$/.test(window.location.pathname);
+if ((japanHome || (kanjiPreloadSwitchedOn() && !pageLang.startsWith('zh'))) && inputTextElement && translatedTextElement) {
+  // wait (briefly) for the service worker, so that the download is saved in its offline cache and not only the HTTP cache
+  const serviceWorkerReady = () => ('serviceWorker' in navigator)
+    ? Promise.race([navigator.serviceWorker.ready, new Promise((resolve) => setTimeout(resolve, 4000))])
+    : Promise.resolve();
+  const keepDictionary = () => {
+    if (kanjiPreloadSwitchedOn() && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  };
+  const warmKanjiLibrary = () => serviceWorkerReady()
+    .then(() => ensureKuroshiroInstance({ showLoading: false }))
+    .then(keepDictionary)
+    .catch((err) => {
+      console.warn('Background Kanji library preload failed; it will retry when needed.', err);
+    });
   if ('requestIdleCallback' in window) window.requestIdleCallback(warmKanjiLibrary, { timeout: 2500 });
   else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
 }

@@ -4,10 +4,13 @@
  *  - pages are fetched from the network first (so a visitor always gets the current page; the server is asked whether it
  *    changed) and only fall back to the saved copy when the network fails;
  *  - scripts, styles and fonts carry a ?v=<hash> in their URL (see build.js), so a saved copy can never be out of date;
- *  - the 18 MB Japanese dictionary (dict/) is left alone: the browser's own cache handles it as before.
+ *  - the 18 MB Japanese dictionary (dict/) is saved the first time it is downloaded, in its own cache that is never
+ *    cleared by a new build (the dictionary does not change). Unlike the browser's HTTP cache, Cache Storage is not
+ *    evicted when the browser tidies up, so kanji conversion stays fast and also works offline.
  * The cache name contains the build hash; a new build installs a new cache and deletes the old one.
  */
-const CACHE = 'hylian-703a1405';
+const CACHE = 'hylian-351166db';
+const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
 const PAGES = ["./","ja/","zh/","ko/","es/","pt/","fr/","de/","it/","fi/","nl/","ru/","uk/","sr/","about.html","ja/about.html","zh/about.html","ko/about.html","es/about.html","pt/about.html","fr/about.html","de/about.html","it/about.html","fi/about.html","nl/about.html","ru/about.html","uk/about.html","sr/about.html"];     // every page, saved when the worker installs
 const ASSETS = [
  "fonts/AlbwBotwHylian-Regular.woff2?v=4",
@@ -32,10 +35,10 @@ const ASSETS = [
  "fonts/RocknRollOne-Latin.subset.woff2?v=4",
  "fonts/SSAncientHylian.woff2?v=4",
  "fonts/TPHylian-GCNRegular.woff2?v=4",
- "images/apple-touch-icon.png?v=703a1405",
- "images/favicon.ico?v=703a1405",
+ "images/apple-touch-icon.png?v=351166db",
+ "images/favicon.ico?v=351166db",
  "images/hyrule_rule.png",
- "images/icon-192.png?v=703a1405",
+ "images/icon-192.png?v=351166db",
  "images/icons/botw.webp",
  "images/icons/gerudo.webp",
  "images/icons/mudoran.webp",
@@ -47,19 +50,19 @@ const ASSETS = [
  "images/icons/windwaker.webp",
  "images/pattern-triforce.png",
  "images/phantom-hourglass.gif",
- "jsMapping/3dHylianMap.js?v=703a1405",
- "jsMapping/64HylianMap.js?v=703a1405",
- "jsMapping/WWHylianMap.js?v=703a1405",
- "jsMapping/fontFileMap.js?v=703a1405",
- "jsMapping/reverseTransliteration.js?v=703a1405",
- "jsMapping/transliterationMap.js?v=703a1405",
- "reverse.js?v=703a1405",
- "script.js?v=703a1405",
- "share.js?v=703a1405",
- "state.js?v=703a1405",
- "styles.css?v=703a1405",
- "ui-select.js?v=703a1405",
- "vendor/wanakana.min.js?v=703a1405"
+ "jsMapping/3dHylianMap.js?v=351166db",
+ "jsMapping/64HylianMap.js?v=351166db",
+ "jsMapping/WWHylianMap.js?v=351166db",
+ "jsMapping/fontFileMap.js?v=351166db",
+ "jsMapping/reverseTransliteration.js?v=351166db",
+ "jsMapping/transliterationMap.js?v=351166db",
+ "reverse.js?v=351166db",
+ "script.js?v=351166db",
+ "share.js?v=351166db",
+ "state.js?v=351166db",
+ "styles.css?v=351166db",
+ "ui-select.js?v=351166db",
+ "vendor/wanakana.min.js?v=351166db"
 ];   // css, scripts, fonts, icons: what the translator needs to run offline
 
 const scope = new URL(self.registration.scope);
@@ -89,7 +92,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    for (const name of await caches.keys()) if (name.startsWith('hylian-') && name !== CACHE) await caches.delete(name);
+    for (const name of await caches.keys()) if (name.startsWith('hylian-') && name !== CACHE && name !== DICT_CACHE) await caches.delete(name);
     await self.clients.claim();
   })());
 });
@@ -116,6 +119,15 @@ async function cacheFirst(request) {
   return response;
 }
 
+async function dictionary(request) {
+  const cache = await caches.open(DICT_CACHE);
+  const hit = await cache.match(request);
+  if (hit) return hit;
+  const response = await fetch(request);
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  return response;
+}
+
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);
   const hit = await cache.match(request);
@@ -132,7 +144,8 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET' || request.headers.has('range')) return;
   const url = new URL(request.url);
   if (url.origin !== location.origin) return;
-  if (url.pathname.startsWith(scope.pathname + 'dict/') || url.pathname === scope.pathname + 'sw.js') return;
+  if (url.pathname === scope.pathname + 'sw.js') return;
+  if (url.pathname.startsWith(scope.pathname + 'dict/')) { event.respondWith(dictionary(request)); return; }
   if (request.mode === 'navigate') { event.respondWith(pageNetworkFirst(request)); return; }
   const versioned = url.searchParams.has('v') || url.pathname.includes('/fonts/');
   event.respondWith(versioned ? cacheFirst(request) : staleWhileRevalidate(request));

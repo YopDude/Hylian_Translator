@@ -198,7 +198,8 @@ input[type="range"], input[type="color"] {
 
 #translatedText {
   font-family: 'RocknRollOne', sans-serif;
-  font-size: 2.5em;
+  /* the slider sets --out-size; --font-scale is a per-script correction (phones only, see below) */
+  font-size: calc(var(--out-size, 2.5rem) * var(--font-scale, 1));
   color: #333;
   word-wrap: break-word;  /* Allow breaking words with no space */
   word-break: break-word; /* Force word break */
@@ -1507,4 +1508,16 @@ html[lang="sr"] header h1 {
 @media (max-width: 480px) {
   .kb-row-dense .hk-glyph { font-size: 1.05rem; }
   .hylian-keyboard.phonetics-hidden .hk { min-height: 38px; }
+}
+
+/* ===== Phones: even out the apparent size of the scripts =====================================================================
+   The @font-face size-adjust values give every script the same glyph height, but on a narrow screen the text wraps and the
+   differences show: the kana scripts (one glyph per syllable) look small and short, the wide letter scripts take many lines.
+   These multipliers scale the output only on phone-sized screens (desktop is unchanged). 1 = no change; adjust to taste. */
+@media (max-width: 768px) {
+  #translatedText[data-hylian="ocarinaOfTime3d"]  { --font-scale: 1.2; }
+  #translatedText[data-hylian="windwaker"]        { --font-scale: 1.12; }
+  #translatedText[data-hylian="twilightPrincess"] { --font-scale: 1.05; }
+  #translatedText[data-hylian="skywardSword"]     { --font-scale: 0.88; }
+  #translatedText[data-hylian="botw"]             { --font-scale: 0.9; }
 }

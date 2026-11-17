@@ -4,10 +4,13 @@
  *  - pages are fetched from the network first (so a visitor always gets the current page; the server is asked whether it
  *    changed) and only fall back to the saved copy when the network fails;
  *  - scripts, styles and fonts carry a ?v=<hash> in their URL (see build.js), so a saved copy can never be out of date;
- *  - the 18 MB Japanese dictionary (dict/) is left alone: the browser's own cache handles it as before.
+ *  - the 18 MB Japanese dictionary (dict/) is saved the first time it is downloaded, in its own cache that is never
+ *    cleared by a new build (the dictionary does not change). Unlike the browser's HTTP cache, Cache Storage is not
+ *    evicted when the browser tidies up, so kanji conversion stays fast and also works offline.
  * The cache name contains the build hash; a new build installs a new cache and deletes the old one.
  */
 const CACHE = 'hylian-__VERSION__';
+const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
 const PAGES = __PAGES__;     // every page, saved when the worker installs
 const ASSETS = __ASSETS__;   // css, scripts, fonts, icons: what the translator needs to run offline
 
@@ -38,7 +41,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    for (const name of await caches.keys()) if (name.startsWith('hylian-') && name !== CACHE) await caches.delete(name);
+    for (const name of await caches.keys()) if (name.startsWith('hylian-') && name !== CACHE && name !== DICT_CACHE) await caches.delete(name);
     await self.clients.claim();
   })());
 });
@@ -65,6 +68,15 @@ async function cacheFirst(request) {
   return response;
 }
 
+async function dictionary(request) {
+  const cache = await caches.open(DICT_CACHE);
+  const hit = await cache.match(request);
+  if (hit) return hit;
+  const response = await fetch(request);
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  return response;
+}
+
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);
   const hit = await cache.match(request);
@@ -81,7 +93,8 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET' || request.headers.has('range')) return;
   const url = new URL(request.url);
   if (url.origin !== location.origin) return;
-  if (url.pathname.startsWith(scope.pathname + 'dict/') || url.pathname === scope.pathname + 'sw.js') return;
+  if (url.pathname === scope.pathname + 'sw.js') return;
+  if (url.pathname.startsWith(scope.pathname + 'dict/')) { event.respondWith(dictionary(request)); return; }
   if (request.mode === 'navigate') { event.respondWith(pageNetworkFirst(request)); return; }
   const versioned = url.searchParams.has('v') || url.pathname.includes('/fonts/');
   event.respondWith(versioned ? cacheFirst(request) : staleWhileRevalidate(request));

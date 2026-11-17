@@ -17,6 +17,16 @@ const vm = require('vm');
 
 const ROOT = __dirname;
 const SITE = 'https://zeldatranslator.com';
+// Cache-buster for the alphabet chart images (images/*.webp): changes only when a chart changes, so replacing a chart
+// reaches visitors who already cached the old one, while ordinary deploys do not make them download the charts again.
+const IMAGE_VER = (() => {
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha1');
+  fs.readdirSync(path.join(ROOT, 'images')).filter((f) => f.endsWith('.webp')).sort()
+    .forEach((f) => hash.update(f).update(fs.readFileSync(path.join(ROOT, 'images', f))));
+  return hash.digest('hex').slice(0, 8);
+})();
+
 // Cache-buster for the css/js/vendor/icon query strings. It is a hash of the files themselves, so it changes exactly
 // when one of them changes and can no longer be forgotten.
 const VER = (() => {
@@ -196,7 +206,7 @@ for (const lang of LANGS) {
       banner: bannerHtml(s),
       languageSelectScript,
       outputLanguageOptions: outputOptions(lang),
-      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', ver: VER, translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
+      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', ver: VER, imgVer: IMAGE_VER, translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
       languageSelect: languageSelect(lang, page),
       languageLinks: languageLinks(lang, page),
       homeHref: rel(from, urlPath(lang, 'index')),
