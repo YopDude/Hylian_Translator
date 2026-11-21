@@ -3,6 +3,7 @@
  * It only adds offline support; online, the site behaves exactly as without it:
  *  - pages are fetched from the network first (so a visitor always gets the current page; the server is asked whether it
  *    changed) and only fall back to the saved copy when the network fails;
+ *  - other small files (images) are also fetched from the network first, and the saved copy is used only when offline;
  *  - scripts, styles and fonts carry a ?v=<hash> in their URL (see build.js), so a saved copy can never be out of date;
  *  - the 18 MB Japanese dictionary (dict/) is saved the first time it is downloaded, in its own cache that is never
  *    cleared by a new build (the dictionary does not change). Unlike the browser's HTTP cache, Cache Storage is not
@@ -52,7 +53,7 @@ async function pageNetworkFirst(request) {
     // 'no-cache' = ask the server whether the page changed (a small 304 reply when it did not), instead of trusting the
     // browser's HTTP cache, which may keep serving an older page for minutes after a deploy.
     const response = await fetch(request, { cache: 'no-cache' });
-    if (response.ok && !response.redirected && response.type === 'basic') cache.put(pageKey(request.url), response.clone());
+    if (response.ok && !response.redirected && response.type === 'basic') cache.put(pageKey(request.url), response.clone()).catch(() => {});
     return response;
   } catch (err) {
     return (await cache.match(pageKey(request.url))) || (await cache.match(pageKey(abs('./')))) || Response.error();
@@ -64,7 +65,7 @@ async function cacheFirst(request) {
   const hit = await cache.match(request);
   if (hit) return hit;
   const response = await fetch(request);
-  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
   return response;
 }
 
@@ -73,19 +74,24 @@ async function dictionary(request) {
   const hit = await cache.match(request);
   if (hit) return hit;
   const response = await fetch(request);
-  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
   return response;
 }
 
-async function staleWhileRevalidate(request) {
+// Files without a ?v= in their URL (small images): fetched from the network (the browser's HTTP cache still applies) and
+// saved; the saved copy is only used when the network fails. They are deliberately NOT served from the saved copy while a
+// refresh overwrites it, because replacing a saved file while the page is still reading it can corrupt the image.
+async function assetNetworkFirst(request) {
   const cache = await caches.open(CACHE);
-  const hit = await cache.match(request);
-  const refresh = fetch(request).then((response) => {
-    if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  try {
+    const response = await fetch(request);
+    if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
     return response;
-  });
-  if (hit) { refresh.catch(() => {}); return hit; }
-  return refresh;
+  } catch (err) {
+    const hit = await cache.match(request);
+    if (hit) return hit;
+    throw err;
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -97,5 +103,5 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith(scope.pathname + 'dict/')) { event.respondWith(dictionary(request)); return; }
   if (request.mode === 'navigate') { event.respondWith(pageNetworkFirst(request)); return; }
   const versioned = url.searchParams.has('v') || url.pathname.includes('/fonts/');
-  event.respondWith(versioned ? cacheFirst(request) : staleWhileRevalidate(request));
+  event.respondWith(versioned ? cacheFirst(request) : assetNetworkFirst(request));
 });

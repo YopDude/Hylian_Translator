@@ -48,7 +48,7 @@ const VER = (() => {
   });
   return hash.digest('hex').slice(0, 8);
 })();
-const FONT_VER = '4'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
+const FONT_VER = '5'; // appended to every font URL (CSS + preload) so browsers re-download fonts when you change them: bump it after editing a font
 const ICON_EXT = 'webp'; // images/icons/<version>.<ext> (96x96 WebP; drop real game logos in with the same names)
 
 // Temporary banner. It hides itself after `end` (UTC), so forgetting it is safe.
@@ -188,7 +188,7 @@ const today = new Date().toISOString().slice(0, 10);
 const nextLastmod = {};
 function recordLastmod(url, html) {
   const hash = require('crypto').createHash('sha1')
-    .update(html.replace(/\?v=[0-9a-f]{8}/g, '').replace(/"ver":"[0-9a-f]{8}"/g, '')).digest('hex').slice(0, 12);
+    .update(html.replace(/\?v=[0-9a-z]+/g, '').replace(/"ver":"[0-9a-f]{8}"/g, '')).digest('hex').slice(0, 12);
   const prev = lastmod[url];
   nextLastmod[url] = prev && prev.hash === hash ? prev : { hash, date: today };
 }

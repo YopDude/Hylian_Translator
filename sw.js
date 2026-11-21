@@ -3,42 +3,43 @@
  * It only adds offline support; online, the site behaves exactly as without it:
  *  - pages are fetched from the network first (so a visitor always gets the current page; the server is asked whether it
  *    changed) and only fall back to the saved copy when the network fails;
+ *  - other small files (images) are also fetched from the network first, and the saved copy is used only when offline;
  *  - scripts, styles and fonts carry a ?v=<hash> in their URL (see build.js), so a saved copy can never be out of date;
  *  - the 18 MB Japanese dictionary (dict/) is saved the first time it is downloaded, in its own cache that is never
  *    cleared by a new build (the dictionary does not change). Unlike the browser's HTTP cache, Cache Storage is not
  *    evicted when the browser tidies up, so kanji conversion stays fast and also works offline.
  * The cache name contains the build hash; a new build installs a new cache and deletes the old one.
  */
-const CACHE = 'hylian-45bf22f3';
+const CACHE = 'hylian-2e2295cf';
 const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
 const PAGES = ["./","ja/","zh/","ko/","es/","pt/","fr/","de/","it/","fi/","nl/","ru/","uk/","sr/","about.html","ja/about.html","zh/about.html","ko/about.html","es/about.html","pt/about.html","fr/about.html","de/about.html","it/about.html","fi/about.html","nl/about.html","ru/about.html","uk/about.html","sr/about.html"];     // every page, saved when the worker installs
 const ASSETS = [
- "fonts/AlbwBotwHylian-Regular.woff2?v=4",
- "fonts/AncientHylian-English.woff2?v=4",
- "fonts/BotWSheikahRegular.woff2?v=4",
- "fonts/Forum-Title.subset.woff2?v=4",
- "fonts/GerudoTypographyRegular.woff2?v=4",
- "fonts/HeroHylianRegular.woff2?v=4",
- "fonts/HyliaSerifBeta-Regular.woff2?v=4",
- "fonts/Hylian64Regular.woff2?v=4",
- "fonts/HylianSymbols.woff2?v=4",
- "fonts/MinishCap--v10.woff2?v=4",
- "fonts/MudoranRegular.woff2?v=4",
- "fonts/NotoSerifJP-Title.subset.woff2?v=4",
- "fonts/NotoSerifKR-Title.subset.woff2?v=4",
- "fonts/NotoSerifSC-Title.subset.woff2?v=4",
- "fonts/ReggaeOne-JP.subset.woff2?v=4",
- "fonts/ReggaeOne-JPLabels.subset.woff2?v=4",
- "fonts/ReggaeOne-Latin.subset.woff2?v=4",
- "fonts/RocknRollOne-JP.subset.woff2?v=4",
- "fonts/RocknRollOne-JPLabels.subset.woff2?v=4",
- "fonts/RocknRollOne-Latin.subset.woff2?v=4",
- "fonts/SSAncientHylian.woff2?v=4",
- "fonts/TPHylian-GCNRegular.woff2?v=4",
- "images/apple-touch-icon.png?v=45bf22f3",
- "images/favicon.ico?v=45bf22f3",
+ "fonts/AlbwBotwHylian-Regular.woff2?v=5",
+ "fonts/AncientHylian-English.woff2?v=5",
+ "fonts/BotWSheikahRegular.woff2?v=5",
+ "fonts/Forum-Title.subset.woff2?v=5",
+ "fonts/GerudoTypographyRegular.woff2?v=5",
+ "fonts/HeroHylianRegular.woff2?v=5",
+ "fonts/HyliaSerifBeta-Regular.woff2?v=5",
+ "fonts/Hylian64Regular.woff2?v=5",
+ "fonts/HylianSymbols.woff2?v=5",
+ "fonts/MinishCap--v10.woff2?v=5",
+ "fonts/MudoranRegular.woff2?v=5",
+ "fonts/NotoSerifJP-Title.subset.woff2?v=5",
+ "fonts/NotoSerifKR-Title.subset.woff2?v=5",
+ "fonts/NotoSerifSC-Title.subset.woff2?v=5",
+ "fonts/ReggaeOne-JP.subset.woff2?v=5",
+ "fonts/ReggaeOne-JPLabels.subset.woff2?v=5",
+ "fonts/ReggaeOne-Latin.subset.woff2?v=5",
+ "fonts/RocknRollOne-JP.subset.woff2?v=5",
+ "fonts/RocknRollOne-JPLabels.subset.woff2?v=5",
+ "fonts/RocknRollOne-Latin.subset.woff2?v=5",
+ "fonts/SSAncientHylian.woff2?v=5",
+ "fonts/TPHylian-GCNRegular.woff2?v=5",
+ "images/apple-touch-icon.png?v=2e2295cf",
+ "images/favicon.ico?v=2e2295cf",
  "images/hyrule_rule.png",
- "images/icon-192.png?v=45bf22f3",
+ "images/icon-192.png?v=2e2295cf",
  "images/icons/botw.webp",
  "images/icons/gerudo.webp",
  "images/icons/mudoran.webp",
@@ -50,19 +51,19 @@ const ASSETS = [
  "images/icons/windwaker.webp",
  "images/pattern-triforce.png",
  "images/phantom-hourglass.gif",
- "jsMapping/3dHylianMap.js?v=45bf22f3",
- "jsMapping/64HylianMap.js?v=45bf22f3",
- "jsMapping/WWHylianMap.js?v=45bf22f3",
- "jsMapping/fontFileMap.js?v=45bf22f3",
- "jsMapping/reverseTransliteration.js?v=45bf22f3",
- "jsMapping/transliterationMap.js?v=45bf22f3",
- "reverse.js?v=45bf22f3",
- "script.js?v=45bf22f3",
- "share.js?v=45bf22f3",
- "state.js?v=45bf22f3",
- "styles.css?v=45bf22f3",
- "ui-select.js?v=45bf22f3",
- "vendor/wanakana.min.js?v=45bf22f3"
+ "jsMapping/3dHylianMap.js?v=2e2295cf",
+ "jsMapping/64HylianMap.js?v=2e2295cf",
+ "jsMapping/WWHylianMap.js?v=2e2295cf",
+ "jsMapping/fontFileMap.js?v=2e2295cf",
+ "jsMapping/reverseTransliteration.js?v=2e2295cf",
+ "jsMapping/transliterationMap.js?v=2e2295cf",
+ "reverse.js?v=2e2295cf",
+ "script.js?v=2e2295cf",
+ "share.js?v=2e2295cf",
+ "state.js?v=2e2295cf",
+ "styles.css?v=2e2295cf",
+ "ui-select.js?v=2e2295cf",
+ "vendor/wanakana.min.js?v=2e2295cf"
 ];   // css, scripts, fonts, icons: what the translator needs to run offline
 
 const scope = new URL(self.registration.scope);
@@ -103,7 +104,7 @@ async function pageNetworkFirst(request) {
     // 'no-cache' = ask the server whether the page changed (a small 304 reply when it did not), instead of trusting the
     // browser's HTTP cache, which may keep serving an older page for minutes after a deploy.
     const response = await fetch(request, { cache: 'no-cache' });
-    if (response.ok && !response.redirected && response.type === 'basic') cache.put(pageKey(request.url), response.clone());
+    if (response.ok && !response.redirected && response.type === 'basic') cache.put(pageKey(request.url), response.clone()).catch(() => {});
     return response;
   } catch (err) {
     return (await cache.match(pageKey(request.url))) || (await cache.match(pageKey(abs('./')))) || Response.error();
@@ -115,7 +116,7 @@ async function cacheFirst(request) {
   const hit = await cache.match(request);
   if (hit) return hit;
   const response = await fetch(request);
-  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
   return response;
 }
 
@@ -124,19 +125,24 @@ async function dictionary(request) {
   const hit = await cache.match(request);
   if (hit) return hit;
   const response = await fetch(request);
-  if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
   return response;
 }
 
-async function staleWhileRevalidate(request) {
+// Files without a ?v= in their URL (small images): fetched from the network (the browser's HTTP cache still applies) and
+// saved; the saved copy is only used when the network fails. They are deliberately NOT served from the saved copy while a
+// refresh overwrites it, because replacing a saved file while the page is still reading it can corrupt the image.
+async function assetNetworkFirst(request) {
   const cache = await caches.open(CACHE);
-  const hit = await cache.match(request);
-  const refresh = fetch(request).then((response) => {
-    if (response.ok && response.type === 'basic') cache.put(request, response.clone());
+  try {
+    const response = await fetch(request);
+    if (response.ok && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
     return response;
-  });
-  if (hit) { refresh.catch(() => {}); return hit; }
-  return refresh;
+  } catch (err) {
+    const hit = await cache.match(request);
+    if (hit) return hit;
+    throw err;
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -148,5 +154,5 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith(scope.pathname + 'dict/')) { event.respondWith(dictionary(request)); return; }
   if (request.mode === 'navigate') { event.respondWith(pageNetworkFirst(request)); return; }
   const versioned = url.searchParams.has('v') || url.pathname.includes('/fonts/');
-  event.respondWith(versioned ? cacheFirst(request) : staleWhileRevalidate(request));
+  event.respondWith(versioned ? cacheFirst(request) : assetNetworkFirst(request));
 });

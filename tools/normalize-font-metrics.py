@@ -47,6 +47,8 @@ for name in FONTS:
     hhea.ascent, hhea.descent, hhea.lineGap = A, -D, 0
     os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap = A, -D, 0
     os2.usWinAscent, os2.usWinDescent = max(A, 0), max(D, 0)
+    if font["maxp"].tableVersion == 0x00010000 and font["maxp"].maxZones == 0:
+        font["maxp"].maxZones = 1                  # some source fonts say 0 zones: Firefox then logs "maxp: Bad maxZones: 0"
     font.save(DIR / f"{name}.ttf")
     for flavor, ext in (("woff", "woff"), ("woff2", "woff2")):
         f2 = TTFont(DIR / f"{name}.ttf"); f2.flavor = flavor; f2.save(DIR / f"{name}.{ext}")
