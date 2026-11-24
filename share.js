@@ -115,9 +115,9 @@
     const label=button.querySelector('.btn-label')||button, original=label.textContent; button.disabled=true;
     try {
       const url=await makeUrl();
-      if(navigator.share) await navigator.share({title:'Hylian Translator',text:'Open this Hylian translation:',url});
+      if(navigator.share) await navigator.share({title:'Hylian Translator',text:text('shareText','Open this Hylian translation:'),url});
       else { await navigator.clipboard.writeText(url); label.textContent=text('shareLinkCopied','Link copied!'); setTimeout(()=>{label.textContent=original;},1800); }
-    } catch(err) { if(err.name!=='AbortError') alert(err.message||'Could not create or share the link.'); }
+    } catch(err) { if(err.name!=='AbortError') alert(text('shareFailed','Could not create or share the link.')); }
     finally { button.disabled=false; }
   });
   readUrl();

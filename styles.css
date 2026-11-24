@@ -1532,3 +1532,15 @@ html[lang="sr"] header h1 {
   #translatedText[data-hylian="skywardSword"]     { --font-scale: 0.88; }
   #translatedText[data-hylian="botw"]             { --font-scale: 0.9; }
 }
+
+/* shown only when JavaScript is switched off (the translator cannot work without it) */
+.noscript-note {
+  max-width: 760px;
+  margin: 16px auto;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  background: #fff3cd;
+  color: #533f03;
+  border-radius: 8px;
+  text-align: center;
+}

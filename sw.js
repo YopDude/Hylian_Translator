@@ -10,9 +10,9 @@
  *    evicted when the browser tidies up, so kanji conversion stays fast and also works offline.
  * The cache name contains the build hash; a new build installs a new cache and deletes the old one.
  */
-const CACHE = 'hylian-2e2295cf';
+const CACHE = 'hylian-3dea7473';
 const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
-const PAGES = ["./","ja/","zh/","ko/","es/","pt/","fr/","de/","it/","fi/","nl/","ru/","uk/","sr/","about.html","ja/about.html","zh/about.html","ko/about.html","es/about.html","pt/about.html","fr/about.html","de/about.html","it/about.html","fi/about.html","nl/about.html","ru/about.html","uk/about.html","sr/about.html"];     // every page, saved when the worker installs
+const PAGES = ["./","ja/","zh/","ko/","es/","pt/","fr/","de/","it/","fi/","nl/","ru/","uk/","sr/","about.html","ja/about.html","zh/about.html","ko/about.html","es/about.html","pt/about.html","fr/about.html","de/about.html","it/about.html","fi/about.html","nl/about.html","ru/about.html","uk/about.html","sr/about.html"];     // every page of the site (the worker only saves the ones a visitor actually uses)
 const ASSETS = [
  "fonts/AlbwBotwHylian-Regular.woff2?v=5",
  "fonts/AncientHylian-English.woff2?v=5",
@@ -36,10 +36,10 @@ const ASSETS = [
  "fonts/RocknRollOne-Latin.subset.woff2?v=5",
  "fonts/SSAncientHylian.woff2?v=5",
  "fonts/TPHylian-GCNRegular.woff2?v=5",
- "images/apple-touch-icon.png?v=2e2295cf",
- "images/favicon.ico?v=2e2295cf",
+ "images/apple-touch-icon.png?v=3dea7473",
+ "images/favicon.ico?v=3dea7473",
  "images/hyrule_rule.png",
- "images/icon-192.png?v=2e2295cf",
+ "images/icon-192.png?v=3dea7473",
  "images/icons/botw.webp",
  "images/icons/gerudo.webp",
  "images/icons/mudoran.webp",
@@ -51,19 +51,19 @@ const ASSETS = [
  "images/icons/windwaker.webp",
  "images/pattern-triforce.png",
  "images/phantom-hourglass.gif",
- "jsMapping/3dHylianMap.js?v=2e2295cf",
- "jsMapping/64HylianMap.js?v=2e2295cf",
- "jsMapping/WWHylianMap.js?v=2e2295cf",
- "jsMapping/fontFileMap.js?v=2e2295cf",
- "jsMapping/reverseTransliteration.js?v=2e2295cf",
- "jsMapping/transliterationMap.js?v=2e2295cf",
- "reverse.js?v=2e2295cf",
- "script.js?v=2e2295cf",
- "share.js?v=2e2295cf",
- "state.js?v=2e2295cf",
- "styles.css?v=2e2295cf",
- "ui-select.js?v=2e2295cf",
- "vendor/wanakana.min.js?v=2e2295cf"
+ "jsMapping/3dHylianMap.js?v=3dea7473",
+ "jsMapping/64HylianMap.js?v=3dea7473",
+ "jsMapping/WWHylianMap.js?v=3dea7473",
+ "jsMapping/fontFileMap.js?v=3dea7473",
+ "jsMapping/reverseTransliteration.js?v=3dea7473",
+ "jsMapping/transliterationMap.js?v=3dea7473",
+ "reverse.js?v=3dea7473",
+ "script.js?v=3dea7473",
+ "share.js?v=3dea7473",
+ "state.js?v=3dea7473",
+ "styles.css?v=3dea7473",
+ "ui-select.js?v=3dea7473",
+ "vendor/wanakana.min.js?v=3dea7473"
 ];   // css, scripts, fonts, icons: what the translator needs to run offline
 
 const scope = new URL(self.registration.scope);
@@ -79,9 +79,18 @@ function pageKey(url) {
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
+    // Only the pages of the language the visitor is using (home + about of every open tab) are saved up front; other
+    // languages are saved the first time they are opened. Saving all 28 pages would cost every visitor ~450 KB per update.
+    const open = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const wanted = new Set();
+    for (const client of open) {
+      const dir = new URL(client.url).pathname.replace(/[^/]*$/, '').slice(scope.pathname.length); // '' or 'ja/'
+      for (const page of [dir, dir + 'about.html']) if (PAGES.includes(page || './')) wanted.add(page || './');
+    }
+    if (!wanted.size) { wanted.add('./'); wanted.add('about.html'); }
     // one failed file must not abort the whole install, so these are not addAll()
     await Promise.allSettled([
-      ...PAGES.map(async (p) => {
+      ...[...wanted].map(async (p) => {
         const response = await fetch(abs(p), { cache: 'reload' }); // never save a copy the HTTP cache still holds from an older build
         if (response.ok && !response.redirected) await cache.put(pageKey(abs(p)), response);
       }),

@@ -1,0 +1,15 @@
+{
+  "name": "hylian-translator",
+  "private": true,
+  "description": "Zelda Hylian Translator (static site). `npm run build` regenerates the pages; `npm test` rebuilds and checks everything.",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node build.js && node tests/run.js"
+  },
+  "devDependencies": {
+    "html-validate": "^9.0.0",
+    "kuroshiro": "1.2.0",
+    "kuroshiro-analyzer-kuromoji": "1.1.0",
+    "wanakana": "4.0.2"
+  }
+}

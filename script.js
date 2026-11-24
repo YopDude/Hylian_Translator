@@ -9,9 +9,10 @@ window.HylianTouch = { isPrimary: () => window.matchMedia('(hover: none) and (po
 const CHART_VER = (window.PAGE_TEXT && window.PAGE_TEXT.imgVer) ? '?v=' + window.PAGE_TEXT.imgVer : '';
 const SITE_VER = (window.PAGE_TEXT && window.PAGE_TEXT.ver) ? '?v=' + window.PAGE_TEXT.ver : '';
 
-// The dictionary cache is installed automatically only when Japanese readings are needed.
-// Users do not need to run or configure the service worker themselves.
-const DICTIONARY_CACHE_NAME = 'hylian-kuromoji-dictionary-v1';
+// Text for the current language that JavaScript needs (alerts and so on): build.js puts it in window.PAGE_TEXT.
+const pageText = (key, fallback) => (window.PAGE_TEXT && window.PAGE_TEXT[key]) || fallback;
+
+// The Japanese dictionary is fetched only when Japanese readings are needed (see ensureKuroshiroInstance).
 const DICTIONARY_FILES = [
     'base.dat.gz', 'cc.dat.gz', 'check.dat.gz', 'tid.dat.gz', 'tid_map.dat.gz',
     'tid_pos.dat.gz', 'unk.dat.gz', 'unk_char.dat.gz', 'unk_compat.dat.gz',
@@ -48,7 +49,6 @@ const wiiOption = document.getElementById('wiiOption');
 const twilightPrincessOptions = document.getElementById('twilightPrincessOptions');
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const fontColorInput = document.getElementById('fontColor');
-const translatedTextContainer = document.getElementById("translatedText");
 const fontSizeValueElement = document.getElementById("fontSizeValue");
 const exportPngElement = document.getElementById('exportPNGBtn');
 const downloadFontElement = document.getElementById('downloadFontBtn');
@@ -490,7 +490,7 @@ async function ensureKuroshiroInstance(options = {}) {
 exportPngElement.addEventListener('click', () => {
   exportAsPNG().catch((err) => {
     console.error('Export as PNG failed:', err);
-    alert('PNG export failed to load required library. Please check your connection and try again.');
+    alert(pageText('exportFailed', 'PNG export is temporarily unavailable. Please check your connection and try again.'));
   });
 });
 
@@ -512,6 +512,8 @@ async function translateTextCore() {
     if (!originalInput) {
         translatedTextElement.textContent = "";
         delete translatedTextElement.dataset.hylian; // the placeholder text is not Hylian: no per-script size correction
+        translatedTextElement.removeAttribute('role'); // the placeholder is ordinary text
+        translatedTextElement.removeAttribute('aria-label');
         return;
     }
 
@@ -533,19 +535,7 @@ async function translateTextCore() {
     const containsKanji = /[\u4E00-\u9FFF]/.test(originalInput + workingText);
     if (!chineseUi && containsKanji) {
         try {
-            const kuro = await ensureKuroshiroInstance();
-            if (isKanaScript(version)) {
-                // Kana-based scripts need one glyph per kana, so read the text as hiragana and romanize that with
-                // wanakana, exactly like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes
-                // long vowels with macrons (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the
-                // particles \u3078 / \u306f / \u3092 into "e" / "wa" / "o".
-                romajiOutput = convertToRomaji(await kuro.convert(workingText, { to: "hiragana" }), keepLongMark);
-            } else {
-                // Kuroshiro reads the particles は / へ / を as "wa" / "e" / "o". Spell them "ha" / "he" / "wo" first, exactly
-                // as kana-only text is written, so the same sentence reads the same with or without kanji in it.
-                const spelled = workingText.replace(/\u306F/g, 'ha').replace(/\u3078/g, 'he').replace(/\u3092/g, 'wo');
-                romajiOutput = await kuro.convert(spelled, { to: "romaji" });
-            }
+            romajiOutput = await readingToRomaji(await ensureKuroshiroInstance(), workingText, version);
         } catch (err) {
             // The Japanese dictionary could not be loaded: kana and Latin text still work, kanji are skipped.
             console.warn('Kanji readings unavailable; converting the kana only.', err);
@@ -590,6 +580,9 @@ async function translateTextCore() {
     translatedTextElement.style.fontFamily = targetFont;
     translatedTextElement.dataset.hylian = version; // per-script size correction on phones (styles.css)
     translatedTextElement.innerHTML = innerHTML;
+    // Screen readers cannot read custom-font glyphs (kana scripts are gibberish as text): describe the output by what was typed
+    translatedTextElement.setAttribute('role', 'img');
+    translatedTextElement.setAttribute('aria-label', originalInput);
     lastCommittedFontFamily = targetFont;
 }
 
@@ -622,6 +615,21 @@ function getGlyphIndexMap(version) {
 
 function isKanaScript(version) {
   return version === 'windwaker' || version === 'ocarinaOfTime64' || version === 'ocarinaOfTime3d';
+}
+
+// Romanizes Japanese text (kana and kanji) for one script. `kuro` is a ready Kuroshiro instance.
+async function readingToRomaji(kuro, text, version) {
+    if (isKanaScript(version)) {
+        // Kana-based scripts need one glyph per kana, so read the text as hiragana and romanize that with wanakana, exactly
+        // like typed kana. Kuroshiro's own romaji is Hepburn "as pronounced": it writes long vowels with macrons
+        // (nintendo -> "nintend\u014d", which dropped the "do" glyph) and turns the particles \u3078 / \u306f / \u3092 into
+        // "e" / "wa" / "o". Wind Waker keeps the long vowel mark as a glyph of its own; the others write it as a vowel.
+        return convertToRomaji(await kuro.convert(text, { to: "hiragana" }), version === 'windwaker');
+    }
+    // Roman-alphabet scripts: spell the particles "ha" / "he" / "wo" first, exactly as kana-only text is written, so the
+    // same sentence reads the same with or without kanji in it.
+    const spelled = text.replace(/\u306F/g, 'ha').replace(/\u3078/g, 'he').replace(/\u3092/g, 'wo');
+    return kuro.convert(spelled, { to: "romaji" });
 }
 
 // Function to convert input to Romaji using wanakana
@@ -770,7 +778,7 @@ downloadFontElement.addEventListener('click', function () {
     const fontUrl = `${SITE_ROOT}fonts/${fontFileName}.ttf`;
     downloadFont(fontUrl, `${fontFileName}.ttf`);
   } else {
-    alert('Font file not found for the selected font version.');
+    alert(pageText('fontNotFound', 'Font file not found for the selected font version.'));
   }
 });
 
@@ -811,7 +819,7 @@ async function exportAsPNG() {
       link.click();
     } catch (err) {
       console.error('PNG export failed:', err);
-      alert('PNG export is temporarily unavailable (failed to load). Please try again.');
+      alert(pageText('exportFailed', 'PNG export is temporarily unavailable. Please check your connection and try again.'));
     }
   } else {
     console.log("No translated text to export.");
@@ -841,7 +849,7 @@ function preloadImage(version) {
   return image;
 }
 
-// Warm the Japanese reading dictionary in the background on the Japanese translator homepage.
+// Warm the Japanese reading dictionary in the background when Japanese is being typed (or always, with the owner switch below).
 // The same in-flight promise is reused if the user starts typing before initialization finishes.
 //
 // Owner switch: open the site once with ?kanji=on (any language) to keep the dictionary ready on every page of this browser,
@@ -854,8 +862,7 @@ try {
 } catch (_) { /* storage unavailable */ }
 const kanjiPreloadSwitchedOn = () => { try { return localStorage.getItem(KANJI_PRELOAD_KEY) === '1'; } catch (_) { return false; } };
 const pageLang = (document.documentElement.lang || '').toLowerCase();
-const japanHome = pageLang === 'ja' && /\/(?:ja\/)?(?:index\.html)?$/.test(window.location.pathname);
-if ((japanHome || (kanjiPreloadSwitchedOn() && !pageLang.startsWith('zh'))) && inputTextElement && translatedTextElement) {
+if (inputTextElement && translatedTextElement && !pageLang.startsWith('zh')) {
   // wait (briefly) for the service worker, so that the download is saved in its offline cache and not only the HTTP cache
   const serviceWorkerReady = () => ('serviceWorker' in navigator)
     ? Promise.race([navigator.serviceWorker.ready, new Promise((resolve) => setTimeout(resolve, 4000))])
@@ -869,8 +876,22 @@ if ((japanHome || (kanjiPreloadSwitchedOn() && !pageLang.startsWith('zh'))) && i
     .catch((err) => {
       console.warn('Background Kanji library preload failed; it will retry when needed.', err);
     });
-  if ('requestIdleCallback' in window) window.requestIdleCallback(warmKanjiLibrary, { timeout: 2500 });
-  else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
+
+  if (kanjiPreloadSwitchedOn()) {
+    // the owner's switch (?kanji=on): preload on every page, once the browser is idle
+    if ('requestIdleCallback' in window) window.requestIdleCallback(warmKanjiLibrary, { timeout: 2500 });
+    else window.addEventListener('load', () => window.setTimeout(warmKanjiLibrary, 800), { once: true });
+  } else if (pageLang === 'ja') {
+    // Japanese pages: the dictionary (17 MB) is not downloaded on page load, because most visitors never type a kanji.
+    // It starts as soon as someone composes Japanese with an input method: kana are typed first and turned into kanji at the
+    // end of the word, so the download has a head start. Latin text composed by a phone keyboard does not count.
+    const onCompose = (event) => {
+      if (!/[\u3040-\u30FF\u4E00-\u9FFF]/.test(event.data || '')) return;
+      inputTextElement.removeEventListener('compositionupdate', onCompose);
+      warmKanjiLibrary();
+    };
+    inputTextElement.addEventListener('compositionupdate', onCompose);
+  }
 }
 
 // ---- Phones: bring the text box to the top of the screen when it is tapped -------------------------------------------

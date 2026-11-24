@@ -206,7 +206,7 @@ for (const lang of LANGS) {
       banner: bannerHtml(s),
       languageSelectScript,
       outputLanguageOptions: outputOptions(lang),
-      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', ver: VER, imgVer: IMAGE_VER, translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings }).replace(/</g, '\\u003c'),
+      pageTextJson: JSON.stringify({ root: lang.code === 'en' ? '' : '../', ver: VER, imgVer: IMAGE_VER, translatedText: s.translatedText, copyLabel: s.copyBtn, copiedMsg: s.copiedMsg, shareLinkCopied: s.shareLinkCopied, sharedLinkNotice: s.sharedLinkNotice, returnToMySettings: s.returnToMySettings, exportFailed: s.exportFailed, fontNotFound: s.fontNotFound, shareFailed: s.shareFailed, shareText: s.shareText }).replace(/</g, '\\u003c'),
       languageSelect: languageSelect(lang, page),
       languageLinks: languageLinks(lang, page),
       homeHref: rel(from, urlPath(lang, 'index')),

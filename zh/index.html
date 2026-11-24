@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>塞尔达海利亚语翻译器 – 将现实世界语言转换为《塞尔达传说》的海利亚文字（旷野之息、时之笛、风之杖）</title>
-  <link rel="stylesheet" href="../styles.css?v=2e2295cf">
-  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=2e2295cf">
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=2e2295cf">
-  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=2e2295cf">
+  <link rel="stylesheet" href="../styles.css?v=3dea7473">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../images/favicon.ico?v=3dea7473">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png?v=3dea7473">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=3dea7473">
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#0d2238">
   <link rel="canonical" href="https://zeldatranslator.com/zh/">
@@ -95,6 +95,7 @@
     </div>
   </header>
   <main class="content">
+    <noscript><p class="noscript-note">此翻译器需要 JavaScript。请在浏览器中启用后使用。</p></noscript>
     <section class="section odd">
       <div class="text-block" id="translatorCard">
         <!-- Direction: real world -> Hylian (default) or Hylian -> real world (swap) -->
@@ -139,7 +140,7 @@
                 <option value="mudoran" data-icon="../images/icons/mudoran.webp" id="chooseHylianVersionMudoran">穆多拉</option>
               </optgroup>
             </select>
-            <button id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="查看字母表">f</button>
+            <button type="button" id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="查看字母表">f</button>
         </div>
         <!-- Radio Buttons for Twilight Princess -->
         <div id="twilightPrincessOptions" style="display: none;">
@@ -169,7 +170,7 @@
           </div>
         </div>
         <div class="fwd-only">
-          <button id="exportPNGBtn" class="tooltip-element btn-with-icon" data-tooltip-key="exportPNGBtn" data-tooltip="将翻译结果保存为 PNG 图片。"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">导出</span></button>
+          <button type="button" id="exportPNGBtn" class="tooltip-element btn-with-icon" data-tooltip-key="exportPNGBtn" data-tooltip="将翻译结果保存为 PNG 图片。"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">导出</span></button>
           <button id="shareLinkBtn" type="button" class="tooltip-element btn-with-icon" data-tooltip-key="shareLinkBtn" data-tooltip="为这段翻译和当前设置生成链接，并分享或复制到剪贴板。"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.4M8.3 13.3l7.4 4.4"/></g></svg><span class="btn-label">分享</span></button>
         </div>
 
@@ -196,7 +197,7 @@
   <footer>
     <div>
       <div>
-        <button id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="下载当前海利亚文字对应的字体。"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">下载字体</span></button>
+        <button type="button" id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="下载当前海利亚文字对应的字体。"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">下载字体</span></button>
         <a id="aboutPageBtn" class="button-link tooltip-element btn-with-icon" data-tooltip-key="aboutPageBtn" data-tooltip="了解更多关于塞尔达海利亚语翻译器、字体、贡献和资源的信息" href="about.html"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></g><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/></svg><span class="btn-label">关于页面</span></a>
       </div>
       <p id="noteText">注意：所有语言均通过自定义字体显示，复制粘贴时不会保留。</p>
@@ -231,7 +232,7 @@
   <!-- Image Overlay (Initially Hidden) -->
   <div id="overlay" class="overlay">
     <div class="overlay-content">
-      <img id="hylianMapImage" src="" loading="lazy" decoding="async" alt="Hylian Alphabet Mapping">
+      <img id="hylianMapImage" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy" decoding="async" alt="海利亚文字对照表">
       <img id="closeOverlayBtn" class="close-icon" src="../images/close.png" width="128" height="128" loading="lazy" decoding="async" alt="Close">
     </div>
   </div>
@@ -244,21 +245,21 @@
     </div>
   </div>
 
-  <script>window.PAGE_TEXT = {"root":"../","ver":"2e2295cf","imgVer":"9a1bff2f","translatedText":"翻译后的文本将显示在这里。","copyLabel":"复制","copiedMsg":"已复制！","shareLinkCopied":"链接已复制！","sharedLinkNotice":"你正在查看他人分享的设置。你保存的设置不会被更改。","returnToMySettings":"返回我的设置"};</script>
+  <script>window.PAGE_TEXT = {"root":"../","ver":"3dea7473","imgVer":"9a1bff2f","translatedText":"翻译后的文本将显示在这里。","copyLabel":"复制","copiedMsg":"已复制！","shareLinkCopied":"链接已复制！","sharedLinkNotice":"你正在查看他人分享的设置。你保存的设置不会被更改。","returnToMySettings":"返回我的设置","exportFailed":"PNG 导出暂时不可用。请检查网络连接后重试。","fontNotFound":"找不到所选字体版本的字体文件。","shareFailed":"无法创建或分享链接。","shareText":"打开这段海利亚文字翻译："};</script>
   <script>(function(){var s=document.getElementById('languageSelect');if(s)s.addEventListener('change',function(){if(s.value)location.href=s.value;});})();</script>
-  <script defer src="../vendor/wanakana.min.js?v=2e2295cf"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
-  <script defer src="../jsMapping/transliterationMap.js?v=2e2295cf"></script> <!-- Convert non-english characters into their english counterpart -->
-  <script defer src="../jsMapping/WWHylianMap.js?v=2e2295cf"></script> <!-- Load the WW glyph map -->
-  <script defer src="../jsMapping/64HylianMap.js?v=2e2295cf"></script> <!-- Load the N64 glyph map -->
-  <script defer src="../jsMapping/3dHylianMap.js?v=2e2295cf"></script> <!-- Load the 3ds glyph map -->
-  <script defer src="../jsMapping/fontFileMap.js?v=2e2295cf"></script> <!-- Load the FontFile map to be able to download -->
+  <script defer src="../vendor/wanakana.min.js?v=3dea7473"></script> <!-- Wanakana (kana <-> romaji), self-hosted -->
+  <script defer src="../jsMapping/transliterationMap.js?v=3dea7473"></script> <!-- Convert non-english characters into their english counterpart -->
+  <script defer src="../jsMapping/WWHylianMap.js?v=3dea7473"></script> <!-- Load the WW glyph map -->
+  <script defer src="../jsMapping/64HylianMap.js?v=3dea7473"></script> <!-- Load the N64 glyph map -->
+  <script defer src="../jsMapping/3dHylianMap.js?v=3dea7473"></script> <!-- Load the 3ds glyph map -->
+  <script defer src="../jsMapping/fontFileMap.js?v=3dea7473"></script> <!-- Load the FontFile map to be able to download -->
   <!-- html2canvas, kuroshiro and pinyin-pro (all self-hosted in vendor/) are loaded on demand -->
-  <script defer src="../script.js?v=2e2295cf"></script> <!-- Main script -->
-  <script defer src="../ui-select.js?v=2e2295cf"></script> <!-- Icon dropdown for the Hylian version -->
-  <script defer src="../jsMapping/reverseTransliteration.js?v=2e2295cf"></script> <!-- Hylian -> real world: transliteration engines -->
-  <script defer src="../reverse.js?v=2e2295cf"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
-  <script defer src="../state.js?v=2e2295cf"></script> <!-- Remembers the session (localStorage) -->
-  <script defer src="../share.js?v=2e2295cf"></script> <!-- Shareable configurations and branded image sharing -->
+  <script defer src="../script.js?v=3dea7473"></script> <!-- Main script -->
+  <script defer src="../ui-select.js?v=3dea7473"></script> <!-- Icon dropdown for the Hylian version -->
+  <script defer src="../jsMapping/reverseTransliteration.js?v=3dea7473"></script> <!-- Hylian -> real world: transliteration engines -->
+  <script defer src="../reverse.js?v=3dea7473"></script> <!-- Hylian -> real world: keyboard + swap toggle -->
+  <script defer src="../state.js?v=3dea7473"></script> <!-- Remembers the session (localStorage) -->
+  <script defer src="../share.js?v=3dea7473"></script> <!-- Shareable configurations and branded image sharing -->
 
 </body>
 </html>

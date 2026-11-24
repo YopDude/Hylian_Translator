@@ -12,7 +12,7 @@
  */
 const CACHE = 'hylian-__VERSION__';
 const DICT_CACHE = 'hylian-dict-v1'; // bump the number only if the files in dict/ are ever replaced
-const PAGES = __PAGES__;     // every page, saved when the worker installs
+const PAGES = __PAGES__;     // every page of the site (the worker only saves the ones a visitor actually uses)
 const ASSETS = __ASSETS__;   // css, scripts, fonts, icons: what the translator needs to run offline
 
 const scope = new URL(self.registration.scope);
@@ -28,9 +28,18 @@ function pageKey(url) {
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
+    // Only the pages of the language the visitor is using (home + about of every open tab) are saved up front; other
+    // languages are saved the first time they are opened. Saving all 28 pages would cost every visitor ~450 KB per update.
+    const open = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const wanted = new Set();
+    for (const client of open) {
+      const dir = new URL(client.url).pathname.replace(/[^/]*$/, '').slice(scope.pathname.length); // '' or 'ja/'
+      for (const page of [dir, dir + 'about.html']) if (PAGES.includes(page || './')) wanted.add(page || './');
+    }
+    if (!wanted.size) { wanted.add('./'); wanted.add('about.html'); }
     // one failed file must not abort the whole install, so these are not addAll()
     await Promise.allSettled([
-      ...PAGES.map(async (p) => {
+      ...[...wanted].map(async (p) => {
         const response = await fetch(abs(p), { cache: 'reload' }); // never save a copy the HTTP cache still holds from an older build
         if (response.ok && !response.redirected) await cache.put(pageKey(abs(p)), response);
       }),

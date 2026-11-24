@@ -46,6 +46,7 @@
     </div>
   </header>
   <main class="content">
+    <noscript><p class="noscript-note">{{noscriptText}}</p></noscript>
     <section class="section odd">
       <div class="text-block" id="translatorCard">
         <!-- Direction: real world -> Hylian (default) or Hylian -> real world (swap) -->
@@ -78,7 +79,7 @@
                 <option value="mudoran" data-icon="{{root}}images/icons/mudoran.{{iconExt}}" id="chooseHylianVersionMudoran">{{chooseHylianVersionMudoran}}</option>
               </optgroup>
             </select>
-            <button id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="{{tip_showHylianMapBtn|a}}">f</button>
+            <button type="button" id="showHylianMapBtn" class="eye-btn tooltip-element" data-tooltip-key="showHylianMapBtn" data-tooltip="{{tip_showHylianMapBtn|a}}">f</button>
         </div>
         <!-- Radio Buttons for Twilight Princess -->
         <div id="twilightPrincessOptions" style="display: none;">
@@ -108,7 +109,7 @@
           </div>
         </div>
         <div class="fwd-only">
-          <button id="exportPNGBtn" class="tooltip-element btn-with-icon" data-tooltip-key="exportPNGBtn" data-tooltip="{{tip_exportPNGBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{exportPNGBtn}}</span></button>
+          <button type="button" id="exportPNGBtn" class="tooltip-element btn-with-icon" data-tooltip-key="exportPNGBtn" data-tooltip="{{tip_exportPNGBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{exportPNGBtn}}</span></button>
           <button id="shareLinkBtn" type="button" class="tooltip-element btn-with-icon" data-tooltip-key="shareLinkBtn" data-tooltip="{{tip_shareLinkBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.4M8.3 13.3l7.4 4.4"/></g></svg><span class="btn-label">{{shareLinkBtn}}</span></button>
         </div>
 
@@ -135,7 +136,7 @@
   <footer>
     <div>
       <div>
-        <button id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="{{tip_downloadFontBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{downloadFontBtn}}</span></button>
+        <button type="button" id="downloadFontBtn" class="tooltip-element btn-with-icon" data-tooltip-key="downloadFontBtn" data-tooltip="{{tip_downloadFontBtn|a}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">{{downloadFontBtn}}</span></button>
         <a id="aboutPageBtn" class="button-link tooltip-element btn-with-icon" data-tooltip-key="aboutPageBtn" data-tooltip="{{tip_aboutPageBtn|a}}" href="{{aboutHref}}"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></g><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/></svg><span class="btn-label">{{aboutPageLink}}</span></a>
       </div>
       <p id="noteText">{{noteText}}</p>
@@ -155,7 +156,7 @@
   <!-- Image Overlay (Initially Hidden) -->
   <div id="overlay" class="overlay">
     <div class="overlay-content">
-      <img id="hylianMapImage" src="" loading="lazy" decoding="async" alt="Hylian Alphabet Mapping">
+      <img id="hylianMapImage" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy" decoding="async" alt="{{chartAlt|a}}">
       <img id="closeOverlayBtn" class="close-icon" src="{{root}}images/close.png" width="128" height="128" loading="lazy" decoding="async" alt="Close">
     </div>
   </div>
